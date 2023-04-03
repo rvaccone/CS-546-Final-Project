@@ -3,11 +3,11 @@ import { ObjectId } from 'mongodb';
 import * as validation from '../validation.js';
 
 const create = async (firstName, lastName, email, password, age, bio, imgLink) => {
-	validation.checkString(firstName, firstName);
-	validation.checkString(lastName, lastName);
+	firstName = validation.checkString(firstName, firstName);
+	lastName = validation.checkString(lastName, lastName);
 	// TODO: preform checks for email.
 	// TODO: preform checks for password & use bcrypt to hash it.
-	validation.checkAge(age, age);
+	age = validation.checkAge(age, age);
 	// TODO: preform checks on bio.
 
 	// Initalizes a newUser.
@@ -33,7 +33,7 @@ const create = async (firstName, lastName, email, password, age, bio, imgLink) =
 };
 
 const getAll = async () => {
-	const userCollection = await bands();
+	const userCollection = await users();
 	// This gives us the data as an array of obejcts from the database.
 	let userList = await userCollection.find({}).project({ _id: 1, name: 1 }).toArray();
 	if (!userList) throw 'Could not get all bands.';
@@ -44,7 +44,14 @@ const getAll = async () => {
 	return userList;
 };
 
-const get = async (id) => {};
+const get = async (id) => {
+	id = checkId(id);
+	const userCollection = await users();
+	const user = await userCollection.findOne({ _id: new ObjectId(id) });
+	if (user === null) throw 'Error: No user with that id.';
+	user._id = user._id.toString();
+	return user;
+};
 
 const remove = async (id) => {};
 

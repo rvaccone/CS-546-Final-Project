@@ -1,3 +1,22 @@
+// Validates Age inputs.
+function checkAge(ageVal, varName) {
+	if (!ageVal) throw `Error: You must supply a ${varNmae}.`;
+	if (typeof ageVal !== 'number') throw `Error: ${varName} should be a number.`;
+	if (ageVal === NaN) throw `Error: ${varName} age cannot be NaN.`;
+	if (ageVal < 13 || ageVal > 100) throw `Error: ${varName} is out of valid range.`;
+	return ageVal;
+}
+
+// Validates id inputs.
+function checkId(id) {
+	if (!id) throw 'You must provide an id to search for';
+	if (typeof id !== 'string') throw 'Id must be a string';
+	if (id.trim().length === 0) throw 'Id cannot be an empty string or just spaces';
+	id = id.trim();
+	if (!ObjectId.isValid(id)) throw 'invalid object ID';
+	return id;
+}
+
 // Validates string inputs.
 function checkString(strVal, varName) {
 	if (!strVal) throw `Error: You must supply a ${varName}!`;
@@ -9,13 +28,4 @@ function checkString(strVal, varName) {
 		throw `Error: ${strVal} is not a valid value for ${varName} as it only contains digits`;
 	return strVal;
 }
-
-function checkAge(ageVal, varName) {
-	if (!ageVal) throw `Error: You must supply a ${varNmae}.`;
-	if (typeof ageVal !== 'number') throw `Error: ${varName} should be a number.`;
-	if (ageVal === NaN) throw `Error: ${varName} age cannot be NaN.`;
-	if (ageVal < 13 || ageVal > 100) throw `Error: ${varName} is out of valid range.`;
-	return ageVal;
-}
-
-export { checkAge, checkString };
+export { checkAge, checkId, checkString };
