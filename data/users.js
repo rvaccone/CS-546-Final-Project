@@ -9,8 +9,8 @@ const create = async (firstName, lastName, email, password, age, bio, imgLink) =
 	email = validation.checkEmail(email, 'email');
 	// TODO: preform checks for password & use bcrypt to hash it.
 	age = validation.checkAge(age, 'age');
-	// TODO: preform checks on bio.
-	// TODO: preform checks on imgLink.
+	bio = validation.checkBio(bio, 'bio');
+	imgLink = validation.checkImgLink(imgLink, 'imgLink');
 
 	// Initalizes a newUser.
 	let newUser = {
@@ -60,9 +60,67 @@ const get = async (id) => {
 };
 
 // Removes a user from the users collection.
-const remove = async (id) => {};
+const remove = async (id) => {
+	id = validation.checkID(id, 'id');
+	const userCollection = await users();
+	const deletionInfo = await userCollection.findOneAndDelete({
+		_id: new ObjectId(id),
+	});
+
+	// checks for the number of documents affected
+	if (deletionInfo.lastErrorObject.n === 0) {
+		throw `Could not delete band with id of ${id}`;
+	}
+	return { userID: id, deleted: true };
+};
 
 // Updates a user in the users collection.
-const update = async (id, firstName, lastName, email, password, age, bio, imgLink) => {};
+const update = async (id, firstName, lastName, email, password, age, bio, imgLink) => {
+	firstName = validation.checkString(firstName, 'firstName');
+	lastName = validation.checkString(lastName, 'lastName');
+	email = validation.checkEmail(email, 'email');
+	// TODO: preform checks for password & use bcrypt to hash it.
+	age = validation.checkAge(age, 'age');
+	bio = validation.checkBio(bio, 'bio');
+	imgLink = validation.checkImgLink(imgLink, 'imgLink');
+
+	const user = await get(id);
+	if (
+		user.firstName === firstName &&
+		user.lastName === lastName &&
+		user.email === email &&
+		user.password === password &&
+		user.age === age &&
+		user.bio === bio &&
+		user.imgLink === imgLink
+	)
+		throw 'Error: cannot update record with the same set of values.';
+
+	// Preforms an update on the band.
+	const updateUser = {
+		firstName: firstName,
+		lastName: lastName,
+		email: email,
+		password: password,
+		age: age,
+		bio: bio,
+		imgLink: imgLink,
+	};
+
+	// Await the collection of the user.
+	const userCollection = await users();
+	const updatedInfo = await userCollection.findOneAndUpdate(
+		{ _id: new ObjectId(id) },
+		{ $set: updateUser },
+		{ returnDocument: 'after' }
+	);
+
+	// Checks if there is an error with updating the record.
+	if (updatedInfo.lastErrorObject.n === 0) {
+		throw 'could not update band successfully';
+	}
+	updatedInfo.value._id = new ObjectId(updatedInfo.value._id).toString();
+	return updatedInfo.value;
+};
 
 export { create, getAll, get, remove, update };

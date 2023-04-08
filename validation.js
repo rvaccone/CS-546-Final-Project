@@ -9,6 +9,17 @@ function checkAge(ageVal, varName) {
 	return ageVal;
 }
 
+// Validates bio inputs.
+function checkBio(bioVal, varName) {
+	if (!bioVal) throw `Error: You must supply a ${varName}.`;
+	if (typeof bioVal !== 'string') throw `Error: ${varName} should be a string.`;
+	bioVal = bioVal.trim();
+	if (bioVal.length === 0)
+		throw `Error: ${varName} cannot be an empty string or string with just spaces`;
+	if (bioVal.length > 500) throw `Error: ${varName} cannot be longer than 500 characters.`;
+	return bioVal;
+}
+
 // Validates email inputs.
 function checkEmail(emailVal, varName) {
 	var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -33,6 +44,19 @@ function checkID(idVal, varName) {
 	return idVal;
 }
 
+// Validates image link inputs.
+function checkImgLink(imgLinkVal, varName) {
+	if (!imgLinkVal) throw `Error: You must supply a ${varName}.`;
+	if (typeof imgLinkVal !== 'string') throw `Error: ${varName} should be a string.`;
+	imgLinkVal = imgLinkVal.trim();
+	if (imgLinkVal.length === 0)
+		throw `Error: ${varName} cannot be an empty string or string with just spaces`;
+	if (!imgLinkVal.match(/^https?:\/\/.+\.(jpg|jpeg|png)$/))
+		throw `Error: ${varName} is not a valid link.`;
+	// TODO: Check with TA if I should try to connect to image source to see if it exists.
+	return imgLinkVal;
+}
+
 // Validates string inputs.
 function checkString(strVal, varName) {
 	if (!strVal) throw `Error: You must supply a ${varName}!`;
@@ -45,4 +69,4 @@ function checkString(strVal, varName) {
 	return strVal;
 }
 
-export { checkAge, checkEmail, checkID, checkString };
+export { checkAge, checkBio, checkEmail, checkID, checkImgLink, checkString };
