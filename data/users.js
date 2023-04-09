@@ -1,16 +1,21 @@
 import { users } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 import * as validation from '../validation.js';
+// import bcrypt from 'bcrypt';
+// const saltRounds = 16;
 
 // Creates a new user and logs it in the users collection.
 const create = async (firstName, lastName, email, password, age, bio, imgLink) => {
 	firstName = validation.checkString(firstName, 'firstName');
 	lastName = validation.checkString(lastName, 'lastName');
 	email = validation.checkEmail(email, 'email');
-	// TODO: preform checks for password & use bcrypt to hash it.
+	password = validation.checkPassword(password, 'password');
 	age = validation.checkAge(age, 'age');
 	bio = validation.checkBio(bio, 'bio');
 	imgLink = validation.checkImgLink(imgLink, 'imgLink');
+
+	// Hashes password.
+	//let hashedPassword = await bcrypt.hash(password, saltRounds);
 
 	// Initalizes a newUser.
 	let newUser = {
@@ -24,6 +29,14 @@ const create = async (firstName, lastName, email, password, age, bio, imgLink) =
 	};
 	// Waits for collection and attempts to insert newUser.
 	const userCollection = await users();
+
+	// Checks if email is already registered.
+	const userEmails = await userCollection.find({}).project({ _id: 0, email: 1 }).toArray();
+	userEmails.forEach((user) => {
+		if (user.email === newUser.email) throw 'Error: Email already registered.';
+	});
+
+	// Inserts new user into collection.
 	const insertInfo = await userCollection.insertOne(newUser);
 
 	// Checks if newUser was inserted properly.
@@ -79,7 +92,7 @@ const update = async (id, firstName, lastName, email, password, age, bio, imgLin
 	firstName = validation.checkString(firstName, 'firstName');
 	lastName = validation.checkString(lastName, 'lastName');
 	email = validation.checkEmail(email, 'email');
-	// TODO: preform checks for password & use bcrypt to hash it.
+	password = validation.checkPassword(password, 'password');
 	age = validation.checkAge(age, 'age');
 	bio = validation.checkBio(bio, 'bio');
 	imgLink = validation.checkImgLink(imgLink, 'imgLink');
@@ -109,6 +122,13 @@ const update = async (id, firstName, lastName, email, password, age, bio, imgLin
 
 	// Await the collection of the user.
 	const userCollection = await users();
+
+	// Checks if email is already registered.
+	const userEmails = await userCollection.find({}).project({ _id: 0, email: 1 }).toArray();
+	userEmails.forEach((user) => {
+		if (user.email === updateUser.email) throw 'Error: Email already registered.';
+	});
+
 	const updatedInfo = await userCollection.findOneAndUpdate(
 		{ _id: new ObjectId(id) },
 		{ $set: updateUser },

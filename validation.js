@@ -22,7 +22,7 @@ function checkBio(bioVal, varName) {
 
 // Validates email inputs.
 function checkEmail(emailVal, varName) {
-	var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+	let mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 	if (!emailVal) throw `Error: You must supply a ${varName}.`;
 	if (typeof emailVal !== 'string') throw `Error: ${varName} should be a string.`;
 	emailVal = emailVal.trim();
@@ -57,6 +57,22 @@ function checkImgLink(imgLinkVal, varName) {
 	return imgLinkVal;
 }
 
+// Validates password inputs.
+function checkPassword(passwordVal, varName) {
+	// Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character.
+	let passwordFormat = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/;
+	if (!passwordVal) throw `Error: You must supply a ${varName}.`;
+	if (typeof passwordVal !== 'string') throw `Error: ${varName} should be a string.`;
+	passwordVal = passwordVal.trim();
+	if (passwordVal.length === 0)
+		throw `Error: ${varName} cannot be an empty string or string with just spaces`;
+	if (passwordVal.length < 8) throw `Error: ${varName} must be at least 8 characters.`;
+	if (passwordVal.length > 30) throw `Error: ${varName} cannot be longer than 50 characters.`;
+	if (!passwordVal.match(passwordFormat))
+		throw `Error: ${varName} must contain at least one lowercase letter, one uppercase letter, one number, and one special character.`;
+	return passwordVal;
+}
+
 // Validates string inputs.
 function checkString(strVal, varName) {
 	if (!strVal) throw `Error: You must supply a ${varName}!`;
@@ -69,4 +85,4 @@ function checkString(strVal, varName) {
 	return strVal;
 }
 
-export { checkAge, checkBio, checkEmail, checkID, checkImgLink, checkString };
+export { checkAge, checkBio, checkEmail, checkID, checkImgLink, checkPassword, checkString };
