@@ -123,6 +123,7 @@ const update = async (id, firstName, lastName, email, password, age, bio, imgLin
 	// Await the collection of the user.
 	const userCollection = await users();
 
+	// TODO: Check if this is needed.
 	// Checks if email is already registered.
 	const userEmails = await userCollection.find({}).project({ _id: 0, email: 1 }).toArray();
 	userEmails.forEach((user) => {
