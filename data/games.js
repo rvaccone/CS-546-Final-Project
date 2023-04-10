@@ -45,7 +45,7 @@ const getAll = async () => {
 const get = async (id) => {
 	id = validation.checkID(id, 'id');
 	const gameCollection = await games();
-	const game = await gameCollection.findOne({ _id: ObjectId(id) });
+	const game = await gameCollection.findOne({ _id: new ObjectId(id) });
 	if (!game) throw 'Game not found';
 	game._id = game._id.toString();
 	return game;
@@ -55,15 +55,16 @@ const get = async (id) => {
 const remove = async (id) => {
 	id = validation.checkID(id, 'id');
 	const gameCollection = await games();
-	const deletionInfo = await gameCollection.removeOne({ _id: ObjectId(id) });
+	const deletionInfo = await gameCollection.findOneAndDelete({ _id: new ObjectId(id) });
 	if (deletionInfo.deletedCount === 0) {
 		throw `Could not delete game with id of ${id}`;
 	}
+	return { gameID: id, deleted: true };
 };
 
 // Updates a game by its id.
 const update = async (id, courtID, startTime, endTime) => {
-	// TODO: Validation
+	// TODO: Validation / Compare start and end times.
 
 	const game = await get(id);
 	if (game.courtID === courtID && user.startTime === startTime && user.endTime === endTime)

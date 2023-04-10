@@ -2,6 +2,8 @@
 import { dbConnection, closeConnection } from '../config/mongoConnection.js';
 import * as users_functions from '../data/users.js';
 import * as games_functions from '../data/games.js';
+import * as games_members_functions from '../data/gameMembers.js';
+import * as courts_functions from '../data/courts.js';
 const db = await dbConnection();
 await db.dropDatabase();
 
@@ -89,9 +91,49 @@ try {
 
 /* ---------------------- GAMES ---------------------- */
 let game1;
+let game2;
 
 try {
-	game1 = await games_functions.create('X159', 'Doe');
+	game1 = await games_functions.create('X159', '12', '1');
+} catch (e) {
+	console.log(e);
+}
+
+try {
+	game2 = await games_functions.create('X160', '12', '1');
+} catch (e) {
+	console.log(e);
+}
+
+try {
+	let allGames = await games_functions.getAll();
+	console.log(allGames);
+} catch (e) {
+	console.log(e);
+}
+
+try {
+	let removeGame = await games_functions.remove(game1._id);
+	console.log(removeGame);
+} catch (e) {
+	console.log(e);
+}
+
+try {
+	let gameMember1 = await games_members_functions.create(
+		game2._id,
+		user1._id,
+		user1.firstName,
+		user1.lastName
+	);
+	console.log(gameMember1);
+} catch (e) {
+	console.log(e);
+}
+
+try {
+	let allMembers = await games_members_functions.getAll(game2._id);
+	console.log(allMembers);
 } catch (e) {
 	console.log(e);
 }
