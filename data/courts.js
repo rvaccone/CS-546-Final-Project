@@ -21,7 +21,7 @@ const create = async (name, location, numCourts, accessible, lat, long) => {
 		lat,
 		long,
 		reviews: [],
-		rating: 0,
+		overallRating: 0,
 	};
 
 	// Retrieve the courts collection
@@ -102,7 +102,7 @@ const update = async (
 		lat,
 		long,
 		reviews: court.reviews,
-		rating: court.rating,
+		overallRating: court.overallRating,
 	};
 
 	// Update the court
