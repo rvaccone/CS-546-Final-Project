@@ -85,4 +85,19 @@ function checkString(strVal, varName) {
 	return strVal;
 }
 
-export { checkAge, checkBio, checkEmail, checkID, checkImgLink, checkPassword, checkString };
+// Validates number inputs
+function checkNumber(numVal, varName) {
+	if (!numVal) throw `Error: You must supply a ${varName}.`;
+	if (typeof numVal !== 'number') throw `Error: ${varName} should be a number.`;
+	if (numVal === NaN) throw `Error: ${varName} age cannot be NaN.`;
+	return numVal;
+}
+
+//Validates boolean inputs
+function checkBoolean(boolVal, varName) {
+	if (boolVal === 'undefined') throw `Error: You must supply a ${varName}.`;
+	if (typeof boolVal !== 'boolean') throw `Error: ${varName} should be a boolean.`;
+	return boolVal;
+}
+
+export { checkAge, checkBio, checkEmail, checkID, checkImgLink, checkPassword, checkString, checkNumber, checkBoolean };
