@@ -116,7 +116,7 @@ function checkRatingNumber(numVal, varName) {
   if (typeof numVal !== "number") throw `Error: ${varName} must be a number!`;
   if (numVal > 5 || numVal < 1)
     throw `Error: ${varName} must be a number between 1-5!`;
-  if (!isNaN(numVal))
+  if (isNaN(numVal))
     throw `Error: ${numVal} is not a valid value for ${varName} as it only contains digits`;
   if (numVal !== numVal) throw `Error ${numVal} cannot be NaN`;
   return numVal;

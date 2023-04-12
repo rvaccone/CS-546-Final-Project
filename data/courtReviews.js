@@ -1,6 +1,6 @@
 import { courts } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
-import * as validation from "./validation.js";
+import * as validation from "../validation.js";
 
 // Creates a new review for a court.
 const create = async (courtID, name, rating, comment) => {
@@ -57,8 +57,9 @@ const getAll = async (courtID) => {
   //input validation
   courtID = validation.checkID(courtID, "courtID");
   //getting all reviews for a courtID
+  const courtCollection = await courts();
   const courtList = await courtCollection
-    .find({ _id: new ObjectId(courtId) })
+    .find({ _id: new ObjectId(courtID) })
     .project({
       _id: 0,
       reviews: 1,
