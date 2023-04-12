@@ -57,6 +57,7 @@ const getAll = async (courtID) => {
   //input validation
   courtID = validation.checkID(courtID, "courtID");
   //getting all reviews for a courtID
+  const courtCollection = await courts();
   const courtList = await courtCollection
     .find({ _id: new ObjectId(courtID) })
     .project({
