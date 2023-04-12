@@ -1,8 +1,8 @@
 import { users } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 import * as validation from '../validation.js';
-// import bcrypt from 'bcrypt';
-// const saltRounds = 16;
+import bcrypt from 'bcrypt';
+const saltRounds = 16;
 
 // Creates a new user and logs it in the users collection.
 const create = async (firstName, lastName, email, password, age, bio, imgLink) => {
@@ -15,14 +15,14 @@ const create = async (firstName, lastName, email, password, age, bio, imgLink) =
 	imgLink = validation.checkImgLink(imgLink, 'imgLink');
 
 	// Hashes password.
-	//let hashedPassword = await bcrypt.hash(password, saltRounds);
+	let hashedPassword = await bcrypt.hash(password, saltRounds);
 
 	// Initalizes a newUser.
 	let newUser = {
 		firstName: firstName,
 		lastName: lastName,
-		email: email,
-		password: password,
+		email: email.toLowerCase(),
+		password: hashedPassword,
 		age: age,
 		bio: bio,
 		imgLink: imgLink,
@@ -33,7 +33,8 @@ const create = async (firstName, lastName, email, password, age, bio, imgLink) =
 	// Checks if email is already registered.
 	const userEmails = await userCollection.find({}).project({ _id: 0, email: 1 }).toArray();
 	userEmails.forEach((user) => {
-		if (user.email === newUser.email) throw 'Error: Email already registered.';
+		if (user.email.toLowerCase() === newUser.email.toLowerCase())
+			throw 'Error: Email already registered.';
 	});
 
 	// Inserts new user into collection.
@@ -98,23 +99,27 @@ const update = async (id, firstName, lastName, email, password, age, bio, imgLin
 	imgLink = validation.checkImgLink(imgLink, 'imgLink');
 
 	const user = await get(id);
+	let isSamePassword = await bcrypt.compare(password, user.password);
 	if (
 		user.firstName === firstName &&
 		user.lastName === lastName &&
 		user.email === email &&
-		user.password === password &&
+		isSamePassword &&
 		user.age === age &&
 		user.bio === bio &&
 		user.imgLink === imgLink
 	)
 		throw 'Error: cannot update record with the same set of values.';
 
+	// Hashes password.
+	let hashedPassword = await bcrypt.hash(password, saltRounds);
+
 	// Preforms an update on the band.
 	const updateUser = {
 		firstName: firstName,
 		lastName: lastName,
-		email: email,
-		password: password,
+		email: email.toLowerCase(),
+		password: hashedPassword,
 		age: age,
 		bio: bio,
 		imgLink: imgLink,
@@ -123,12 +128,14 @@ const update = async (id, firstName, lastName, email, password, age, bio, imgLin
 	// Await the collection of the user.
 	const userCollection = await users();
 
-	// TODO: Check if this is needed.
 	// Checks if email is already registered.
-	const userEmails = await userCollection.find({}).project({ _id: 0, email: 1 }).toArray();
-	userEmails.forEach((user) => {
-		if (user.email === updateUser.email) throw 'Error: Email already registered.';
-	});
+	if (user.email.toLowerCase() !== updateUser.email.toLowerCase()) {
+		const userEmails = await userCollection.find({}).project({ _id: 0, email: 1 }).toArray();
+		userEmails.forEach((user) => {
+			if (user.email.toLowerCase() === updateUser.email.toLowerCase())
+				throw 'Error: Email already registered.';
+		});
+	}
 
 	const updatedInfo = await userCollection.findOneAndUpdate(
 		{ _id: new ObjectId(id) },

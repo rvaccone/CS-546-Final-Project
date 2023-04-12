@@ -17,7 +17,7 @@ try {
 	user1 = await users_functions.create(
 		'John',
 		'Doe',
-		'johndoe@gmail.com',
+		'jOhNdOe@gmail.com',
 		'Password1$',
 		20,
 		'KX5Y0eBIdiVOg7EW2AF7RZEgpcRSjFUtgIk2qypGN0dRZGHgVSJUeH5b7rLPZ5OLKTaeM0GcS6NtzgAC4ZP9TCFAT3eSWgDJR1Ca1QVSoYX7W50vAPCJd0aAEvWs9Wc3Vbqd32M3pkXdzbIg7UKDKw8JP9jAS8oqywI0CvUSOlkrrVer5K8fEVGnqJWMAbc7Ra5bGShASldPufIk9xmbneproIElyZiaaGpWpnJCfLwbS21QEbJ4ciHue1L5cp0huH2VFR9bBmUrmeDX7qr1U9PtW538gRKUTP6arcVYwemeiPp3uT1kV69KnPjxmchFpZ0AvghTiaQqzHCqIDuYQmZ8Ljz8PRPjJS5FwjHKdjjjy7aix5NJLbah7ZloZBnjzjNApf2btd42VOVISN1Dm3rVLProUXQcXDnm22D7nl46kYnHERmP5ksNuqY9TWEG0igDGPgzahxFa2S4Y3AEsJwLX0FkjBnpKl22LGRnXzzTKyVnTKHs',
@@ -32,7 +32,7 @@ try {
 	user2 = await users_functions.create(
 		'Another',
 		'Person',
-		'johndoe@gmail.com',
+		'joHnDoe@gmail.com',
 		'Password1$',
 		21,
 		'This is my bio.',
@@ -76,9 +76,9 @@ try {
 	// Renames band1.
 	const rename_user = await users_functions.update(
 		user1._id,
-		'Jack',
-		'Harrington',
-		'johndoe@gmail.com',
+		'John',
+		'Doe',
+		'jOhNdOe@gmail.com',
 		'Password1$',
 		20,
 		'KX5Y0eBIdiVOg7EW2AF7RZEgpcRSjFUtgIk2qypGN0dRZGHgVSJUeH5b7rLPZ5OLKTaeM0GcS6NtzgAC4ZP9TCFAT3eSWgDJR1Ca1QVSoYX7W50vAPCJd0aAEvWs9Wc3Vbqd32M3pkXdzbIg7UKDKw8JP9jAS8oqywI0CvUSOlkrrVer5K8fEVGnqJWMAbc7Ra5bGShASldPufIk9xmbneproIElyZiaaGpWpnJCfLwbS21QEbJ4ciHue1L5cp0huH2VFR9bBmUrmeDX7qr1U9PtW538gRKUTP6arcVYwemeiPp3uT1kV69KnPjxmchFpZ0AvghTiaQqzHCqIDuYQmZ8Ljz8PRPjJS5FwjHKdjjjy7aix5NJLbah7ZloZBnjzjNApf2btd42VOVISN1Dm3rVLProUXQcXDnm22D7nl46kYnHERmP5ksNuqY9TWEG0igDGPgzahxFa2S4Y3AEsJwLX0FkjBnpKl22LGRnXzzTKyVnTKHs',
@@ -92,15 +92,37 @@ try {
 /* ---------------------- GAMES ---------------------- */
 let game1;
 let game2;
+let game3;
 
 try {
-	game1 = await games_functions.create('X159', '12', '1');
+	game1 = await games_functions.create(
+		'2023-04-12T13:08:31+00:00',
+		'2023-04-12T14:08:31+00:00',
+		10
+	);
+	console.log(game1);
 } catch (e) {
 	console.log(e);
 }
 
 try {
-	game2 = await games_functions.create('X160', '12', '1');
+	game2 = await games_functions.create(
+		'2023-04-12T15:08:31+00:00',
+		'2023-04-12T16:08:31+00:00',
+		10
+	);
+	console.log(game2);
+} catch (e) {
+	console.log(e);
+}
+
+try {
+	game3 = await games_functions.create(
+		'2023-04-12T15:08:31+00:00',
+		'2023-04-12T16:08:31+00:00',
+		10
+	);
+	console.log(game3);
 } catch (e) {
 	console.log(e);
 }
@@ -118,6 +140,12 @@ try {
 } catch (e) {
 	console.log(e);
 }
+
+// try {
+// 	let updateGameThree = await games_functions.update(game3._id, '3', '4');
+// } catch (e) {
+// 	console.log(e);
+// }
 
 try {
 	let gameMember1 = await games_members_functions.create(

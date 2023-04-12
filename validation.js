@@ -20,6 +20,21 @@ function checkBio(bioVal, varName) {
 	return bioVal;
 }
 
+// Validates date inputs.
+function checkDate(dateVal, varName) {
+	if (!dateVal) throw `Error: You must supply a ${varName}.`;
+	if (typeof dateVal !== 'string') throw `Error: ${varName} should be a string.`;
+	dateVal = dateVal.trim();
+	if (dateVal.length === 0)
+		throw `Error: ${varName} cannot be an empty string or string with just spaces`;
+	try {
+		let date = new Date(dateVal);
+		return date;
+	} catch (e) {
+		throw `Error: ${varName} is in an invalid format.`;
+	}
+}
+
 // Validates email inputs.
 function checkEmail(emailVal, varName) {
 	let mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -57,6 +72,15 @@ function checkImgLink(imgLinkVal, varName) {
 	return imgLinkVal;
 }
 
+// Validates number inputs.
+function checkMaxPlayer(numberVal, varName) {
+	if (!numberVal) throw `Error: You must supply a ${varName}.`;
+	if (typeof numberVal !== 'number') throw `Error: ${varName} should be a number.`;
+	if (numberVal === NaN) throw `Error: ${varName} cannot be NaN.`;
+	if (numberVal < 0 || numberVal > 10) throw `Error: invalid range provided for ${varName}.`;
+	return numberVal;
+}
+
 // Validates password inputs.
 function checkPassword(passwordVal, varName) {
 	// Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character.
@@ -67,7 +91,7 @@ function checkPassword(passwordVal, varName) {
 	if (passwordVal.length === 0)
 		throw `Error: ${varName} cannot be an empty string or string with just spaces`;
 	if (passwordVal.length < 8) throw `Error: ${varName} must be at least 8 characters.`;
-	if (passwordVal.length > 30) throw `Error: ${varName} cannot be longer than 50 characters.`;
+	if (passwordVal.length > 30) throw `Error: ${varName} cannot be longer than 30 characters.`;
 	if (!passwordVal.match(passwordFormat))
 		throw `Error: ${varName} must contain at least one lowercase letter, one uppercase letter, one number, and one special character.`;
 	return passwordVal;
@@ -85,4 +109,14 @@ function checkString(strVal, varName) {
 	return strVal;
 }
 
-export { checkAge, checkBio, checkEmail, checkID, checkImgLink, checkPassword, checkString };
+export {
+	checkAge,
+	checkBio,
+	checkDate,
+	checkEmail,
+	checkID,
+	checkImgLink,
+	checkMaxPlayer,
+	checkPassword,
+	checkString,
+};
