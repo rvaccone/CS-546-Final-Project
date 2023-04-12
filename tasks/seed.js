@@ -138,6 +138,109 @@ try {
 	console.log(e);
 }
 
+/* ---------------------- Courts ---------------------- */
+// Create two courts to be used later
+let court1 = null;
+let court2 = null;
+
+// Printing out a spacer for readability
+console.log('-'.repeat(20) + ' Courts ' + '-'.repeat(20));
+
+// Create the first court
+console.log('Creating the first court');
+try {
+	court1 = await courts_functions.create(
+		'court1',
+		'122 Bloomfield Ave',
+		4,
+		false,
+		10,
+		33
+	);
+} catch (e) {
+	console.log(e);
+}
+
+// Create the second court
+console.log('Creating the second court');
+try {
+	court2 = await courts_functions.create(
+		'court2',
+		'122 Bloomfield Ave',
+		2,
+		true,
+		-10,
+		-33
+	);
+} catch (e) {
+	console.log(e);
+}
+
+// Get all the courts
+console.log('Get all the courts for the first time');
+try {
+	let allCourts = await courts_functions.getAll();
+	console.log(allCourts);
+} catch (e) {
+	console.log(e);
+}
+console.log('Done getting all courts');
+
+// Get the first court
+console.log('Get the first court');
+try {
+	let court = await courts_functions.get(court1._id.toString());
+	console.log(court);
+} catch (e) {
+	console.log(e);
+}
+
+// Remove the first court
+console.log('Remove the first court');
+try {
+	let removeCourt = await courts_functions.remove(court1._id.toString());
+	console.log(removeCourt);
+} catch (e) {
+	console.log(e);
+}
+
+// Get all the courts again
+console.log('Get all the courts for the second time');
+try {
+	let allCourts = await courts_functions.getAll();
+	console.log(allCourts);
+} catch (e) {
+	console.log(e);
+}
+console.log('Done getting all courts');
+
+// Update the second court
+console.log('Update the second court');
+try {
+	let updateCourt = await courts_functions.update(
+		court2._id.toString(),
+		'court3',
+		'55 Bloom Ave',
+		3,
+		false,
+		-15,
+		-35
+	);
+	console.log(updateCourt);
+} catch (e) {
+	console.log(e);
+}
+
+// Get all the courts one last time
+console.log('Get all the courts for the third time');
+try {
+	let allCourts = await courts_functions.getAll();
+	console.log(allCourts);
+} catch (e) {
+	console.log(e);
+}
+console.log('Done getting all courts');
+
 console.log('Done seeding database');
 
 await closeConnection();
