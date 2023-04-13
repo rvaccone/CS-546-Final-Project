@@ -41,7 +41,7 @@ const create = async (gameID, userID, firstName, lastName) => {
 		{ $push: { gameMembers: { userID, fullName } } }
 	);
 	if (newGameMemberInformation.lastErrorObject.n === 0) throw 'Error: could not add player.';
-	return newGameMember;
+	return { userID: newGameMember.userID.toString(), fullName: fullName };
 };
 
 // Gets all game members from a lobby.

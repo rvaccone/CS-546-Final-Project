@@ -158,24 +158,32 @@ try {
 console.log('==============================================');
 try {
 	let allGames = await games_functions.getAll(court1._id);
-	console.log('HERE');
 	console.log(allGames);
 } catch (e) {
 	console.log(e);
 }
 
+console.log('==============================================');
 try {
 	let removeGame = await games_functions.remove(game1._id);
-	//console.log(removeGame);
+	console.log(removeGame);
 } catch (e) {
 	console.log(e);
 }
 
-// try {
-// 	let updateGameThree = await games_functions.update(game3._id, '3', '4');
-// } catch (e) {
-// 	console.log(e);
-// }
+console.log('==============================================');
+try {
+	let updateGameThree = await games_functions.update(
+		game3._id,
+		court1._id,
+		'2023-04-12T20:08:31+00:00',
+		'2023-04-12T21:08:31+00:00',
+		10
+	);
+	console.log(updateGameThree);
+} catch (e) {
+	console.log(e);
+}
 
 try {
 	let gameMember1 = await games_members_functions.create(

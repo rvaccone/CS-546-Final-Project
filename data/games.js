@@ -16,7 +16,7 @@ const create = async (courtID, startTime, endTime, maxPlayers) => {
 	}
 
 	let newGame = {
-		courtID: courtID,
+		courtID: new ObjectId(courtID),
 		startTime: startTime,
 		endTime: endTime,
 		maxPlayers: maxPlayers,
@@ -51,19 +51,19 @@ const create = async (courtID, startTime, endTime, maxPlayers) => {
 };
 
 // Gets all games from the games collection.
-//TODO: make this get by courtID.
 const getAll = async (courtID) => {
 	courtID = courtID.toString();
 	courtID = validation.checkID(courtID, 'courtID');
 	const gameCollection = await games();
 	// This gives us the data as an array of obejcts from the database.
 	let gameList = await gameCollection
-		.find({ _id: new ObjectId(courtID) })
+		.find({ courtID: new ObjectId(courtID) })
 		.project({ _id: 1, courtID: 1 })
 		.toArray();
 	if (!gameList) throw 'Could not get all games.';
 	gameList = gameList.map((element) => {
 		element._id = element._id.toString();
+		element.courtID = element.courtID.toString();
 		return element;
 	});
 	return gameList;
