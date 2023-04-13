@@ -88,6 +88,31 @@ try {
 } catch (e) {
 	console.log(e);
 }
+/* ---------------------- Courts ---------------------- */
+// Create two courts to be used later
+let court1 = null;
+let court2 = null;
+
+// Printing out a spacer for readability
+console.log('-'.repeat(20) + ' Courts ' + '-'.repeat(20));
+
+// Create the first court
+console.log('Creating the first court');
+try {
+	court1 = await courts_functions.create('court1', '122 Bloomfield Ave', 4, false, 10, 33);
+	console.log(court1);
+} catch (e) {
+	console.log(e);
+}
+
+// Create the second court
+console.log('Creating the second court');
+try {
+	court2 = await courts_functions.create('court2', '122 Bloomfield Ave', 2, true, -10, -33);
+	console.log(court2);
+} catch (e) {
+	console.log(e);
+}
 
 /* ---------------------- GAMES ---------------------- */
 let game1;
@@ -96,6 +121,7 @@ let game3;
 
 try {
 	game1 = await games_functions.create(
+		court1._id,
 		'2023-04-12T13:08:31+00:00',
 		'2023-04-12T14:08:31+00:00',
 		10
@@ -107,6 +133,7 @@ try {
 
 try {
 	game2 = await games_functions.create(
+		court1._id,
 		'2023-04-12T15:08:31+00:00',
 		'2023-04-12T16:08:31+00:00',
 		10
@@ -118,6 +145,7 @@ try {
 
 try {
 	game3 = await games_functions.create(
+		court1._id,
 		'2023-04-12T15:08:31+00:00',
 		'2023-04-12T16:08:31+00:00',
 		10
@@ -127,8 +155,10 @@ try {
 	console.log(e);
 }
 
+console.log('==============================================');
 try {
-	let allGames = await games_functions.getAll();
+	let allGames = await games_functions.getAll(court1._id);
+	console.log('HERE');
 	console.log(allGames);
 } catch (e) {
 	console.log(e);
@@ -136,7 +166,7 @@ try {
 
 try {
 	let removeGame = await games_functions.remove(game1._id);
-	console.log(removeGame);
+	//console.log(removeGame);
 } catch (e) {
 	console.log(e);
 }

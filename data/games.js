@@ -3,19 +3,20 @@ import { ObjectId } from 'mongodb';
 import * as validation from '../validation.js';
 
 // Creates a new game and logs it in the games collection.
-//TODO: Add a courtID to connect game with court.
-const create = async (startTime, endTime, maxPlayers) => {
-	//courtID = validation.checkID(courtID, 'courtID');
+const create = async (courtID, startTime, endTime, maxPlayers) => {
+	courtID = courtID.toString();
+	courtID = validation.checkID(courtID, 'courtID');
 	startTime = validation.checkDate(startTime, 'startTime');
 	endTime = validation.checkDate(endTime, 'endTime');
 	maxPlayers = validation.checkMaxPlayer(maxPlayers, 'maxPlayers');
+
 	// Check that endTime is after startTime.
 	if (endTime <= startTime) {
 		throw 'Error: startTime cannot be after endTime.';
 	}
 
 	let newGame = {
-		//courtID: courtID,
+		courtID: courtID,
 		startTime: startTime,
 		endTime: endTime,
 		maxPlayers: maxPlayers,
@@ -51,10 +52,15 @@ const create = async (startTime, endTime, maxPlayers) => {
 
 // Gets all games from the games collection.
 //TODO: make this get by courtID.
-const getAll = async () => {
+const getAll = async (courtID) => {
+	courtID = courtID.toString();
+	courtID = validation.checkID(courtID, 'courtID');
 	const gameCollection = await games();
 	// This gives us the data as an array of obejcts from the database.
-	let gameList = await gameCollection.find({}).project({ _id: 1, name: 1 }).toArray();
+	let gameList = await gameCollection
+		.find({ _id: new ObjectId(courtID) })
+		.project({ _id: 1, courtID: 1 })
+		.toArray();
 	if (!gameList) throw 'Could not get all games.';
 	gameList = gameList.map((element) => {
 		element._id = element._id.toString();
@@ -85,10 +91,10 @@ const remove = async (id) => {
 };
 
 // Updates a game by its id.\
-//TODO: Add courtIDs for this as well.
-const update = async (id, startTime, endTime, maxPlayers) => {
+const update = async (id, courtID, startTime, endTime, maxPlayers) => {
 	// TODO: Validation / Compare start and end times.
 	id = validation.checkID(id, 'id');
+	courtID = validation.checkID(courtID, 'courtID');
 	startTime = validation.checkDate(startTime, 'startTime');
 	endTime = validation.checkDate(endTime, 'endTime');
 	maxPlayers = validation.checkMaxPlayer(maxPlayers, 'maxPlayers');
@@ -98,12 +104,27 @@ const update = async (id, startTime, endTime, maxPlayers) => {
 		throw 'Error: startTime cannot be after endTime.';
 	}
 
+	const gameStartTimes = await gameCollection
+		.find({})
+		.project({ _id: 0, startTime: 1, endTime: 1 })
+		.toArray();
+	gameStartTimes.forEach((game) => {
+		if (game.startTime <= newGame.startTime && game.endTime >= newGame.endTime)
+			throw 'Error: Cannot schedule games for overlapping times.';
+	});
+
 	const game = await get(id);
-	if (game.startTime === startTime && game.endTime === endTime && game.maxPlayers === maxPlayers)
+	if (
+		game.courtID === courtID &&
+		game.startTime === startTime &&
+		game.endTime === endTime &&
+		game.maxPlayers === maxPlayers
+	)
 		throw 'Error: cannot update record with the same set of values.';
 
-	// Preforms an update on the band.
+	// Preforms an update.
 	const updateGame = {
+		courtID: courtID,
 		startTime: startTime,
 		endTime: endTime,
 		maxPlayers: maxPlayers,
