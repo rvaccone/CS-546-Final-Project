@@ -120,36 +120,21 @@ let game2;
 let game3;
 
 try {
-	game1 = await games_functions.create(
-		court1._id,
-		'2023-04-12T13:08:31+00:00',
-		'2023-04-12T14:08:31+00:00',
-		10
-	);
+	game1 = await games_functions.create(court1._id, '2023-04-12T13:08:31+00:00', 10);
 	console.log(game1);
 } catch (e) {
 	console.log(e);
 }
 
 try {
-	game2 = await games_functions.create(
-		court1._id,
-		'2023-04-12T15:08:31+00:00',
-		'2023-04-12T16:08:31+00:00',
-		10
-	);
+	game2 = await games_functions.create(court1._id, '2023-04-12T15:08:31+00:00', 10);
 	console.log(game2);
 } catch (e) {
 	console.log(e);
 }
 
 try {
-	game3 = await games_functions.create(
-		court1._id,
-		'2023-04-12T15:08:31+00:00',
-		'2023-04-12T16:08:31+00:00',
-		10
-	);
+	game3 = await games_functions.create(court1._id, '2023-04-12T15:08:31+00:00', 10);
 	console.log(game3);
 } catch (e) {
 	console.log(e);
@@ -172,18 +157,17 @@ try {
 }
 
 console.log('==============================================');
-try {
-	let updateGameThree = await games_functions.update(
-		game3._id,
-		court1._id,
-		'2023-04-12T20:08:31+00:00',
-		'2023-04-12T21:08:31+00:00',
-		10
-	);
-	console.log(updateGameThree);
-} catch (e) {
-	console.log(e);
-}
+// try {
+// 	let updateGameThree = await games_functions.update(
+// 		game3._id,
+// 		court1._id,
+// 		'2023-04-12T20:08:31+00:00',
+// 		10
+// 	);
+// 	console.log(updateGameThree);
+// } catch (e) {
+// 	console.log(e);
+// }
 
 try {
 	let gameMember1 = await games_members_functions.create(

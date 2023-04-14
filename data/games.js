@@ -3,22 +3,15 @@ import { ObjectId } from 'mongodb';
 import * as validation from '../validation.js';
 
 // Creates a new game and logs it in the games collection.
-const create = async (courtID, startTime, endTime, maxPlayers) => {
+const create = async (courtID, startTime, maxPlayers) => {
 	courtID = courtID.toString();
 	courtID = validation.checkID(courtID, 'courtID');
 	startTime = validation.checkDate(startTime, 'startTime');
-	endTime = validation.checkDate(endTime, 'endTime');
 	maxPlayers = validation.checkMaxPlayer(maxPlayers, 'maxPlayers');
-
-	// Check that endTime is after startTime.
-	if (endTime <= startTime) {
-		throw 'Error: startTime cannot be after endTime.';
-	}
 
 	let newGame = {
 		courtID: new ObjectId(courtID),
 		startTime: startTime,
-		endTime: endTime,
 		maxPlayers: maxPlayers,
 		gameMembers: [],
 	};
@@ -26,14 +19,15 @@ const create = async (courtID, startTime, endTime, maxPlayers) => {
 	// Waits for collection and attempts to insert newUser.
 	const gameCollection = await games();
 
-	// Check that no game times overlap.
-	// TODO: Check for addditional cases.
+	// Check that no games start at the same time.
 	const gameStartTimes = await gameCollection
 		.find({})
-		.project({ _id: 0, startTime: 1, endTime: 1 })
+		.project({ _id: 0, startTime: 1 })
 		.toArray();
 	gameStartTimes.forEach((game) => {
-		if (game.startTime <= newGame.startTime && game.endTime >= newGame.endTime)
+		console.log(game.startTime);
+		console.log('new game start time:' + newGame.startTime);
+		if (game.startTime === newGame.startTime)
 			throw 'Error: Cannot schedule games for overlapping times.';
 	});
 
@@ -90,43 +84,30 @@ const remove = async (id) => {
 	return { gameID: id, deleted: true };
 };
 
-// Updates a game by its id.\
-const update = async (id, courtID, startTime, endTime, maxPlayers) => {
-	// TODO: Validation / Compare start and end times.
+// Updates a game by its id.
+const update = async (id, courtID, startTime, maxPlayers) => {
 	id = validation.checkID(id, 'id');
 	courtID = validation.checkID(courtID, 'courtID');
 	startTime = validation.checkDate(startTime, 'startTime');
-	endTime = validation.checkDate(endTime, 'endTime');
 	maxPlayers = validation.checkMaxPlayer(maxPlayers, 'maxPlayers');
-
-	// Check that endTime is after startTime.
-	if (endTime <= startTime) {
-		throw 'Error: startTime cannot be after endTime.';
-	}
 
 	const gameStartTimes = await gameCollection
 		.find({})
 		.project({ _id: 0, startTime: 1, endTime: 1 })
 		.toArray();
 	gameStartTimes.forEach((game) => {
-		if (game.startTime <= newGame.startTime && game.endTime >= newGame.endTime)
+		if (game.startTime === newGame.startTime)
 			throw 'Error: Cannot schedule games for overlapping times.';
 	});
 
 	const game = await get(id);
-	if (
-		game.courtID === courtID &&
-		game.startTime === startTime &&
-		game.endTime === endTime &&
-		game.maxPlayers === maxPlayers
-	)
+	if (game.courtID === courtID && game.startTime === startTime && game.maxPlayers === maxPlayers)
 		throw 'Error: cannot update record with the same set of values.';
 
 	// Preforms an update.
 	const updateGame = {
 		courtID: courtID,
 		startTime: startTime,
-		endTime: endTime,
 		maxPlayers: maxPlayers,
 	};
 

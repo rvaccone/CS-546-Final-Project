@@ -26,11 +26,11 @@ const create = async (gameID, userID, firstName, lastName) => {
 
 	// Creates fullName variable.
 	let fullName = firstName + ' ' + lastName;
-
+	let objectUserID = new ObjectId(userID);
+	
 	// Initalizes a newGameMember.
-	// TODO: Make this value store as an ObjectID?
 	let newGameMember = {
-		userID: new ObjectId(userID),
+		userID: objectUserID,
 		fullName: fullName,
 	};
 
@@ -38,7 +38,7 @@ const create = async (gameID, userID, firstName, lastName) => {
 	const gameCollection = await games();
 	const newGameMemberInformation = await gameCollection.findOneAndUpdate(
 		{ _id: new ObjectId(gameID) },
-		{ $push: { gameMembers: { userID, fullName } } }
+		{ $push: { gameMembers: newGameMember } }
 	);
 	if (newGameMemberInformation.lastErrorObject.n === 0) throw 'Error: could not add player.';
 	return { userID: newGameMember.userID.toString(), fullName: fullName };
@@ -82,9 +82,7 @@ const remove = async (userID) => {
 	return { userID: id, deleted: true };
 };
 
-// Updates a game member by their id.
-//? Should this be done by userID or gameID?
-// We need both to identify game and then user.
+// ! I dont think we even need this because we only need to add and remove players.
 const update = async (id, firstName, lastName) => {};
 
 export { create, getAll, get, remove, update };
