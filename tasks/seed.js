@@ -191,10 +191,6 @@ try {
 // }
 
 /* ---------------------- Courts ---------------------- */
-// Create two courts to be used later
-let court1 = null;
-let court2 = null;
-
 // Printing out a spacer for readability
 console.log('-'.repeat(20) + ' Courts ' + '-'.repeat(20));
 
