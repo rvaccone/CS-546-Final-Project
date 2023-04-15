@@ -3,10 +3,10 @@ import { ObjectId } from 'mongodb';
 import * as validation from '../validation.js';
 
 // Creates a new game and logs it in the games collection.
-const create = async (courtID, startTime, maxPlayers) => {
+const create = async (courtID, date, time, maxPlayers) => {
 	courtID = courtID.toString();
 	courtID = validation.checkID(courtID, 'courtID');
-	startTime = validation.checkDate(startTime, 'startTime');
+	// TODO: create validation function for date and time.
 	maxPlayers = validation.checkMaxPlayer(maxPlayers, 'maxPlayers');
 
 	let newGame = {
@@ -25,7 +25,7 @@ const create = async (courtID, startTime, maxPlayers) => {
 		.project({ _id: 0, startTime: 1 })
 		.toArray();
 	gameStartTimes.forEach((game) => {
-		console.log(game.startTime);
+		console.log('OG game start ' + game.startTime);
 		console.log('new game start time:' + newGame.startTime);
 		if (game.startTime === newGame.startTime)
 			throw 'Error: Cannot schedule games for overlapping times.';

@@ -120,7 +120,7 @@ let game2;
 let game3;
 
 try {
-	game1 = await games_functions.create(court1._id, '2023-04-12T13:08:31+00:00', 10);
+	game1 = await games_functions.create(court1._id, '2023-04-12T15:08:31+00:00', 10);
 	console.log(game1);
 } catch (e) {
 	console.log(e);
