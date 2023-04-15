@@ -15,11 +15,11 @@ let user3;
 
 /* ------------------- USERS ------------------- */
 try {
-  // Creates a user.
+  // Creates a band.
   user1 = await users_functions.create(
     "John",
     "Doe",
-    "johndoe@gmail.com",
+    "jOhNdOe@gmail.com",
     "Password1$",
     20,
     "KX5Y0eBIdiVOg7EW2AF7RZEgpcRSjFUtgIk2qypGN0dRZGHgVSJUeH5b7rLPZ5OLKTaeM0GcS6NtzgAC4ZP9TCFAT3eSWgDJR1Ca1QVSoYX7W50vAPCJd0aAEvWs9Wc3Vbqd32M3pkXdzbIg7UKDKw8JP9jAS8oqywI0CvUSOlkrrVer5K8fEVGnqJWMAbc7Ra5bGShASldPufIk9xmbneproIElyZiaaGpWpnJCfLwbS21QEbJ4ciHue1L5cp0huH2VFR9bBmUrmeDX7qr1U9PtW538gRKUTP6arcVYwemeiPp3uT1kV69KnPjxmchFpZ0AvghTiaQqzHCqIDuYQmZ8Ljz8PRPjJS5FwjHKdjjjy7aix5NJLbah7ZloZBnjzjNApf2btd42VOVISN1Dm3rVLProUXQcXDnm22D7nl46kYnHERmP5ksNuqY9TWEG0igDGPgzahxFa2S4Y3AEsJwLX0FkjBnpKl22LGRnXzzTKyVnTKHs",
@@ -106,11 +106,56 @@ try {
   console.log(e);
 }
 
-/* ---------------------- Courts ---------------------- */
-// Create two courts to be used later
-let court1 = null;
-let court2 = null;
+/* ---------------------- GAMES ---------------------- */
+let game1;
+let game2;
 
+try {
+  game1 = await games_functions.create("X159", "12", "1");
+} catch (e) {
+  console.log(e);
+}
+
+try {
+  game2 = await games_functions.create("X160", "12", "1");
+} catch (e) {
+  console.log(e);
+}
+
+try {
+  let allGames = await games_functions.getAll();
+  console.log(allGames);
+} catch (e) {
+  console.log(e);
+}
+
+try {
+  let removeGame = await games_functions.remove(game1._id);
+  console.log(removeGame);
+} catch (e) {
+  console.log(e);
+}
+
+try {
+  let gameMember1 = await games_members_functions.create(
+    game2._id,
+    user1._id,
+    user1.firstName,
+    user1.lastName
+  );
+  console.log(gameMember1);
+} catch (e) {
+  console.log(e);
+}
+
+try {
+  let allMembers = await games_members_functions.getAll(game2._id);
+  console.log(allMembers);
+} catch (e) {
+  console.log(e);
+}
+
+/* ---------------------- Courts ---------------------- */
 // Printing out a spacer for readability
 console.log("-".repeat(20) + " Courts " + "-".repeat(20));
 

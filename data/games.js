@@ -26,7 +26,7 @@ const create = async (courtID, date, time, maxPlayers) => {
   let newGame = {
     courtID: new ObjectId(courtID),
     date: date,
-    time: time,
+    time: time.toLowerCase(),
     maxPlayers: maxPlayers,
     gameMembers: [],
   };
@@ -137,11 +137,14 @@ const update = async (id, courtID, date, time, maxPlayers) => {
   // Converts the id to an ObjectId.
   let objectCourtID = new ObjectId(courtID);
 
+  // Converts the id to an ObjectId.
+  let objectCourtID = new ObjectId(courtID);
+
   // Preforms an update.
   const updateGame = {
     courtID: objectCourtID,
     date: date,
-    time: time,
+    time: time.toLowerCase(),
     maxPlayers: maxPlayers,
   };
 
@@ -157,7 +160,7 @@ const update = async (id, courtID, date, time, maxPlayers) => {
     console.log(updateGame);
     if (
       game.date === updateGame.date &&
-      game.time === updateGame.time &&
+      game.time.toLowerCase() === updateGame.time.toLowerCase() &&
       game.courtID.toString() === updateGame.courtID.toString()
     )
       throw "Error: Cannot schedule games for overlapping times.";
