@@ -31,8 +31,7 @@ const create = async (name, location, numCourts, accessible, lat, long) => {
 	const insertInfo = await courtCollection.insertOne(newCourt);
 
 	// Checking if the insert was successful
-	if (!insertInfo.acknowledged || !insertInfo.insertedId)
-		throw 'Error: Could not add court';
+	if (!insertInfo.acknowledged || !insertInfo.insertedId) throw 'Error: Could not add court';
 
 	// Return the new court
 	return await get(insertInfo.insertedId.toString());
@@ -69,15 +68,7 @@ const get = async (courtID) => {
 };
 
 // Updates a court by its id.
-const update = async (
-	courtID,
-	name,
-	location,
-	numCourts,
-	accessible,
-	lat,
-	long
-) => {
+const update = async (courtID, name, location, numCourts, accessible, lat, long) => {
 	// Validate the inputs
 	courtID = validation.checkID(courtID, 'courtID');
 	name = validation.checkString(name, 'name');
