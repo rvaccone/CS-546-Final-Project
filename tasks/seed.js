@@ -134,7 +134,7 @@ try {
 }
 
 try {
-	game3 = await games_functions.create(court2._id, '08/22/2023', '9:34 am', 10);
+	game3 = await games_functions.create(court2._id, '08/22/2023', '9:34 PM', 10);
 	console.log(game2);
 } catch (e) {
 	console.log(e);
@@ -160,9 +160,9 @@ console.log('==============================================');
 try {
 	let updateGameOne = await games_functions.update(
 		game1._id,
-		'643a0375ffe511007e88ec6f',
-		'11/20/2023',
-		'9:34 am',
+		court1._id,
+		'08/22/2023',
+		'9:35 AM',
 		10
 	);
 	console.log(updateGameOne);
