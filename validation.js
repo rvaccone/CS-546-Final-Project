@@ -166,7 +166,7 @@ function checkPassword(passwordVal, varName) {
 	if (passwordVal.length === 0)
 		throw `Error: ${varName} cannot be an empty string or string with just spaces`;
 	if (passwordVal.length < 8) throw `Error: ${varName} must be at least 8 characters.`;
-	if (passwordVal.length > 30) throw `Error: ${varName} cannot be longer than 30 characters.`;
+	if (passwordVal.length > 30) throw `Error: ${varName} cannot be longer than 50 characters.`;
 	if (!passwordVal.match(passwordFormat))
 		throw `Error: ${varName} must contain at least one lowercase letter, one uppercase letter, one number, and one special character.`;
 	return passwordVal;
