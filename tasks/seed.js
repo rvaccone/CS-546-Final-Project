@@ -120,73 +120,74 @@ let game2;
 let game3;
 
 try {
-	game1 = await games_functions.create(court1._id, '2023-04-12T15:08:31+00:00', 10);
+	game1 = await games_functions.create(court1._id, '08/20/2023', '9:34 am', 10);
 	console.log(game1);
 } catch (e) {
 	console.log(e);
 }
 
 try {
-	game2 = await games_functions.create(court1._id, '2023-04-12T15:08:31+00:00', 10);
+	game2 = await games_functions.create(court1._id, '08/22/2023', '9:35 am', 10);
+	console.log(game1);
+} catch (e) {
+	console.log(e);
+}
+
+try {
+	game3 = await games_functions.create(court2._id, '08/22/2023', '9:34 am', 10);
 	console.log(game2);
 } catch (e) {
 	console.log(e);
 }
 
-try {
-	game3 = await games_functions.create(court1._id, '2023-04-12T15:08:31+00:00', 10);
-	console.log(game3);
-} catch (e) {
-	console.log(e);
-}
-
-console.log('==============================================');
-try {
-	let allGames = await games_functions.getAll(court1._id);
-	console.log(allGames);
-} catch (e) {
-	console.log(e);
-}
-
-console.log('==============================================');
-try {
-	let removeGame = await games_functions.remove(game1._id);
-	console.log(removeGame);
-} catch (e) {
-	console.log(e);
-}
-
-console.log('==============================================');
+// console.log('==============================================');
 // try {
-// 	let updateGameThree = await games_functions.update(
-// 		game3._id,
-// 		court1._id,
-// 		'2023-04-12T20:08:31+00:00',
-// 		10
-// 	);
-// 	console.log(updateGameThree);
+// 	let allGames = await games_functions.getAll(court1._id);
+// 	console.log(allGames);
 // } catch (e) {
 // 	console.log(e);
 // }
 
-try {
-	let gameMember1 = await games_members_functions.create(
-		game2._id,
-		user1._id,
-		user1.firstName,
-		user1.lastName
-	);
-	console.log(gameMember1);
-} catch (e) {
-	console.log(e);
-}
+// console.log('==============================================');
+// try {
+// 	let removeGame = await games_functions.remove(game1._id);
+// 	console.log(removeGame);
+// } catch (e) {
+// 	console.log(e);
+// }
 
+console.log('==============================================');
 try {
-	let allMembers = await games_members_functions.getAll(game2._id);
-	console.log(allMembers);
+	let updateGameOne = await games_functions.update(
+		game1._id,
+		'643a0375ffe511007e88ec6f',
+		'11/20/2023',
+		'9:34 am',
+		10
+	);
+	console.log(updateGameOne);
 } catch (e) {
 	console.log(e);
 }
+// console.log('==============================================');
+// try {
+// 	let gameMember1 = await games_members_functions.create(
+// 		game2._id,
+// 		user1._id,
+// 		user1.firstName,
+// 		user1.lastName
+// 	);
+// 	console.log(gameMember1);
+// } catch (e) {
+// 	console.log(e);
+// }
+
+// try {
+// 	let allMembers = await games_members_functions.getAll(game2._id);
+// 	console.log(allMembers);
+// } catch (e) {
+// 	console.log(e);
+// }
 
 console.log('Done seeding database');
 

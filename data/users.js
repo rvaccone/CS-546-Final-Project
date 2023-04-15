@@ -2,7 +2,7 @@ import { users } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 import * as validation from '../validation.js';
 import bcrypt from 'bcrypt';
-const saltRounds = 16;
+const saltRounds = 1;
 
 // Creates a new user and logs it in the users collection.
 const create = async (firstName, lastName, email, password, age, bio, imgLink) => {

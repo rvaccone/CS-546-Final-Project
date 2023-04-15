@@ -1,44 +1,54 @@
 import { games } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 import * as validation from '../validation.js';
+import * as courts_functions from '../data/courts.js';
 
 // Creates a new game and logs it in the games collection.
 const create = async (courtID, date, time, maxPlayers) => {
 	courtID = courtID.toString();
 	courtID = validation.checkID(courtID, 'courtID');
-	// TODO: create validation function for date and time.
+	date = validation.checkDate(date, 'date');
+	time = validation.checkTime(time, 'time');
 	maxPlayers = validation.checkMaxPlayer(maxPlayers, 'maxPlayers');
 
+	// Creates a new game.
 	let newGame = {
 		courtID: new ObjectId(courtID),
-		startTime: startTime,
+		date: date,
+		time: time,
 		maxPlayers: maxPlayers,
 		gameMembers: [],
 	};
 
-	// Waits for collection and attempts to insert newUser.
+	// Waits for collection and attempts to insert newGame.
 	const gameCollection = await games();
+
+	// Check that courtID exists.
+	const court = await courts_functions.get(courtID);
 
 	// Check that no games start at the same time.
 	const gameStartTimes = await gameCollection
 		.find({})
-		.project({ _id: 0, startTime: 1 })
+		.project({ _id: 0, courtID: 1, date: 1, time: 1 })
 		.toArray();
 	gameStartTimes.forEach((game) => {
-		console.log('OG game start ' + game.startTime);
-		console.log('new game start time:' + newGame.startTime);
-		if (game.startTime === newGame.startTime)
+		// Checks that games are not on the same court at the same date and time.
+		if (
+			game.date === newGame.date &&
+			game.time === newGame.time &&
+			game.courtID === newGame.courtID
+		)
 			throw 'Error: Cannot schedule games for overlapping times.';
 	});
 
-	// Inserts new user into collection.
+	// Inserts newGame into game collection.
 	const insertInfo = await gameCollection.insertOne(newGame);
 
-	// Checks if newUser was inserted properly.
+	// Checks if newGame was inserted properly.
 	if (!insertInfo.acknowledged || !insertInfo.insertedId)
 		throw 'Error: band could not be inserted.';
 
-	// Sets the id of the newUser to a string and returns user.
+	// Sets the id of the newGame to a string and returns user.
 	const newId = insertInfo.insertedId.toString();
 	const game = await get(newId);
 	return game;
@@ -85,34 +95,58 @@ const remove = async (id) => {
 };
 
 // Updates a game by its id.
-const update = async (id, courtID, startTime, maxPlayers) => {
+// TODO: Update this.
+const update = async (id, courtID, date, time, maxPlayers) => {
 	id = validation.checkID(id, 'id');
+	courtID = courtID.toString();
 	courtID = validation.checkID(courtID, 'courtID');
-	startTime = validation.checkDate(startTime, 'startTime');
+	date = validation.checkDate(date, 'date');
+	time = validation.checkTime(time, 'time');
 	maxPlayers = validation.checkMaxPlayer(maxPlayers, 'maxPlayers');
 
-	const gameStartTimes = await gameCollection
-		.find({})
-		.project({ _id: 0, startTime: 1, endTime: 1 })
-		.toArray();
-	gameStartTimes.forEach((game) => {
-		if (game.startTime === newGame.startTime)
-			throw 'Error: Cannot schedule games for overlapping times.';
-	});
+	// Check that courtID exists.
+	const court = await courts_functions.get(courtID);
 
+	// Checks the upodate values are different from the current values.
 	const game = await get(id);
-	if (game.courtID === courtID && game.startTime === startTime && game.maxPlayers === maxPlayers)
+	if (
+		game.courtID.toString() === courtID &&
+		game.date === date &&
+		game.time === time &&
+		game.maxPlayers === maxPlayers
+	)
 		throw 'Error: cannot update record with the same set of values.';
+
+	// Converts the id to an ObjectId.
+	let objectCourtID = new ObjectId(courtID);
 
 	// Preforms an update.
 	const updateGame = {
-		courtID: courtID,
-		startTime: startTime,
+		courtID: objectCourtID,
+		date: date,
+		time: time,
 		maxPlayers: maxPlayers,
 	};
 
-	// Await the collection of the user.
+	// Check that no games start at the same time.
 	const gameCollection = await games();
+	const gameStartTimes = await gameCollection
+		.find({})
+		.project({ _id: 0, courtID: 1, date: 1, time: 1 })
+		.toArray();
+	gameStartTimes.forEach((game) => {
+		// Checks that games are not on the same court at the same date and time.
+		console.log(game);
+		console.log(updateGame);
+		if (
+			game.date === updateGame.date &&
+			game.time === updateGame.time &&
+			game.courtID.toString() === updateGame.courtID.toString()
+		)
+			throw 'Error: Cannot schedule games for overlapping times.';
+	});
+
+	// Await the collection of the user.
 	const updatedInfo = await gameCollection.findOneAndUpdate(
 		{ _id: new ObjectId(id) },
 		{ $set: updateGame },
@@ -121,7 +155,7 @@ const update = async (id, courtID, startTime, maxPlayers) => {
 
 	// Checks if there is an error with updating the record.
 	if (updatedInfo.lastErrorObject.n === 0) {
-		throw 'could not update band successfully';
+		throw 'Could not update game successfully.';
 	}
 	updatedInfo.value._id = new ObjectId(updatedInfo.value._id).toString();
 	return updatedInfo.value;

@@ -45,12 +45,61 @@ function checkDate(dateVal, varName) {
 	dateVal = dateVal.trim();
 	if (dateVal.length === 0)
 		throw `Error: ${varName} cannot be an empty string or string with just spaces`;
-	try {
-		let date = new Date(dateVal);
-		return date;
-	} catch (e) {
-		throw `Error: ${varName} is in an invalid format.`;
+	let date_array = dateVal.split('/');
+	if (date_array[0].length !== 2 || date_array[1].length !== 2 || date_array[2].length !== 4)
+		throw 'Error: invalid date format.';
+	if (date_array.length !== 3) throw 'Error: invalid date format.';
+	let month = Number(date_array[0]);
+	let day = Number(date_array[1]);
+	let year = Number(date_array[2]);
+	if (year == NaN || month == NaN || day == NaN) throw 'Error: invalid date format.';
+
+	// Checks the valid range of values for month.
+	if (month < 1 || month > 12) throw 'Error: invalid month.';
+
+	// Checks the correct number of days based on the month.
+	if (month === 1) {
+		if (day > 31 || day < 1) throw 'Error: day range.';
 	}
+	if (month === 2) {
+		if (day > 28 || day < 1) throw 'Error: day range.';
+	}
+	if (month === 3) {
+		if (day > 31 || day < 1) throw 'Error: day range.';
+	}
+	if (month === 4) {
+		if (day > 30 || day < 1) throw 'Error: day range.';
+	}
+	if (month === 5) {
+		if (day > 31 || day < 1) throw 'Error: day range.';
+	}
+	if (month === 6) {
+		if (day > 30 || day < 1) throw 'Error: day range.';
+	}
+	if (month === 7) {
+		if (day > 31 || day < 1) throw 'Error: day range.';
+	}
+	if (month === 8) {
+		if (day > 31 || day < 1) throw 'Error: day range.';
+	}
+	if (month === 9) {
+		if (day > 30 || day < 1) throw 'Error: day range.';
+	}
+	if (month === 10) {
+		if (day > 31 || day < 1) throw 'Error: day range.';
+	}
+	if (month === 11) {
+		if (day > 30 || day < 1) throw 'Error: day range.';
+	}
+	if (month === 12) {
+		if (day > 31 || day < 1) throw 'Error: day range.';
+	}
+
+	// Checks that the year is valid format (current - current yr. + 1)
+	let current_year = new Date().getFullYear();
+	if (!Number.isInteger(year) || year > current_year + 1 || year < current_year)
+		throw 'Error: year outside of allowed range.';
+	return dateVal;
 }
 
 // Validates email inputs.
@@ -146,6 +195,17 @@ function checkString(strVal, varName) {
 	return strVal;
 }
 
+function checkTime(timeVal, varName) {
+	if (!timeVal) throw `Error: You must supply a ${varName}!`;
+	if (typeof timeVal !== 'string') throw `Error: ${varName} must be a string!`;
+	timeVal = timeVal.trim();
+	if (timeVal.length === 0)
+		throw `Error: ${varName} cannot be an empty string or string with just spaces`;
+	if (!timeVal.match(/^(0?[1-9]|1[0-2]):([0-5][0-9]) ([AP]M)$/i))
+		throw `Error: ${varName} is not a valid time!`;
+	return timeVal;
+}
+
 export {
 	checkAge,
 	checkBio,
@@ -160,4 +220,5 @@ export {
 	checkPassword,
 	checkRatingNumber,
 	checkString,
+	checkTime,
 };
