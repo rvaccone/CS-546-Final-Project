@@ -5,6 +5,7 @@ import * as games_functions from "../data/games.js";
 import * as games_members_functions from "../data/gameMembers.js";
 import * as courts_functions from "../data/courts.js";
 import * as court_rev_functions from "../data/courtReviews.js";
+import { getRounds } from "bcrypt";
 const db = await dbConnection();
 await db.dropDatabase();
 
@@ -33,7 +34,7 @@ try {
   user2 = await users_functions.create(
     "Another",
     "Person",
-    "johndoe@gmail.com",
+    "johndoe345@gmail.com",
     "Password1$",
     21,
     "This is my bio.",
@@ -48,10 +49,25 @@ try {
   user3 = await users_functions.create(
     "Jane",
     "Doe",
-    "johndoe2@gmail.com",
+    "johndoe211@gmail.com",
     "Password1$",
     20,
     "Hello, my name is Jane Doe.",
+    "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.com%2Fpin.jpg"
+  );
+} catch (e) {
+  console.log(e);
+}
+
+try {
+  // Creates a user.
+  user4 = await users_functions.create(
+    "Sai",
+    "Bandla",
+    "saipranav789@gmail.com",
+    "Password1789$",
+    20,
+    "Hello, my name is sai and I can't dunk.",
     "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.com%2Fpin.jpg"
   );
 } catch (e) {
@@ -65,16 +81,16 @@ try {
   console.log(e);
 }
 
-try {
-  // Removes a user.
-  const removal = await users_functions.remove(user3._id);
-  console.log(removal);
-} catch (e) {
-  console.log(e);
-}
+// try {
+//   // Removes a user.
+//   const removal = await users_functions.remove(user3._id);
+//   console.log(removal);
+// } catch (e) {
+//   console.log(e);
+// }
 
 try {
-  // Renames band1.
+  // Renames user
   const rename_user = await users_functions.update(
     user1._id,
     "Jack",
@@ -86,55 +102,6 @@ try {
     "https://t3.ftcdn.net/jpg/02/95/26/46/360_F_295264675_clwKZxogAhxLS9sD163Tgkz1WMHsq1RJ.png"
   );
   console.log(rename_user);
-} catch (e) {
-  console.log(e);
-}
-
-/* ---------------------- GAMES ---------------------- */
-let game1;
-let game2;
-
-try {
-  game1 = await games_functions.create("X159", "12", "1");
-} catch (e) {
-  console.log(e);
-}
-
-try {
-  game2 = await games_functions.create("X160", "12", "1");
-} catch (e) {
-  console.log(e);
-}
-
-try {
-  let allGames = await games_functions.getAll();
-  console.log(allGames);
-} catch (e) {
-  console.log(e);
-}
-
-try {
-  let removeGame = await games_functions.remove(game1._id);
-  console.log(removeGame);
-} catch (e) {
-  console.log(e);
-}
-
-try {
-  let gameMember1 = await games_members_functions.create(
-    game2._id,
-    user1._id,
-    user1.firstName,
-    user1.lastName
-  );
-  console.log(gameMember1);
-} catch (e) {
-  console.log(e);
-}
-
-try {
-  let allMembers = await games_members_functions.getAll(game2._id);
-  console.log(allMembers);
 } catch (e) {
   console.log(e);
 }
@@ -351,5 +318,217 @@ try {
   console.log(e);
 }
 console.log("+===============================================+");
+//creating a court for game
+let game_court1 = null;
+try {
+  game_court1 = await courts_functions.create(
+    "court to host game",
+    "122 Bloomfield Ave",
+    4,
+    false,
+    10,
+    33
+  );
+  console.log("court is created now creating game");
+} catch (e) {
+  console.log(e);
+}
+
+let game_court2 = null;
+try {
+  game_court2 = await courts_functions.create(
+    "court to host game2",
+    "124 Webster Ave",
+    4,
+    false,
+    10,
+    33
+  );
+  console.log("court is created for testing now creating game");
+} catch (e) {
+  console.log(e);
+}
+/* ---------------------- GAMES ---------------------- */
+let game1 = null;
+let game2 = null;
+let game3 = null;
+
+try {
+  game1 = await games_functions.create(
+    game_court1._id.toString(),
+    "06/13/2023",
+    "10:00 AM",
+    10
+  );
+  console.log("game 1 created");
+} catch (e) {
+  console.log(e);
+}
+
+try {
+  game2 = await games_functions.create(
+    game_court1._id.toString(),
+    "06/13/2023",
+    "11:00 PM",
+    10
+  );
+  console.log("game 2 created");
+} catch (e) {
+  console.log(e);
+}
+
+try {
+  game3 = await games_functions.create(
+    game_court1._id.toString(),
+    "06/13/2023",
+    "10:00 PM",
+    10
+  );
+  console.log("game 3 created");
+} catch (e) {
+  console.log(e);
+}
+let game4 = null;
+try {
+  game4 = await games_functions.create(
+    game_court1._id.toString(),
+    "06/13/2023",
+    "10:00 AM",
+    10
+  );
+  console.log("game 4 created");
+} catch (e) {
+  console.log(e);
+}
+let game5 = null;
+try {
+  game5 = await games_functions.create(
+    game_court2._id.toString(),
+    "06/13/2023",
+    "10:00 AM",
+    10
+  );
+  console.log("game 5 created");
+} catch (e) {
+  console.log(e);
+}
+
+//adding a member to a game
+let game_w_member = null;
+try {
+  game_w_member = await games_members_functions.create(
+    game1._id.toString(),
+    user1._id
+  );
+  console.log("created member in game");
+} catch (e) {
+  console.log(e);
+}
+
+let game_w_member2 = null;
+try {
+  game_w_member2 = await games_members_functions.create(
+    game5._id.toString(),
+    user1._id
+  );
+  console.log("created member in game");
+} catch (e) {
+  console.log(e);
+}
+console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+console.log("I am trying to add the same player to the same game to see error");
+try {
+  game_w_member = await games_members_functions.create(
+    game1._id.toString(),
+    user1._id
+  );
+  console.log("created member in game");
+} catch (e) {
+  console.log(e);
+}
+
+let game_w_member3 = null;
+try {
+  game_w_member3 = await games_members_functions.create(
+    game1._id.toString(),
+    user2._id
+  );
+  console.log("created member in game");
+} catch (e) {
+  console.log(e);
+}
+
+let game_w_member4 = null;
+try {
+  game_w_member4 = await games_members_functions.create(
+    game1._id.toString(),
+    user3._id
+  );
+  console.log("created member in game");
+} catch (e) {
+  console.log(e);
+}
+console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+try {
+  let allGames = await games_functions.getAll(game_court1._id);
+  console.log(allGames);
+} catch (e) {
+  console.log(e);
+}
+
+//testing get and removing game member function:
+
+console.log("*********TESTING GET AND REMOVE GAMEMEMBERS ***************");
+let getGM = null;
+let getGM2 = null;
+console.log(`game id: ${game1._id}`);
+try {
+  getGM = await games_members_functions.get(user3._id, game1._id.toString());
+  console.log("got 1st member in game1");
+} catch (e) {
+  console.log(e);
+}
+
+try {
+  getGM2 = await games_members_functions.get(user2._id, game1._id.toString());
+  console.log("got 2nd member in game1");
+} catch (e) {
+  console.log(e);
+}
+//TO TEST LATER
+// try {
+//   let removedList = await games_functions.removeAllPastGames();
+//   console.log(removedList);
+// } catch (e) {
+//   console.log(e);
+// }
+
+// removing game
+// try {
+//   let removeGame = await games_functions.remove(game1._id);
+//   console.log(removeGame);
+//   console.log("removed game successfully");
+// } catch (e) {
+//   console.log(e);
+// }
+
+// try {
+//   let gameMember1 = await games_members_functions.create(
+//     game2._id,
+//     user1._id,
+//     user1.firstName,
+//     user1.lastName
+//   );
+//   console.log(gameMember1);
+// } catch (e) {
+//   console.log(e);
+// }
+
+// try {
+//   let allMembers = await games_members_functions.getAll(game2._id);
+//   console.log(allMembers);
+// } catch (e) {
+//   console.log(e);
+// }
 
 await closeConnection();
