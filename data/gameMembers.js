@@ -1,88 +1,140 @@
-import { games, users } from '../config/mongoCollections.js';
-import { ObjectId } from 'mongodb';
-import * as validation from '../validation.js';
+import { games, users } from "../config/mongoCollections.js";
+import { ObjectId } from "mongodb";
+import * as validation from "../validation.js";
+import * as users_functions from "../data/users.js";
+import * as game_functions from "../data/games.js";
+//TODO: cant have a gm join a game on the same time n date
 
 // Creates a new game lobby and logs it in the games collection.
 //? Is this the right ID?
-const create = async (gameID, userID, firstName, lastName) => {
-	gameID = validation.checkID(gameID, 'gameID');
-	userID = validation.checkID(userID, 'userID');
-	firstName = validation.checkString(firstName, 'firstName');
-	lastName = validation.checkString(lastName, 'lastName');
+const create = async (gameID, userID) => {
+  gameID = validation.checkID(gameID, "gameID");
+  userID = validation.checkID(userID, "userID");
 
-	// Checks user collection to determine if firstName and lastName are registered users.
-	// TODO: write a filter.
-	const userCollection = await users();
-	const memberFirstName = await userCollection
-		.find({})
-		.project({ _id: 0, firstName: 1 })
-		.toArray();
-	// const memberLastName = await userCollection.find({}).project({ _id: 0, lastName: 1 }).toArray();
-	// if (!memberFirstName.includes(firstName) || !memberLastName.includes(lastName))
-	// 	throw 'Error: Not a registered user.';
-	// TODO: Find the user with filter, then check if name equals the functions name input.
-	// TODO: Make sure the user is not already in the game.
-	// TODO: Make sure the userID matches the firstName and lastName.
+  // Checks user collection to find player existing
+  //   const userCollection = await users();
+  let userExist = await users_functions.get(userID);
+  if (userExist === null) throw "there is no user in mongo with that id";
+  const userCollection = await users();
+  const memberName = await userCollection.findOne({
+    _id: new ObjectId(userID),
+  });
 
-	// Creates fullName variable.
-	let fullName = firstName + ' ' + lastName;
-	let objectUserID = new ObjectId(userID);
-	
-	// Initalizes a newGameMember.
-	let newGameMember = {
-		userID: objectUserID,
-		fullName: fullName,
-	};
+  if (memberName === null) throw "could not find user in usersCollection";
+  const gameCollection = await games();
+  const game = await gameCollection.findOne({ _id: new ObjectId(gameID) });
 
-	// Pushing the value to the band.
-	const gameCollection = await games();
-	const newGameMemberInformation = await gameCollection.findOneAndUpdate(
-		{ _id: new ObjectId(gameID) },
-		{ $push: { gameMembers: newGameMember } }
-	);
-	if (newGameMemberInformation.lastErrorObject.n === 0) throw 'Error: could not add player.';
-	return { userID: newGameMember.userID.toString(), fullName: fullName };
+  //Make sure the user is not already in the game.
+
+  let game_details = await game_functions.get(gameID);
+  let players_in_this_game = game_details.gameMembers;
+  for (let i = 0; i < players_in_this_game.length; i++) {
+    if (new ObjectId(userID).equals(players_in_this_game[i]._id))
+      throw "player is already a member of this game";
+  }
+
+  //making sure the player is not in another game at same time
+  //   console.log("@@@@@@@@@@@@@@@@@@@@@@");
+  let playersInSameTimeGames = await gameCollection
+    .find({ time: game.time })
+    .project({ gameMembers: 1 })
+    .toArray();
+  //   console.log(playersInSameTimeGames);
+  //   console.log("@@@@@@@@@@@@@@@@@@@@@@2");
+  for (let i = 0; i < playersInSameTimeGames.length; i++) {
+    let memObj = playersInSameTimeGames[i].gameMembers;
+    for (let j = 0; j < memObj.length; j++) {
+      if (new ObjectId(userID).equals(memObj[j]._id))
+        throw "user is already in another game starting at same time";
+    }
+  }
+  // Creates fullName variable.
+  let fullName = memberName.firstName + " " + memberName.lastName;
+
+  // Initalizes a newGameMember.
+  let newGameMember = {
+    _id: new ObjectId(userID),
+    fullName: fullName,
+  };
+
+  let updatedGameMembers = game.gameMembers;
+  updatedGameMembers.push(newGameMember);
+
+  //updating court with updated reviews and overall rating
+  const updatedGame = {
+    gameMembers: updatedGameMembers,
+  };
+  //   const gameCollection = await games();
+  const updatedInfo = await gameCollection.findOneAndUpdate(
+    { _id: new ObjectId(gameID) },
+    { $set: updatedGame },
+    { returnDocument: "after" }
+  );
+
+  if (updatedInfo.lastErrorObject.n === 0) {
+    throw "could not update review in court successfully";
+  }
+  updatedInfo.value._id = updatedInfo.value._id.toString();
+  return updatedInfo.value;
 };
 
 // Gets all game members from a lobby.
 const getAll = async (gameID) => {
-	gameID = validation.checkID(gameID, 'gameID');
+  gameID = validation.checkID(gameID, "gameID");
 
-	const gameCollection = await games();
-	const gameMembers = await gameCollection.findOne(
-		{ _id: new ObjectId(gameID) },
-		{ gameMembers: 1 }
-	);
-	if (!gameMembers) throw 'Error: No players found within game.';
-	return gameMembers.gameMembers;
+  const gameCollection = await games();
+  const gameMembers = await gameCollection.findOne(
+    { _id: new ObjectId(gameID) },
+    { gameMembers: 1 }
+  );
+  if (!gameMembers) throw "Error: No game members for this game";
+  if (gameMembers.length === 0) throw "Error: No game members for this game";
+  return gameMembers.gameMembers;
 };
 
 // Gets a game member by their id.
-const get = async (userID) => {
-	id = validation.checkID(userID, 'id');
-	const userCollection = await users();
-	const user = await userCollection.findOne({ _id: new ObjectId(id) });
-	if (user === null) throw 'No user with that id';
-	user._id = user._id.toString();
-	return user;
+const get = async (userID, gameID) => {
+  userID = validation.checkID(userID, "userID");
+  gameID = validation.checkID(gameID, "gameID");
+
+  const gameCollection = await games();
+  let game = await gameCollection.findOne({
+    _id: new ObjectId(gameID),
+  });
+  console.log(game);
+
+  if (game === null) throw "Game not found";
+
+  let user = null;
+  for (let i = 0; i < game.gameMembers.length; i++) {
+    if (game.gameMembers[i]._id.toString() === userID) {
+      user = game.gameMembers[i];
+      break;
+    }
+  }
+
+  if (user === null) throw "User not found in game";
+
+  return user;
 };
 
 // Removes a game member by their id.
-const remove = async (userID) => {
-	id = validation.checkID(userID, 'id');
-	const userCollection = await users();
-	const deletionInfo = await userCollection.findOneAndDelete({
-		_id: new ObjectId(id),
-	});
+const remove = async (userID, gameID) => {
+  userID = validation.checkID(userID, "userID");
+  gameID = validation.checkID(gameID, "gameID");
 
-	// checks for the number of documents affected
-	if (deletionInfo.lastErrorObject.n === 0) {
-		throw `Could not delete band with id of ${id}`;
-	}
-	return { userID: id, deleted: true };
+  const gameCollection = await games();
+  const updatedGame = await gameCollection.findOneAndUpdate(
+    { _id: new ObjectId(gameID) },
+    { $pull: { gameMembers: { _id: new ObjectId(userID) } } },
+    { returnDocument: "after" }
+  );
+
+  if (updatedGame.lastErrorObject.n === 0) {
+    throw "could not update game in database successfully";
+  }
+
+  return updatedGame.value;
 };
 
-// ! I dont think we even need this because we only need to add and remove players.
-const update = async (id, firstName, lastName) => {};
-
-export { create, getAll, get, remove, update };
+export { create, getAll, get, remove };
