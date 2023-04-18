@@ -4,6 +4,8 @@ import * as validation from '../validation.js';
 import bcrypt from 'bcrypt';
 const saltRounds = 1;
 
+// TODO: Add data function to validate the login creds. (lab10 shit)
+
 // Creates a new user and logs it in the users collection.
 const create = async (firstName, lastName, email, password, age, bio, imgLink) => {
 	firstName = validation.checkString(firstName, 'firstName');
