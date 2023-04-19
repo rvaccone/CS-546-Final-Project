@@ -1,0 +1,22 @@
+<section class="user-profile">
+    <h1>NYC Court Finder</h1>
+    <header>
+    <nav>
+        <span class="nav-item">UserName: {{user.name}}</span>
+    </nav>
+</header>
+    <h2>User Profile</h2>
+    <img src="{{user.imgLink}}" alt="User's Photo">
+    <p>User Name: {{user.name}}</p>
+    <p>Bio: {{user.bio}}</p>
+
+    <h3>Currently Hosted Pick Up Games</h3>
+    {{#each hostedGames}}
+    <div class="hosted-game">
+        <p>Game Name: {{name}}</p>
+        <p>Host: {{host}}</p>
+        <p>Playing Capacity: {{playingCapacity}}</p>
+        <button class="cancel-button" data-game-id="{{_id}}">Cancel Game</button>
+    </div>
+    {{/each}}
+</section>

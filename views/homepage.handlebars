@@ -1,0 +1,25 @@
+<head>
+    <title>Home Page</title>
+</head>
+<section class="homepage">
+    <h1>NYC Court Finder</h1>
+    <header>
+    <nav>
+        <input type="text" id="search-bar" class="nav-item" placeholder="Search...">
+         <input type="submit" value="Search">
+        <a href="/login" class="nav-item">Login</a>
+        <a href="/signup" class="nav-item">Sign Up</a>
+    </nav>
+</header>
+</section>
+
+<section class="trending-games">
+    <h2>Trending Games</h2>
+    <ul>
+        {{#each trendingGames}}
+        <li>
+            <a href="/games/{{slug}}">{{title}}</a>
+        </li>
+        {{/each}}
+    </ul>
+</section>

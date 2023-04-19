@@ -1,0 +1,18 @@
+<section class="search-results">
+    <h1>NYC Court Finder</h1>
+    <header>
+    <nav>
+        <a href="/login" class="nav-item">Login</a>
+        <a href="/signup" class="nav-item">Sign Up</a>
+    </nav>
+</header>
+    <p>Search Results:</p>
+    <ul>
+        {{#each courts}}
+        <li>
+            <a href="/courts/{{slug}}">{{name}}</a>
+        </li>
+        {{/each}}
+    </ul>
+</section>
+

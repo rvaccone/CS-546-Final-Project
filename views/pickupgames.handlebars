@@ -1,0 +1,20 @@
+<section class="pickup-games">
+    <h1>NYC Court Finder</h1>
+    <header>
+    <nav>
+        <span class="nav-item">UserName: {{user.name}}</span>
+    </nav>
+</header>
+    <h2>Pick Up Games</h2>
+    <ul>
+        {{#each pickupGames}}
+        <li>
+            <p>Game Name: {{name}}</p>
+            <p>Host: {{host.username}}</p>
+            <p>Playing Capacity: {{playingCapacity}}</p>
+            <button class="join-btn">Join</button>
+        </li>
+        {{/each}}
+    </ul>
+    <button id="create-game-btn">Create New Game</button>
+</section>
