@@ -1,18 +1,29 @@
 import { Router } from 'express';
 const router = Router();
 import { reviewData } from '../data/index.js';
-
+import * as validation from '../validation.js';
 
 // POST - Create a new review for a court
 router.post('/courts/:courtID/reviews', async (req, res) => {
     const { courtID } = req.params;
     const { name, rating, comment } = req.body;
 
+    // Input validation
+    try {
+        validation.checkID(courtID, 'courtID');
+        validation.checkString(name, 'name');
+        validation.checkRatingNumber(rating, 'rating');
+        validation.checkComment(comment, 'comment');
+    } catch (e) {
+        return res.status(400).json({ error: e });
+    }
+
     try {
         const newReview = await reviewData.create(courtID, name, rating, comment);
         res.status(201).json(newReview);
     } catch (e) {
-        res.status(400).json({ error: e });
+        console.log(e);
+        return res.status(500).json({ error: e });
     }
 });
 
@@ -20,11 +31,19 @@ router.post('/courts/:courtID/reviews', async (req, res) => {
 router.delete('/reviews/:reviewId', async (req, res) => {
     const { reviewId } = req.params;
 
+    // Input validation
+    try {
+        validation.checkID(reviewId, 'reviewId');
+    } catch (e) {
+        return res.status(400).json({ error: e });
+    }
+
     try {
         const removedReview = await reviewData.remove(reviewId);
         res.status(200).json(removedReview);
     } catch (e) {
-        res.status(400).json({ error: e });
+        console.log(e);
+        return res.status(500).json({ error: e });
     }
 });
 
