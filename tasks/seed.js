@@ -6,6 +6,7 @@ import * as games_members_functions from "../data/gameMembers.js";
 import * as courts_functions from "../data/courts.js";
 import * as court_rev_functions from "../data/courtReviews.js";
 import { getRounds } from "bcrypt";
+import { ConnectionCheckOutStartedEvent } from "mongodb";
 const db = await dbConnection();
 await db.dropDatabase();
 
@@ -15,11 +16,11 @@ let user3;
 
 /* ------------------- USERS ------------------- */
 try {
-  // Creates a band.
+  // Creates a user.
   user1 = await users_functions.create(
     "John",
     "Doe",
-    "jOhNdOe@gmail.com",
+    "johndoe@gmail.com",
     "Password1$",
     20,
     "KX5Y0eBIdiVOg7EW2AF7RZEgpcRSjFUtgIk2qypGN0dRZGHgVSJUeH5b7rLPZ5OLKTaeM0GcS6NtzgAC4ZP9TCFAT3eSWgDJR1Ca1QVSoYX7W50vAPCJd0aAEvWs9Wc3Vbqd32M3pkXdzbIg7UKDKw8JP9jAS8oqywI0CvUSOlkrrVer5K8fEVGnqJWMAbc7Ra5bGShASldPufIk9xmbneproIElyZiaaGpWpnJCfLwbS21QEbJ4ciHue1L5cp0huH2VFR9bBmUrmeDX7qr1U9PtW538gRKUTP6arcVYwemeiPp3uT1kV69KnPjxmchFpZ0AvghTiaQqzHCqIDuYQmZ8Ljz8PRPjJS5FwjHKdjjjy7aix5NJLbah7ZloZBnjzjNApf2btd42VOVISN1Dm3rVLProUXQcXDnm22D7nl46kYnHERmP5ksNuqY9TWEG0igDGPgzahxFa2S4Y3AEsJwLX0FkjBnpKl22LGRnXzzTKyVnTKHs",
@@ -106,56 +107,11 @@ try {
   console.log(e);
 }
 
-/* ---------------------- GAMES ---------------------- */
-let game1;
-let game2;
-
-try {
-  game1 = await games_functions.create("X159", "12", "1");
-} catch (e) {
-  console.log(e);
-}
-
-try {
-  game2 = await games_functions.create("X160", "12", "1");
-} catch (e) {
-  console.log(e);
-}
-
-try {
-  let allGames = await games_functions.getAll();
-  console.log(allGames);
-} catch (e) {
-  console.log(e);
-}
-
-try {
-  let removeGame = await games_functions.remove(game1._id);
-  console.log(removeGame);
-} catch (e) {
-  console.log(e);
-}
-
-try {
-  let gameMember1 = await games_members_functions.create(
-    game2._id,
-    user1._id,
-    user1.firstName,
-    user1.lastName
-  );
-  console.log(gameMember1);
-} catch (e) {
-  console.log(e);
-}
-
-try {
-  let allMembers = await games_members_functions.getAll(game2._id);
-  console.log(allMembers);
-} catch (e) {
-  console.log(e);
-}
-
 /* ---------------------- Courts ---------------------- */
+// Create two courts to be used later
+let court1 = null;
+let court2 = null;
+
 // Printing out a spacer for readability
 console.log("-".repeat(20) + " Courts " + "-".repeat(20));
 
@@ -530,6 +486,7 @@ console.log(`game id: ${game1._id}`);
 try {
   getGM = await games_members_functions.get(user3._id, game1._id.toString());
   console.log("got 1st member in game1");
+  console.log(getGM);
 } catch (e) {
   console.log(e);
 }
@@ -537,6 +494,43 @@ try {
 try {
   getGM2 = await games_members_functions.get(user2._id, game1._id.toString());
   console.log("got 2nd member in game1");
+  console.log(getGM2);
+} catch (e) {
+  console.log(e);
+}
+
+try {
+  getGM2 = await games_members_functions.remove(
+    user2._id,
+    game1._id.toString()
+  );
+  console.log("removing 2nd member in game1");
+  console.log(getGM2);
+} catch (e) {
+  console.log(e);
+}
+
+//creating a game in the past
+
+let past_game = null;
+try {
+  past_game = await games_functions.create(
+    game_court2._id.toString(),
+    "02/13/2023",
+    "10:00 AM",
+    10
+  );
+  console.log("game in past created");
+  console.log(past_game);
+} catch (e) {
+  console.log(e);
+}
+
+//testing delete all past games
+try {
+  past_game = await games_functions.removeAllPastGames();
+  console.log("removing past games");
+  console.log(past_game);
 } catch (e) {
   console.log(e);
 }

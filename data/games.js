@@ -43,7 +43,7 @@ const create = async (courtID, date, time, maxPlayers) => {
     .find({})
     .project({ _id: 0, courtID: 1, date: 1, time: 1 })
     .toArray();
-  console.log(gameStartTimes);
+  //   console.log(gameStartTimes);
 
   for (let i = 0; i < gameStartTimes.length; i++) {
     let game = gameStartTimes[i];
@@ -124,7 +124,7 @@ const update = async (id, courtID, date, time, maxPlayers) => {
   // Check that courtID exists.
   const court = await courts_functions.get(courtID);
 
-  // Checks the upodate values are different from the current values.
+  // Checks the update values are different from the current values.
   const game = await get(id);
   if (
     game.courtID.toString() === courtID &&
@@ -133,9 +133,6 @@ const update = async (id, courtID, date, time, maxPlayers) => {
     game.maxPlayers === maxPlayers
   )
     throw "Error: cannot update record with the same set of values.";
-
-  // Converts the id to an ObjectId.
-  let objectCourtID = new ObjectId(courtID);
 
   // Converts the id to an ObjectId.
   let objectCourtID = new ObjectId(courtID);
@@ -182,7 +179,7 @@ const update = async (id, courtID, date, time, maxPlayers) => {
 };
 
 const removeAllPastGames = async () => {
-  console.log("NEED TO WRITE THIS");
+  console.log("finding all past games");
   const gameCollection = await games();
   // This gives us the data as an array of obejcts from the database.
   let gameList = await gameCollection
@@ -190,7 +187,7 @@ const removeAllPastGames = async () => {
     .project({ _id: 1, courtID: 1, date: 1 })
     .toArray();
   const currentDate = new Date();
-  const removedGamesCount = 0;
+  let removedGamesCount = 0;
   for (let i = 0; i < gameList.length; i++) {
     if (gameList[i].date) {
       const gameDateofCreation = new Date(gameList[i].date);
