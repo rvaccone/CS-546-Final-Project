@@ -44,6 +44,32 @@ function checkComment(comment, varName) {
   return comment;
 }
 
+// Validates date inputs.
+function checkDate(date, varName) {
+  if (!date) throw `Error: You must supply a ${varName}!`;
+  if (typeof date !== "string") throw `Error: ${varName} must be a string!`;
+  date = date.trim();
+  if (date.length === 0)
+    throw `Error: ${varName} cannot be an empty string or string with just spaces`;
+  if (!isNaN(date))
+    throw `Error: ${strVal} is not a valid value for ${varName} as it only contains digits`;
+  let dateRegex =
+    /^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d$/;
+
+  if (!date.match(dateRegex)) throw "enter a valid date format of mm/dd/yyyy";
+
+  if (!Moment(date, "MM/DD/YYYY", true).isValid()) throw "enter a valid date";
+  // checking if 1990 < releaseDate < currentYear+1
+  let minYear = 1900;
+  let maxYear = new Date();
+  maxYear = maxYear.getFullYear() + 1;
+  let RD = new Date(date);
+  let RY = RD.getFullYear();
+  if (RY < minYear || RY > maxYear)
+    throw "releaseDate entered is not within range 1900-2024";
+  return date;
+}
+
 // Validates email inputs.
 function checkEmail(emailVal, varName) {
   let mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -192,6 +218,15 @@ function checkDate(date, varName) {
   if (RY < minYear || RY > maxYear)
     throw "releaseDate entered is not within range 1900-2024";
   return date;
+}
+function checkMaxPlayer(numberVal, varName) {
+  if (!numberVal) throw `Error: You must supply a ${varName}.`;
+  if (typeof numberVal !== "number")
+    throw `Error: ${varName} should be a number.`;
+  if (numberVal === NaN) throw `Error: ${varName} cannot be NaN.`;
+  if (numberVal < 0 || numberVal > 10)
+    throw `Error: invalid range provided for ${varName}.`;
+  return numberVal;
 }
 
 export {

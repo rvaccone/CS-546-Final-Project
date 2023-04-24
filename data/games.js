@@ -9,6 +9,8 @@ const create = async (courtID, date, time, maxPlayers) => {
   courtID = validation.checkID(courtID, "courtID");
   //todo: make it so that pick up games can be hosted only a month from the current date
   date = validation.checkDate(date, "date");
+  time = validation.checkTime(time, "time");
+  maxPlayers = validation.checkMaxPlayer(maxPlayers, "maxPlayers");
   // after checking date format we need to make sure games cannot be created in the past
   const gameDateofCreation = new Date(date);
 

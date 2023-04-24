@@ -350,8 +350,6 @@ try {
   console.log(e);
 }
 /* ---------------------- GAMES ---------------------- */
-let game1 = null;
-let game2 = null;
 let game3 = null;
 
 try {
