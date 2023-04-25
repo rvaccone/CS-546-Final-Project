@@ -1,0 +1,19 @@
+<section class="court-details">
+    <h1>NYC Court Finder</h1>
+    <h2>{{courtName}}</h2>
+    <p>Address: {{address}}</p>
+    <p>Rating: {{overallRating}}</p>
+    <button id="pick-up-games-btn">Pick Up Games</button>
+    <div id="map">
+        <iframe
+            width="600"
+            height="450"
+            style="border:0"
+            loading="lazy"
+            allowfullscreen
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDFFwqO140DVnI3leB_luDuu3133GDLfaI
+                &q={{latitude}},{{longitude}}">
+        </iframe>
+    </div>
+</section>
