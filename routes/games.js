@@ -28,18 +28,9 @@ router
 
 		// Validates the input.
 		try {
-			courtsPostData.courtID = validation.checkID(
-				courtsPostData.courtID,
-				'courtID'
-			);
-			courtsPostData.date = validation.checkDate(
-				courtsPostData.date,
-				'date'
-			);
-			courtsPostData.time = validation.checkTime(
-				courtsPostData.time,
-				'time'
-			);
+			courtsPostData.courtID = validation.checkID(courtsPostData.courtID, 'courtID');
+			courtsPostData.date = validation.checkDate(courtsPostData.date, 'date');
+			courtsPostData.time = validation.checkTime(courtsPostData.time, 'time');
 			courtsPostData.maxPlayers = validation.checkMaxPlayer(
 				courtsPostData.maxPlayers,
 				'maxPlayers'
@@ -53,12 +44,7 @@ router
 		try {
 			console.log(courtsPostData);
 			const { courtID, date, time, maxPlayers } = courtsPostData;
-			const newGame = await gamesData.create(
-				courtID,
-				date,
-				time,
-				maxPlayers
-			);
+			const newGame = await gamesData.create(courtID, date, time, maxPlayers);
 			return res.status(200).json(newGame);
 		} catch (e) {
 			return res.status(400).render('Error', { errorMessage: e });
@@ -92,27 +78,18 @@ router
 
 		// Checks to see if the req.body is empty
 		if (!bandInfo || Object.keys(bandInfo).length === 0)
-			return res
-				.status(400)
-				.render('Error', { error: 'Error: The request was empty' });
+			return res.status(400).render('Error', { error: 'Error: The request was empty' });
 
 		// Check to see if the correct number of fields were returned
 		if (Object.keys(gameMemberPutData).length !== 2)
 			return res.status(400).render('Error', {
-				errorMessage:
-					'The request contained the wrong number of fields',
+				errorMessage: 'The request contained the wrong number of fields',
 			});
 
 		// Validate the IDs
 		try {
-			gameMemberPutData.gameID = validation.checkID(
-				gameMemberPutData.gameID,
-				'gameID'
-			);
-			gameMemberPutData.userID = validation.checkID(
-				gameMemberPutData.userID,
-				'userID'
-			);
+			gameMemberPutData.gameID = validation.checkID(gameMemberPutData.gameID, 'gameID');
+			gameMemberPutData.userID = validation.checkID(gameMemberPutData.userID, 'userID');
 		} catch (e) {
 			return res.status(400).render('Error', { errorMessage: e });
 		}
@@ -132,3 +109,5 @@ router
 			return res.status(400).render('Error', { errorMessage: e });
 		}
 	});
+
+export default router;
