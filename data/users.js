@@ -4,8 +4,6 @@ import * as validation from '../validation.js';
 import bcrypt from 'bcrypt';
 const saltRounds = 1;
 
-// TODO: Add data function to validate the login creds. (lab10 shit)
-
 // Creates a new user and logs it in the users collection.
 const create = async (firstName, lastName, email, password, age, bio, imgLink) => {
 	firstName = validation.checkString(firstName, 'firstName');
@@ -153,4 +151,34 @@ const update = async (id, firstName, lastName, email, password, age, bio, imgLin
 	return updatedInfo.value;
 };
 
-export { create, getAll, get, remove, update };
+// Checks user credentials.
+const checkUser = async (emailAddress, password) => {
+	// Validates the inputs.
+	emailAddress = validation.validateEmailInputs(emailAddress, 'email address');
+	password = validation.validatePasswordInputs(password, 'password');
+
+	// Gets the users collection.
+	const usersCollection = await users();
+
+	// Gets the user with the matching email.
+	const user = await usersCollection.findOne({ emailAddress: emailAddress.toLowerCase() });
+	if (user == null) {
+		throw 'Error: Either the email address or password is invalid.';
+	}
+
+	// Checks if the password matches the hashed password.
+	const match = await bcrypt.compare(password, user.password);
+	if (match) {
+		// Returns user information.
+		return {
+			firstName: user.firstName,
+			lastName: user.lastName,
+			emailAddress: user.emailAddress,
+			role: user.role,
+		};
+	} else {
+		throw 'Error: Either the email address or password is invalid.';
+	}
+};
+
+export { create, getAll, get, remove, update, checkUser };
