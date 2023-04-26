@@ -1,3 +1,7 @@
+// Import the express router
+import { Router } from 'express';
+const router = Router();
+
 // Import the routes from the other files
 import userRoutes from './users.js';
 import gameRoutes from './games.js';
