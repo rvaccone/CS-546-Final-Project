@@ -1,65 +1,187 @@
 import { Router } from 'express';
 const router = Router();
 import { usersData } from '../data/index.js';
+import * as users_functions from '../data/users.js';
 import * as validation from '../validation.js';
+import xss from 'xss';
 
-// TODO: router.route("/login") and router.route("/logout")
-
+// Register Route
 router
-	.route('/')
+	// Render the registration page.
+	.get('/register', async (req, res) => {
+		return res.render('register', { title: 'Register' });
+	})
 
-	// Sign-Up Route
-	.post(async (req, res) => {
-		const newUserData = req.body;
-
-		// Checks to see if the req.body is empty.
-		if (!newUserData || Object.keys(newUserData).length === 0) {
-			return res.status(400).json({ error: 'There are no fields in the request body' });
+	// Register the new user.
+	.post('/register', async (req, res) => {
+		// Get the user data from the request body.
+		let error_array = [];
+		const userRegistration = req.body;
+		console.log(userRegistration);
+		if (!userRegistration || Object.keys(userRegistration).length === 0) {
+			return res
+				.status(400)
+				.render('register', { title: 'Register', error: 'No user data provided.' });
 		}
 
-		// Checks to see if the correct number of fields were returned.
-		if (Object.keys(newUserData).length !== 7) {
-			return res.status(400).json({ error: 'The schema does not match the database.' });
-		}
+		// XSS Protection on registration form.
+		userRegistration.firstNameInput = xss(userRegistration.firstNameInput);
+		userRegistration.lastNameInput = xss(userRegistration.lastNameInput);
+		userRegistration.emailAddressInput = xss(userRegistration.emailAddressInput);
+		userRegistration.passwordInput = xss(userRegistration.passwordInput);
+		userRegistration.confirmPasswordInput = xss(userRegistration.confirmPasswordInput);
+		userRegistration.ageInput = xss(userRegistration.ageInput);
+		userRegistration.bioInput = xss(userRegistration.bioInput);
+		userRegistration.imglinkInput = xss(userRegistration.imglinkInput);
 
-		// Validates the input.
 		try {
-			newUserData.firstName = validation.checkString(newUserData.firstName, 'firstName');
-			newUserData.lastName = validation.checkString(newUserData.lastName, 'lastName');
-			newUserData.email = validation.checkEmail(newUserData.email, 'email');
-			newUserData.password = validation.checkPassword(newUserData.password, 'password');
-			newUserData.age = validation.checkAge(newUserData.age, 'age');
-			newUserData.bio = validation.checkBio(newUserData.bio, 'bio');
-			newUserData.imgLink = validation.checkImgLink(newUserData.imgLink, 'imgLink');
-		} catch (e) {
-			console.log(e);
-			return res.status(400).json({ error: e });
-		}
-
-		// Creates a new user.
-		try {
-			const { firstName, lastName, email, password, age, bio, imgLink } = newUserData;
-			const newUser = await usersData.create(
-				firstName,
-				lastName,
-				email,
-				password,
-				age,
-				bio,
-				imgLink
+			// Validate the first name.
+			userRegistration.firstNameInput = validation.checkString(
+				userRegistration.firstNameInput,
+				'firstNameInput'
 			);
-			res.status(200).json(newUser);
+
+			// Validate the last name.
+			userRegistration.lastNameInput = validation.checkString(
+				userRegistration.lastNameInput,
+				'lastNameInput'
+			);
+
+			// Validate the email address.
+			userRegistration.emailAddressInput = validation.checkEmail(
+				userRegistration.emailAddressInput,
+				'emailAddressInput'
+			);
+
+			// Validate the password.
+
+			userRegistration.passwordInput = validation.checkPassword(
+				userRegistration.passwordInput,
+				'passwordInput'
+			);
+
+			// Validate the age.
+
+			userRegistration.ageInput = validation.checkAge(
+				Number(userRegistration.ageInput),
+				'ageInput'
+			);
+
+			// Validate the bio.
+
+			userRegistration.bioInput = validation.checkBio(userRegistration.bioInput, 'bioInput');
+
+			// Validate the image link.
+
+			userRegistration.imglinkInput = validation.checkImgLink(
+				userRegistration.imglinkInput,
+				'imglinkInput'
+			);
+		} catch (e) {
+			return res.status(400).render('error', { error: e });
+		}
+
+		// Checks that the passwords match.
+		if (userRegistration.passwordInput != userRegistration.confirmPasswordInput) {
+			error_array.push('Passwords do not match.');
+		}
+
+		// Re-renders the page with errors.
+		// if (error_array.length > 0) {
+		// 	return res.status(400).render('error', { title: 'Register', error: error_array });
+		// }
+		try {
+			const {
+				firstNameInput,
+				lastNameInput,
+				emailAddressInput,
+				passwordInput,
+				ageInput,
+				bioInput,
+				imglinkInput,
+			} = userRegistration;
+			const newUser = await users_functions.create(
+				firstNameInput,
+				lastNameInput,
+				emailAddressInput,
+				passwordInput,
+				ageInput,
+				bioInput,
+				imglinkInput
+			);
+			console.log(newUser);
+			return res.status(200).redirect('/user/login');
 		} catch (e) {
 			console.log(e);
-			res.status(500).json({ error: e });
+			return res.status(400).render({ title: 'Error', error: e });
+		}
+	});
+
+// Login Route
+router
+
+	// Render the login page.
+	.get('/login', async (req, res) => {
+		return res.render('login', { title: 'Login' });
+	})
+
+	// Get user data from login.
+	.post('/login', async (req, res) => {
+		// Get the user data from the request body.
+		const userLogin = req.body;
+		if (!userLogin || Object.keys(userLogin).length === 0) {
+			return res
+				.status(400)
+				.render('login', { title: 'Login', error: 'No user data provided.' });
+		}
+
+		// Preform validation on the user input.
+		try {
+			userLogin.emailAddressInput = validation.validateEmailInputs(
+				userLogin.emailAddressInput,
+				'email address'
+			);
+			userLogin.passwordInput = validation.validatePasswordInputs(
+				userLogin.passwordInput,
+				'password'
+			);
+		} catch (e) {
+			return res.status(400).render('login', { title: 'Login', error: e });
+		}
+
+		// Authenticate the user.
+		try {
+			// Validates the user.
+			const validatedUser = await users.checkUser(
+				userLogin.emailAddressInput,
+				userLogin.passwordInput
+			);
+			if (validatedUser) {
+				// Sets the user session in the cookie.
+				req.session.user = validatedUser;
+
+				// Checks the role of the validated user and redirects.
+				if (validatedUser.role === 'admin') return res.redirect('/admin');
+				if (validatedUser.role === 'user') return res.redirect('/protected');
+			}
+		} catch (e) {
+			return res.status(400).render('login', {
+				title: 'Login',
+				error: e,
+			});
 		}
 	});
 
 router
-	.route('/:id')
+
+	// TODO: get route for user to display profile.
+	//! Should you be printing the user's ID in the URL?
+	.get('/:id', async (req, res) => {
+		//something
+	})
 
 	// Edit Profile Route
-	.put(async (req, res) => {
+	.put('/:id/', async (req, res) => {
 		const updatedUser = req.body;
 
 		// Checks if the req.body is empty.
