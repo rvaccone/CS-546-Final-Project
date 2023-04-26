@@ -54,6 +54,35 @@ router
 router
 	.route('/:gameID')
 
+	.get(async (req, res) => {
+		// Store the gameID from the url
+		let gameID = req.params.gameID;
+
+		// Validate the gameID
+		try {
+			gameID = validation.checkID(gameID, 'gameID');
+		} catch (e) {
+			return res.status(400).render('Error', { errorMessage: e });
+		}
+
+		// Get the game using the gameID
+		let gameDetails = null;
+		try {
+			gameDetails = await gamesData.get(gameID);
+		} catch (e) {
+			return res.status(400).render('Error', { errorMessage: e });
+		}
+
+		// Check that the game exists
+		if (!gameDetails)
+			return res
+				.status(400)
+				.render('Error', { errorMessage: 'Error: Game not found' });
+
+		// Return the game details
+		return res.status(200).json(gameDetails);
+	})
+
 	// Delete Game by gameID
 	.delete(async (req, res) => {
 		// Validate the gameID
@@ -108,6 +137,6 @@ router
 		} catch (e) {
 			return res.status(400).render('Error', { errorMessage: e });
 		}
-	});
-
+    });
+    
 export default router;
