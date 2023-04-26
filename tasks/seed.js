@@ -356,7 +356,6 @@ console.log('-'.repeat(10));
 
 // Using the get function for the first review
 console.log('Getting review 1');
-console.log(review1._id.toString());
 try {
 	console.log(await court_rev_functions.get(review1._id.toString()));
 } catch (e) {
@@ -376,11 +375,10 @@ console.log('-'.repeat(10));
 // Update the second review
 console.log('Updating review 2');
 try {
-	console.log(
-		await court_rev_functions.update(review2._id.toString(), {
-			rating: 3,
-		})
-	);
+	review2 = await court_rev_functions.update(review2._id.toString(), {
+		rating: 5,
+		comment: 'This is a great court!',
+	});
 } catch (e) {
 	console.log(e);
 }
@@ -418,8 +416,8 @@ console.log('Creating game 1 on court 1');
 try {
 	game1 = await games_functions.create(
 		court1._id.toString(),
-		'02/21/2021',
-		'10:00',
+		'02/21/2024',
+		'10:00 PM',
 		4
 	);
 	console.log(game1);
@@ -434,7 +432,7 @@ try {
 	game2 = await games_functions.create(
 		court2._id.toString(),
 		'10/24/2023',
-		'2:00',
+		'2:00 AM',
 		8
 	);
 	console.log(game2);
@@ -448,8 +446,8 @@ console.log('Creating game 3 on court 3');
 try {
 	game3 = await games_functions.create(
 		court3._id.toString(),
-		'04/12/2023',
-		'8:00',
+		'04/30/2023',
+		'8:00 AM',
 		4
 	);
 	console.log(game3);
@@ -467,10 +465,10 @@ try {
 }
 console.log('-'.repeat(10));
 
-// Getting all users
+// Getting all users for court1
 console.log('Getting all games');
 try {
-	console.log(await games_functions.getAll());
+	console.log(await games_functions.getAll(court1._id.toString()));
 } catch (e) {
 	console.log(e);
 }
@@ -508,9 +506,9 @@ try {
 console.log('-'.repeat(10));
 
 // Getting all users
-console.log('Getting all users');
+console.log('Getting all users for court 1');
 try {
-	console.log(await games_functions.getAll());
+	console.log(await games_functions.getAll(court1._id.toString()));
 } catch (e) {
 	console.log(e);
 }
