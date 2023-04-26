@@ -3,40 +3,17 @@ const router = Router();
 import { usersData } from '../data/index.js';
 import * as users_functions from '../data/users.js';
 import * as validation from '../validation.js';
-
-// Main Route
-router
-	.route('/')
-
-	.get(
-		// (req, res, next) => {
-		// 	if (!req.session.user) {
-		// 		return res.redirect('/login');
-		// 	} else if (req.session.user.role == 'admin') {
-		// 		return res.redirect('/admin');
-		// 	} else {
-		// 		return res.redirect('/protected');
-		// 	}
-		// 	next();
-		// },
-		async (req, res) => {
-			//code here for GET THIS ROUTE SHOULD NEVER FIRE BECAUSE OF MIDDLEWARE #1 IN SPECS.
-			return res.json({ error: 'YOU SHOULD NOT BE HERE!' });
-		}
-	);
+import xss from 'xss';
 
 // Register Route
 router
-	.route('/register')
-
 	// Render the registration page.
-	.get(async (req, res) => {
-		//code here for GET
+	.get('/register', async (req, res) => {
 		return res.render('register', { title: 'Register' });
 	})
 
 	// Register the new user.
-	.post(async (req, res) => {
+	.post('/register', async (req, res) => {
 		// Get the user data from the request body.
 		let error_array = [];
 		const userRegistration = req.body;
@@ -47,6 +24,16 @@ router
 				.render('register', { title: 'Register', error: 'No user data provided.' });
 		}
 
+		// XSS Protection on registration form.
+		userRegistration.firstNameInput = xss(userRegistration.firstNameInput);
+		userRegistration.lastNameInput = xss(userRegistration.lastNameInput);
+		userRegistration.emailAddressInput = xss(userRegistration.emailAddressInput);
+		userRegistration.passwordInput = xss(userRegistration.passwordInput);
+		userRegistration.confirmPasswordInput = xss(userRegistration.confirmPasswordInput);
+		userRegistration.ageInput = xss(userRegistration.ageInput);
+		userRegistration.bioInput = xss(userRegistration.bioInput);
+		userRegistration.imglinkInput = xss(userRegistration.imglinkInput);
+
 		try {
 			// Validate the first name.
 			userRegistration.firstNameInput = validation.checkString(
@@ -55,7 +42,6 @@ router
 			);
 
 			// Validate the last name.
-
 			userRegistration.lastNameInput = validation.checkString(
 				userRegistration.lastNameInput,
 				'lastNameInput'
@@ -124,24 +110,23 @@ router
 				imglinkInput
 			);
 			console.log(newUser);
-			return res.status(200).redirect('login');
+			return res.status(200).redirect('/user/login');
 		} catch (e) {
 			console.log(e);
-			return res.status(400).render('error', { error: e });
+			return res.status(400).render({ title: 'Error', error: e });
 		}
 	});
 
 // Login Route
 router
-	.route('/login')
 
 	// Render the login page.
-	.get(async (req, res) => {
+	.get('/login', async (req, res) => {
 		return res.render('login', { title: 'Login' });
 	})
 
 	// Get user data from login.
-	.post(async (req, res) => {
+	.post('/login', async (req, res) => {
 		// Get the user data from the request body.
 		const userLogin = req.body;
 		if (!userLogin || Object.keys(userLogin).length === 0) {
@@ -188,10 +173,15 @@ router
 	});
 
 router
-	.route('/:id')
+
+	// TODO: get route for user to display profile.
+	//! Should you be printing the user's ID in the URL?
+	.get('/:id', async (req, res) => {
+		//something
+	})
 
 	// Edit Profile Route
-	.put(async (req, res) => {
+	.put('/:id/', async (req, res) => {
 		const updatedUser = req.body;
 
 		// Checks if the req.body is empty.
