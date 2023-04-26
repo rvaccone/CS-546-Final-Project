@@ -1,6 +1,6 @@
 //* File Completed
-import { MongoClient } from 'mongodb';
-import { mongoConfig } from './settings.js';
+import { MongoClient } from "mongodb";
+import { mongoConfig } from "./settings.js";
 
 let _connection = undefined;
 let _db = undefined;
