@@ -7,16 +7,28 @@ import * as courts_functions from "../data/courts.js";
 const create = async (courtID, date, time, maxPlayers) => {
   //****INPUT VALIDATION****//
   courtID = validation.checkID(courtID, "courtID");
+  let courtFound = courts_functions.get(courtID);
+  let courtFoundDetails = [
+    courtFound.name,
+    courtFound.location,
+    courtFound.lat,
+    courtFound.long,
+  ];
   //todo: make it so that pick up games can be hosted only a month from the current date
   date = validation.checkDate(date, "date");
   time = validation.checkTime(time, "time");
   maxPlayers = validation.checkMaxPlayer(maxPlayers, "maxPlayers");
   // after checking date format we need to make sure games cannot be created in the past
-  const gameDateofCreation = new Date(date);
+  //   const gameDateofCreation = new Date(date);
+  // Combine date and time strings into a single string
+  const dateTimeString = `${date} ${time}`;
 
+  // Create a Date object using the concatenated string
+  const gameDateofCreation = new Date(dateTimeString);
   // Get the current date
   const currentDate = new Date();
   // Check if the game date is in the past
+  console.log(gameDateofCreation, currentDate);
   if (gameDateofCreation < currentDate) {
     throw "Error: Cannot schedule games for past dates.";
   }
@@ -27,6 +39,8 @@ const create = async (courtID, date, time, maxPlayers) => {
   // Creates a new game.
   let newGame = {
     courtID: new ObjectId(courtID),
+    courtName: courtFoundDetails[0],
+    location: courtFoundDetails[1],
     date: date,
     time: time.toLowerCase(),
     maxPlayers: maxPlayers,
@@ -204,4 +218,36 @@ const removeAllPastGames = async () => {
   return `removed games: ${removedGamesCount}`;
 };
 
-export { create, getAll, get, update, remove, removeAllPastGames };
+const getAllTrending = async () => {
+  let currentDate = new Date();
+  let month = String(currentDate.getMonth() + 1).padStart(2, "0");
+  let day = String(currentDate.getDate()).padStart(2, "0");
+  let year = currentDate.getFullYear();
+  let dateString = `${month}/${day}/${year}`;
+  dateString = validation.checkDate(dateString);
+  console.log(dateString);
+  const gameCollection = await games();
+  let trendingGameList = await gameCollection
+    .find({ date: dateString })
+    .project({
+      _id: 1,
+      courtID: 1,
+      courtName: 1,
+      location: 1,
+      date: 1,
+      time: 1,
+    })
+    .toArray();
+
+  return trendingGameList;
+};
+
+export {
+  create,
+  getAll,
+  get,
+  update,
+  remove,
+  removeAllPastGames,
+  getAllTrending,
+};

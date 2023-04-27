@@ -8,12 +8,14 @@ import * as court_rev_functions from "../data/courtReviews.js";
 import { getRounds } from "bcrypt";
 import { ConnectionCheckOutStartedEvent } from "mongodb";
 const db = await dbConnection();
-await db.dropDatabase();
+// await db.dropDatabase();
 
 let user1;
 let user2;
 let user3;
-
+let user4;
+let user5;
+let user6;
 /* ------------------- USERS ------------------- */
 try {
   // Creates a user.
@@ -29,7 +31,37 @@ try {
 } catch (e) {
   console.log(e);
 }
+try {
+  // Creates a user.
+  user6 = await users_functions.create(
+    "John",
+    "Doe",
+    "johndoe@gmail.com",
+    "Password1$",
+    20,
+    "This is John's bio",
+    "https://example.com/john.jpg"
+  );
+  console.log("Created user John Doe");
+} catch (e) {
+  console.log(e);
+}
 
+try {
+  // Creates a user.
+  user5 = await users_functions.create(
+    "Jane",
+    "Doe",
+    "janedoe@gmail.com",
+    "Password2$",
+    25,
+    "This is Jane's bio",
+    "https://example.com/jane.jpg"
+  );
+  console.log("Created user Jane Doe");
+} catch (e) {
+  console.log(e);
+}
 try {
   // Creates a user.
   user2 = await users_functions.create(
@@ -351,7 +383,8 @@ try {
 }
 /* ---------------------- GAMES ---------------------- */
 let game3 = null;
-
+let game1 = null;
+let game2 = null;
 try {
   game1 = await games_functions.create(
     game_court1._id.toString(),
