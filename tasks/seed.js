@@ -299,7 +299,7 @@ console.log('Creating review 1 on court 1 with user 1');
 try {
 	review1 = await court_rev_functions.create(
 		court1._id.toString(),
-		user1.firstName,
+		user1._id.toString(),
 		5,
 		'This is a great court!'
 	);
@@ -314,7 +314,7 @@ console.log('Creating review 2 on court 1 with user 2');
 try {
 	review2 = await court_rev_functions.create(
 		court1._id.toString(),
-		user2.firstName,
+		user2._id.toString(),
 		1,
 		'This is a bad court!'
 	);
@@ -329,7 +329,7 @@ console.log('Creating review 3 on court 2 with user 1');
 try {
 	review3 = await court_rev_functions.create(
 		court2._id.toString(),
-		user1.firstName,
+		user1._id.toString(),
 		5,
 		'This court is better than court 1!'
 	);
@@ -344,7 +344,7 @@ console.log('Creating review 4 on court 2 with user 2');
 try {
 	review4 = await court_rev_functions.create(
 		court2._id.toString(),
-		user2.firstName,
+		user2._id.toString(),
 		1,
 		'This court is worse than court 1!'
 	);
@@ -357,7 +357,12 @@ console.log('-'.repeat(10));
 // Using the get function for the first review
 console.log('Getting review 1');
 try {
-	console.log(await court_rev_functions.get(review1._id.toString()));
+	console.log(
+		await court_rev_functions.get(
+			court1._id.toString(),
+			user1._id.toString()
+		)
+	);
 } catch (e) {
 	console.log(e);
 }
@@ -375,10 +380,13 @@ console.log('-'.repeat(10));
 // Update the second review
 console.log('Updating review 2');
 try {
-	review2 = await court_rev_functions.update(review2._id.toString(), {
-		rating: 5,
-		comment: 'This is a great court!',
-	});
+	review2 = await court_rev_functions.update(
+		court1._id.toString(),
+		user2._id.toString(),
+		4,
+		'This is a pretty great court!'
+	);
+	console.log(review2);
 } catch (e) {
 	console.log(e);
 }
@@ -387,7 +395,12 @@ console.log('-'.repeat(10));
 // Using the get function for the second review
 console.log('Getting review 2');
 try {
-	console.log(await court_rev_functions.get(review2._id.toString()));
+	console.log(
+		await court_rev_functions.get(
+			court1._id.toString(),
+			user2._id.toString()
+		)
+	);
 } catch (e) {
 	console.log(e);
 }
@@ -396,12 +409,14 @@ console.log('-'.repeat(10));
 // Delete the fourth review
 console.log('Deleting review 4 on court 2 with user 2');
 try {
-	review4 = await court_rev_functions.remove(review4._id.toString());
+	review4 = await court_rev_functions.remove(
+		court2._id.toString(),
+		user2._id.toString()
+	);
 	console.log(review4);
 } catch (e) {
 	console.log(e);
 }
-console.log('-'.repeat(10));
 
 /* ------------------- GAMES ------------------- */
 console.log('/* ------------------- GAMES ------------------- */');
