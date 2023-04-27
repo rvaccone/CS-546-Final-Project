@@ -74,6 +74,14 @@ const create = async (courtID, userID, rating, comment) => {
 	// Verify that the court and user exist
 	let { court, courtCollection } = await verifyCourtAndUser(courtID, userID);
 
+	// Confirm that the user has not already reviewed the court
+	try {
+		await get(courtID, userID);
+		throw `User with id ${userID.toString()} has already reviewed court with id ${courtID.toString()}`;
+	} catch (e) {
+		if (e !== 'No review from user with given ID') throw e;
+	}
+
 	let pushReview = {
 		_id: new ObjectId(),
 		userID: new ObjectId(userID),
@@ -129,7 +137,7 @@ const get = async (courtID, userID) => {
 	});
 
 	// Check that the review exists
-	if (!userReview) throw `No review from user with ID ${userID.toString()}`;
+	if (!userReview) throw 'No review from user with given ID';
 
 	// Return the review if it exists
 	return userReview;
