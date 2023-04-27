@@ -5,7 +5,15 @@ import bcrypt from 'bcrypt';
 const saltRounds = 1;
 
 // Creates a new user and logs it in the users collection.
-const create = async (firstName, lastName, email, password, age, bio, imgLink) => {
+const create = async (
+	firstName,
+	lastName,
+	email,
+	password,
+	age,
+	bio,
+	imgLink
+) => {
 	firstName = validation.checkString(firstName, 'firstName');
 	lastName = validation.checkString(lastName, 'lastName');
 	email = validation.checkEmail(email, 'email');
@@ -31,7 +39,10 @@ const create = async (firstName, lastName, email, password, age, bio, imgLink) =
 	const userCollection = await users();
 
 	// Checks if email is already registered.
-	const userEmails = await userCollection.find({}).project({ _id: 0, email: 1 }).toArray();
+	const userEmails = await userCollection
+		.find({})
+		.project({ _id: 0, email: 1 })
+		.toArray();
 	userEmails.forEach((user) => {
 		if (user.email.toLowerCase() === newUser.email.toLowerCase())
 			throw 'Error: Email already registered.';
@@ -54,7 +65,10 @@ const create = async (firstName, lastName, email, password, age, bio, imgLink) =
 const getAll = async () => {
 	const userCollection = await users();
 	// This gives us the data as an array of obejcts from the database.
-	let userList = await userCollection.find({}).project({ _id: 1, name: 1 }).toArray();
+	let userList = await userCollection
+		.find({})
+		.project({ _id: 1, name: 1 })
+		.toArray();
 	if (!userList) throw 'Could not get all users.';
 	userList = userList.map((element) => {
 		element._id = element._id.toString();
@@ -89,7 +103,16 @@ const remove = async (id) => {
 };
 
 // Updates a user in the users collection.
-const update = async (id, firstName, lastName, email, password, age, bio, imgLink) => {
+const update = async (
+	id,
+	firstName,
+	lastName,
+	email,
+	password,
+	age,
+	bio,
+	imgLink
+) => {
 	firstName = validation.checkString(firstName, 'firstName');
 	lastName = validation.checkString(lastName, 'lastName');
 	email = validation.checkEmail(email, 'email');
@@ -130,7 +153,10 @@ const update = async (id, firstName, lastName, email, password, age, bio, imgLin
 
 	// Checks if email is already registered.
 	if (user.email.toLowerCase() !== updateUser.email.toLowerCase()) {
-		const userEmails = await userCollection.find({}).project({ _id: 0, email: 1 }).toArray();
+		const userEmails = await userCollection
+			.find({})
+			.project({ _id: 0, email: 1 })
+			.toArray();
 		userEmails.forEach((user) => {
 			if (user.email.toLowerCase() === updateUser.email.toLowerCase())
 				throw 'Error: Email already registered.';
@@ -154,14 +180,19 @@ const update = async (id, firstName, lastName, email, password, age, bio, imgLin
 // Checks user credentials.
 const checkUser = async (emailAddress, password) => {
 	// Validates the inputs.
-	emailAddress = validation.validateEmailInputs(emailAddress, 'email address');
+	emailAddress = validation.validateEmailInputs(
+		emailAddress,
+		'email address'
+	);
 	password = validation.validatePasswordInputs(password, 'password');
 
 	// Gets the users collection.
 	const usersCollection = await users();
 
 	// Gets the user with the matching email.
-	const user = await usersCollection.findOne({ emailAddress: emailAddress.toLowerCase() });
+	const user = await usersCollection.findOne({
+		emailAddress: emailAddress.toLowerCase(),
+	});
 	if (user == null) {
 		throw 'Error: Either the email address or password is invalid.';
 	}
@@ -181,4 +212,17 @@ const checkUser = async (emailAddress, password) => {
 	}
 };
 
-export { create, getAll, get, remove, update, checkUser };
+// Function to retrieve a user's first and last name
+const getFullName = async (userID) => {
+	// Validate the input
+	userID = validation.checkID(userID, 'userID');
+
+	// Check that the user exists
+	const user = await get(userID);
+	if (!user) throw `Error: No user with id ${userID} exists`;
+
+	// Return the user's full name
+	return `${user.firstName} ${user.lastName}`;
+};
+
+export { create, getAll, get, remove, update, checkUser, getFullName };
