@@ -1,0 +1,124 @@
+h1 {
+	color: #000000;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 36px;
+	font-weight: bold;
+	text-align: center;
+}
+
+h2 {
+    color: #000000;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+}
+
+h3 {
+    color: #000000;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
+form {
+	text-align: left;
+	display: flex;
+	flex-direction: column;
+	width: 50%;
+}
+
+input {
+	color: #000000;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-align: left;
+	background-color: rgb(216, 219, 223);
+	border-radius: 5px;
+	padding: 5px;
+    margin-bottom: 5px;
+}
+
+textarea {
+    color: #000000;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    text-align: left;
+    background-color: rgb(216, 219, 223);
+    border-color: #000000;
+    border-width: 2px;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+select {
+	color: #000000;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-align: left;
+	background-color: rgb(216, 219, 223);
+	border-radius: 5px;
+	padding: 5px;
+}
+
+.button {
+	background-color: #6591e2;
+	color: #ffffff;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 5px;
+	text-decoration: none;
+	display: block;
+	margin-top: 10px;
+	width: 100%;
+	border-radius: 5px;
+	text-align: center;
+}
+
+.button:hover {
+	background-color: #103fbf;
+	color: #ffffff;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 5px;
+	text-decoration: none;
+	display: block;
+	margin-top: 10px;
+	width: 100%;
+	border-radius: 5px;
+	text-align: center;
+}
+
+.button_text {
+	color: #000000;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+p {
+	color: #000000;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	text-align: center;
+}
+
+a {
+	color: #000000;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #103fbf;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	text-decoration: underline;
+}

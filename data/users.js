@@ -154,16 +154,16 @@ const update = async (id, firstName, lastName, email, password, age, bio, imgLin
 // Checks user credentials.
 const checkUser = async (emailAddress, password) => {
 	// Validates the inputs.
-	emailAddress = validation.validateEmailInputs(emailAddress, 'email address');
-	password = validation.validatePasswordInputs(password, 'password');
+	emailAddress = validation.checkEmail(emailAddress, 'email address');
+	password = validation.checkPassword(password, 'password');
 
 	// Gets the users collection.
 	const usersCollection = await users();
 
 	// Gets the user with the matching email.
-	const user = await usersCollection.findOne({ emailAddress: emailAddress.toLowerCase() });
+	const user = await usersCollection.findOne({ email: emailAddress.toLowerCase() });
 	if (user == null) {
-		throw 'Error: Either the email address or password is invalid.';
+		throw 'Error: Either the email address or password is invalid. ervfweoiurvhweorivuweh';
 	}
 
 	// Checks if the password matches the hashed password.
@@ -171,10 +171,13 @@ const checkUser = async (emailAddress, password) => {
 	if (match) {
 		// Returns user information.
 		return {
+			_id: user._id.toString(),
 			firstName: user.firstName,
 			lastName: user.lastName,
-			emailAddress: user.emailAddress,
-			role: user.role,
+			emailAddress: user.email,
+			age: user.age,
+			bio: user.bio,
+			imgLink: user.imgLink,
 		};
 	} else {
 		throw 'Error: Either the email address or password is invalid.';

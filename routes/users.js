@@ -135,16 +135,14 @@ router
 				.render('login', { title: 'Login', error: 'No user data provided.' });
 		}
 
+		// XSS Protection on login form.
+		userLogin.email = xss(userLogin.email);
+		userLogin.password = xss(userLogin.password);
+
 		// Preform validation on the user input.
 		try {
-			userLogin.emailAddressInput = validation.validateEmailInputs(
-				userLogin.emailAddressInput,
-				'email address'
-			);
-			userLogin.passwordInput = validation.validatePasswordInputs(
-				userLogin.passwordInput,
-				'password'
-			);
+			userLogin.email = validation.checkEmail(userLogin.email, 'email address');
+			userLogin.password = validation.checkPassword(userLogin.password, 'password');
 		} catch (e) {
 			return res.status(400).render('login', { title: 'Login', error: e });
 		}
@@ -152,19 +150,18 @@ router
 		// Authenticate the user.
 		try {
 			// Validates the user.
-			const validatedUser = await users.checkUser(
-				userLogin.emailAddressInput,
-				userLogin.passwordInput
+			const validatedUser = await users_functions.checkUser(
+				userLogin.email,
+				userLogin.password
 			);
+			console.log(validatedUser);
 			if (validatedUser) {
 				// Sets the user session in the cookie.
 				req.session.user = validatedUser;
-
-				// Checks the role of the validated user and redirects.
-				if (validatedUser.role === 'admin') return res.redirect('/admin');
-				if (validatedUser.role === 'user') return res.redirect('/protected');
+				return res.redirect(`/user/:${validatedUser._id}`);
 			}
 		} catch (e) {
+			console.log('Here is the error:' + e);
 			return res.status(400).render('login', {
 				title: 'Login',
 				error: e,
@@ -177,11 +174,30 @@ router
 	// TODO: get route for user to display profile.
 	//! Should you be printing the user's ID in the URL?
 	.get('/:id', async (req, res) => {
-		//something
+		// Send the user's session information to the page.
+		return res.render('profile', {
+			title: 'My Profile',
+			_id: req.session.user._id,
+			firstName: req.session.user.firstName,
+			lastName: req.session.user.lastName,
+			email: req.session.user.emailAddress,
+			age: req.session.user.age,
+			bio: req.session.user.bio,
+			imglink: req.session.user.imglink,
+		});
 	})
 
+	// TODO: Get the profile pic to work
+	// TODO: Edit the editProfile page to have correct action, entries, and link back to profile.
+	.get('/editProfile/:id', async (req, res) => {
+		return res.status(200).render('editProfile', {
+			title: 'Edit Profile',
+		});
+	})
+
+	// TODO: Adjust this shit to work
 	// Edit Profile Route
-	.put('/:id/', async (req, res) => {
+	.put('/:id', async (req, res) => {
 		const updatedUser = req.body;
 
 		// Checks if the req.body is empty.
