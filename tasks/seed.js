@@ -505,9 +505,13 @@ console.log('-'.repeat(10));
 console.log('Updating game 2');
 try {
 	console.log(
-		await games_functions.update(game2._id.toString(), {
-			date: '03/19/2020',
-		})
+		await games_functions.update(
+			game2._id.toString(),
+			game2.courtID,
+			'03/19/2020',
+			'12:00 PM',
+			6
+		)
 	);
 } catch (e) {
 	console.log(e);
