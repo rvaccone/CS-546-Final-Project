@@ -22,6 +22,12 @@ h3 {
     text-align: center;
 }
 
+.form-wrapper {
+    display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 form {
 	text-align: left;
 	display: flex;
@@ -106,6 +112,10 @@ p {
 	font-size: 12px;
 	font-weight: bold;
 	text-align: center;
+}
+
+.link-wrapper {
+    text-align: center;
 }
 
 a {
