@@ -439,10 +439,11 @@ let game1 = null,
 	game3 = null; // game3 will be deleted later
 
 // Create the first game
-console.log('Creating game 1 on court 1');
+console.log('Creating game 1 on court 1 with user 1');
 try {
 	game1 = await games_functions.create(
 		court1._id.toString(),
+		user1._id.toString(),
 		'02/21/2024',
 		'10:00 PM',
 		4
@@ -454,10 +455,11 @@ try {
 console.log('-'.repeat(10));
 
 // Create the first game
-console.log('Creating game 2 on court 2');
+console.log('Creating game 2 on court 2 with user 2');
 try {
 	game2 = await games_functions.create(
 		court2._id.toString(),
+		user2._id.toString(),
 		'10/24/2023',
 		'2:00 AM',
 		8
@@ -469,10 +471,11 @@ try {
 console.log('-'.repeat(10));
 
 // Create the third game
-console.log('Creating game 3 on court 3');
+console.log('Creating game 3 on court 3 with user 3');
 try {
 	game3 = await games_functions.create(
 		court3._id.toString(),
+		user3._id.toString(),
 		'04/30/2023',
 		'8:00 AM',
 		4
@@ -493,7 +496,7 @@ try {
 console.log('-'.repeat(10));
 
 // Getting all users for court1
-console.log('Getting all games');
+console.log('Getting all games for court1');
 try {
 	console.log(await games_functions.getAll(court1._id.toString()));
 } catch (e) {
@@ -507,7 +510,8 @@ try {
 	console.log(
 		await games_functions.update(
 			game2._id.toString(),
-			game2.courtID,
+			game2.courtID.toString(),
+			game2.userID.toString(),
 			'03/19/2020',
 			'12:00 PM',
 			6
@@ -519,7 +523,7 @@ try {
 console.log('-'.repeat(10));
 
 // Using the get function for the second game
-console.log('Getting game 2');
+console.log('Getting game 2 for court 2');
 try {
 	console.log(await games_functions.get(game2._id.toString()));
 } catch (e) {
@@ -553,10 +557,10 @@ let gameMember1 = null,
 	gameMember3 = null; // gameMember3 will be deleted later
 
 // Create the first gameMember
-console.log('Creating gameMember 1 on game 1 with user 1');
+console.log('Creating gameMember 1 on game 2 with user 1');
 try {
 	gameMember1 = await games_members_functions.create(
-		game1._id.toString(),
+		game2._id.toString(),
 		user1._id.toString()
 	);
 	console.log(gameMember1);
@@ -566,10 +570,10 @@ try {
 console.log('-'.repeat(10));
 
 // Create the first gameMember
-console.log('Creating gameMember 2 on game 2 with user 2');
+console.log('Creating gameMember 2 on game 1 with user 2');
 try {
 	gameMember2 = await games_members_functions.create(
-		game2._id.toString(),
+		game1._id.toString(),
 		user2._id.toString()
 	);
 	console.log(gameMember2);
