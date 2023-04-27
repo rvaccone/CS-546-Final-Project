@@ -1,6 +1,7 @@
 import { games } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 import * as validation from '../validation.js';
+import * as user_functions from '../data/users.js';
 import * as courts_functions from '../data/courts.js';
 import * as game_members_functions from '../data/gameMembers.js';
 
@@ -239,12 +240,36 @@ const getAllTrending = async () => {
   return trendingGameList;
 };
 
+const getAllTrending = async () => {
+	let currentDate = new Date();
+	let month = String(currentDate.getMonth() + 1).padStart(2, '0');
+	let day = String(currentDate.getDate()).padStart(2, '0');
+	let year = currentDate.getFullYear();
+	let dateString = `${month}/${day}/${year}`;
+	dateString = validation.checkDate(dateString);
+	console.log(dateString);
+	const gameCollection = await games();
+	let trendingGameList = await gameCollection
+		.find({ date: dateString })
+		.project({
+			_id: 1,
+			courtID: 1,
+			courtName: 1,
+			location: 1,
+			date: 1,
+			time: 1,
+		})
+		.toArray();
+
+	return trendingGameList;
+};
+
 export {
-  create,
-  getAll,
-  get,
-  update,
-  remove,
-  removeAllPastGames,
-  getAllTrending,
+	create,
+	getAll,
+	get,
+	update,
+	remove,
+	removeAllPastGames,
+	getAllTrending,
 };
