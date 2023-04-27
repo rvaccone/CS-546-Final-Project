@@ -115,10 +115,16 @@ console.log('-'.repeat(10));
 console.log('Updating user 2');
 try {
 	console.log(
-		await users_functions.update(user2._id.toString(), {
-			firstName: 'Clark',
-			lastName: 'Kent',
-		})
+		await users_functions.update(
+			user2._id.toString(),
+			'Clark',
+			'Kent',
+			user2.email,
+			'Password1$Password1$',
+			user2.age,
+			user2.bio,
+			user2.imgLink
+		)
 	);
 } catch (e) {
 	console.log(e);
@@ -250,9 +256,15 @@ console.log('-'.repeat(10));
 console.log('Updating court 2');
 try {
 	console.log(
-		await courts_functions.update(court2._id.toString(), {
-			name: 'Court 2.0',
-		})
+		await courts_functions.update(
+			court2._id.toString(),
+			'Court 2.0',
+			'30 5th Ave',
+			13,
+			true,
+			-33,
+			33
+		)
 	);
 } catch (e) {
 	console.log(e);
