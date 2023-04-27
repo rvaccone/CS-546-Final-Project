@@ -203,5 +203,36 @@ const removeAllPastGames = async () => {
   }
   return `removed games: ${removedGamesCount}`;
 };
+const getAllTrending = async () => {
+  let currentDate = new Date();
+  let month = String(currentDate.getMonth() + 1).padStart(2, "0");
+  let day = String(currentDate.getDate()).padStart(2, "0");
+  let year = currentDate.getFullYear();
+  let dateString = `${month}/${day}/${year}`;
+  dateString = validation.checkDate(dateString);
+  console.log(dateString);
+  const gameCollection = await games();
+  let trendingGameList = await gameCollection
+    .find({ date: dateString })
+    .project({
+      _id: 1,
+      courtID: 1,
+      courtName: 1,
+      location: 1,
+      date: 1,
+      time: 1,
+    })
+    .toArray();
 
-export { create, getAll, get, update, remove, removeAllPastGames };
+  return trendingGameList;
+};
+
+export {
+  create,
+  getAll,
+  get,
+  update,
+  remove,
+  removeAllPastGames,
+  getAllTrending,
+};
