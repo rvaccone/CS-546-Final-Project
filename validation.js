@@ -112,7 +112,9 @@ function checkImgLink(imgLinkVal, varName) {
 
 // Validates number inputs.
 function checkMaxPlayer(numberVal, varName) {
+  //input from form comes as a str
   if (!numberVal) throw `Error: You must supply a ${varName}.`;
+  numberVal = parseInt(numberVal);
   if (typeof numberVal !== "number")
     throw `Error: ${varName} should be a number.`;
   if (numberVal === NaN) throw `Error: ${varName} cannot be NaN.`;

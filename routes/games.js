@@ -2,6 +2,7 @@ import { Router } from "express";
 const router = Router();
 import { gamesData, usersData, courtsData } from "../data/index.js";
 import * as validation from "../validation.js";
+import { ObjectId } from "mongodb";
 
 // TODO: render instead of json. Including data you want to render with it.
 
@@ -24,13 +25,13 @@ router
     } catch (e) {
       return res.status(400).render("Error", { errorMessage: e });
     }
-    return res.render("createGame");
+    return res.status(200).render("createGame", { courtId: id });
   })
 
   // Create Game by courtID
   .post(async (req, res) => {
     const courtsPostData = req.body;
-
+    let courtID = req.params.courtID;
     // Checks to see if the req.body is empty.
     if (!courtsPostData || Object.keys(courtsPostData).length === 0) {
       return res.status(400).render("Error", {
@@ -39,19 +40,24 @@ router
     }
 
     // Checks to see if the correct number of fields were returned.
-    if (Object.keys(courtsPostData).length !== 5) {
+    if (Object.keys(courtsPostData).length !== 3) {
       return res.status(400).render("Error", {
         errorMessage: "Error: The schema does not match the database",
       });
     }
+    let dateStr = courtsPostData.date;
+    let dateFormatted = `${dateStr.substring(5, 7)}/${dateStr.substring(
+      8,
+      10
+    )}/${dateStr.substring(0, 4)}`;
 
     // Validates the input.
     try {
-      courtsPostData.courtID = validation.checkID(
-        courtsPostData.courtID,
-        "courtID"
-      );
-      courtsPostData.date = validation.checkDate(courtsPostData.date, "date");
+      //todo create a check court id validation function
+      courtID = validation.checkID(courtID, "courtID");
+      console.log("here");
+      dateFormatted = validation.checkDate(dateFormatted, "date");
+      console.log(dateFormatted);
       courtsPostData.time = validation.checkTime(courtsPostData.time, "time");
       courtsPostData.maxPlayers = validation.checkMaxPlayer(
         courtsPostData.maxPlayers,
@@ -65,8 +71,15 @@ router
     // Creates a new game.
     try {
       console.log(courtsPostData);
-      const { courtID, date, time, maxPlayers } = courtsPostData;
-      const newGame = await gamesData.create(courtID, date, time, maxPlayers);
+      const { time, maxPlayers } = courtsPostData;
+      const newGame = await gamesData.create(
+        courtID,
+        // userID, replace with the userid from cookie
+        "6448d870a99c1b67a0324ec4",
+        dateFormatted,
+        time,
+        maxPlayers
+      );
       return res.status(200).json(newGame);
     } catch (e) {
       return res.status(400).render("Error", { errorMessage: e });
