@@ -184,4 +184,17 @@ const checkUser = async (emailAddress, password) => {
 	}
 };
 
-export { create, getAll, get, remove, update, checkUser };
+// Function to retrieve a user's first and last name
+const getFullName = async (userID) => {
+	// Validate the input
+	userID = validation.checkID(userID, 'userID');
+
+	// Check that the user exists
+	const user = await get(userID);
+	if (!user) throw `Error: No user with id ${userID} exists`;
+
+	// Return the user's full name
+	return `${user.firstName} ${user.lastName}`;
+};
+
+export { create, getAll, get, remove, update, checkUser, getFullName };

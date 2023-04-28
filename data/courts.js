@@ -31,7 +31,8 @@ const create = async (name, location, numCourts, accessible, lat, long) => {
 	const insertInfo = await courtCollection.insertOne(newCourt);
 
 	// Checking if the insert was successful
-	if (!insertInfo.acknowledged || !insertInfo.insertedId) throw 'Error: Could not add court';
+	if (!insertInfo.acknowledged || !insertInfo.insertedId)
+		throw 'Error: Could not add court';
 
 	// Return the new court
 	return await get(insertInfo.insertedId.toString());
@@ -61,14 +62,22 @@ const get = async (courtID) => {
 	const court = await courtCollection.findOne({ _id: new ObjectId(courtID) });
 
 	// Check if the court exists
-	if (!court) throw 'Error: Could not get court';
+	if (!court) throw `Error: Could not get court with id ${courtID}`;
 
 	// Return the court
 	return court;
 };
 
 // Updates a court by its id.
-const update = async (courtID, name, location, numCourts, accessible, lat, long) => {
+const update = async (
+	courtID,
+	name,
+	location,
+	numCourts,
+	accessible,
+	lat,
+	long
+) => {
 	// Validate the inputs
 	courtID = validation.checkID(courtID, 'courtID');
 	name = validation.checkString(name, 'name');
@@ -132,4 +141,19 @@ const remove = async (courtID) => {
 	return { ...deleteInfo.value, deleted: true };
 };
 
-export { create, getAll, get, update, remove };
+const getCourtsByName = async (courtName) => {
+	courtName = validation.checkString(courtName, 'courtName');
+	const courtCollection = await courts();
+
+	// find all courts with a name that matches the search query
+	const query = { name: { $regex: new RegExp(courtName, 'i') } };
+	const courtSearched = await courtCollection.find(query).toArray();
+
+	// check if any courts were found
+	if (!courtSearched || courtSearched.length === 0)
+		throw `Could not find courts for search term: ${courtName}`;
+
+	return courtSearched;
+};
+
+export { create, getAll, get, update, remove, getCourtsByName };

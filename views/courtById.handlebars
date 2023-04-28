@@ -3,7 +3,6 @@
     <h2>{{courtName}}</h2>
     <p>Address: {{address}}</p>
     <p>Rating: {{overallRating}}</p>
-    <button id="pick-up-games-btn">Pick Up Games</button>
     <div id="map">
         <iframe
             width="600"
@@ -16,4 +15,21 @@
                 &q={{latitude}},{{longitude}}">
         </iframe>
     </div>
+    
 </section>
+<br>
+<h2>Pick Up Games:</h2>
+<section>
+    <div id="pick-up-games">
+        {{#each pickUpGames}}
+  <div class="game">
+    <p>Game at {{courtName}}</p>
+    <p>Date: {{date}}</p>
+    <p>Time: {{time}}</p>
+    <p>Max Players: {{maxPlayers}}</p>
+    <p>Players Joined: {{gameMembers.length}}</p>
+  </div>
+{{/each}}
+    </div>
+</section>
+<p>Court Reviews:</p>

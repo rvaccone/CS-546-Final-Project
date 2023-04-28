@@ -1,22 +1,37 @@
 import { games } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 import * as validation from "../validation.js";
+import * as user_functions from "../data/users.js";
 import * as courts_functions from "../data/courts.js";
+import * as game_members_functions from "../data/gameMembers.js";
 
 // Creates a new game and logs it in the games collection.
-const create = async (courtID, date, time, maxPlayers) => {
+const create = async (courtID, userID, date, time, maxPlayers) => {
   //****INPUT VALIDATION****//
   courtID = validation.checkID(courtID, "courtID");
+  let courtFound = await courts_functions.get(courtID);
+  let courtFoundDetails = [
+    courtFound.name,
+    courtFound.location,
+    courtFound.lat,
+    courtFound.long,
+  ];
+  userID = validation.checkID(userID, "userID");
   //todo: make it so that pick up games can be hosted only a month from the current date
   date = validation.checkDate(date, "date");
   time = validation.checkTime(time, "time");
   maxPlayers = validation.checkMaxPlayer(maxPlayers, "maxPlayers");
   // after checking date format we need to make sure games cannot be created in the past
-  const gameDateofCreation = new Date(date);
+  //   const gameDateofCreation = new Date(date);
+  // Combine date and time strings into a single string
+  const dateTimeString = `${date} ${time}`;
 
+  // Create a Date object using the concatenated string
+  const gameDateofCreation = new Date(dateTimeString);
   // Get the current date
   const currentDate = new Date();
   // Check if the game date is in the past
+  console.log(gameDateofCreation, currentDate);
   if (gameDateofCreation < currentDate) {
     throw "Error: Cannot schedule games for past dates.";
   }
@@ -27,6 +42,8 @@ const create = async (courtID, date, time, maxPlayers) => {
   // Creates a new game.
   let newGame = {
     courtID: new ObjectId(courtID),
+    userID: new ObjectId(userID),
+    courtName: courtFoundDetails[0],
     date: date,
     time: time.toLowerCase(),
     maxPlayers: maxPlayers,
@@ -36,14 +53,14 @@ const create = async (courtID, date, time, maxPlayers) => {
   // Waits for collection and attempts to insert newGame.
   const gameCollection = await games();
 
-  // Check that courtID exists.
-  const court = await courts_functions.get(courtID);
+  // // Check that courtID exists.
+  // const court = await courts_functions.get(courtID);
 
   // Check that no games start at the same time.
 
   const gameStartTimes = await gameCollection
     .find({})
-    .project({ _id: 0, courtID: 1, date: 1, time: 1 })
+    .project({ _id: 1, courtID: 1, date: 1, time: 1 })
     .toArray();
   //   console.log(gameStartTimes);
 
@@ -65,6 +82,13 @@ const create = async (courtID, date, time, maxPlayers) => {
   if (!insertInfo.acknowledged || !insertInfo.insertedId)
     throw "Error: game could not be scheduled.";
 
+  // Adds the user to the gameMembers collection
+  try {
+    await game_members_functions.create(newGame._id.toString(), userID);
+  } catch (e) {
+    throw e;
+  }
+
   // Sets the id of the newGame to a string and returns game.
   const newId = insertInfo.insertedId.toString();
   const game = await get(newId);
@@ -79,7 +103,6 @@ const getAll = async (courtID) => {
   // This gives us the data as an array of obejcts from the database.
   let gameList = await gameCollection
     .find({ courtID: new ObjectId(courtID) })
-    .project({ _id: 1, courtID: 1 })
     .toArray();
   if (!gameList) throw "Could not get all games.";
   gameList = gameList.map((element) => {
@@ -115,9 +138,10 @@ const remove = async (id) => {
 
 // Updates a game by its id.
 // TODO: Update this.
-const update = async (id, courtID, date, time, maxPlayers) => {
+const update = async (id, courtID, userID, date, time, maxPlayers) => {
   id = validation.checkID(id, "id");
   courtID = courtID.toString();
+  userID = userID.toString();
   courtID = validation.checkID(courtID, "courtID");
   date = validation.checkDate(date, "date");
   time = validation.checkTime(time, "time");
@@ -141,7 +165,8 @@ const update = async (id, courtID, date, time, maxPlayers) => {
 
   // Preforms an update.
   const updateGame = {
-    courtID: objectCourtID,
+    courtID: new ObjectId(objectCourtID),
+    userID: new ObjectId(userID),
     date: date,
     time: time.toLowerCase(),
     maxPlayers: maxPlayers,
@@ -204,4 +229,36 @@ const removeAllPastGames = async () => {
   return `removed games: ${removedGamesCount}`;
 };
 
-export { create, getAll, get, update, remove, removeAllPastGames };
+const getAllTrending = async () => {
+  let currentDate = new Date();
+  let month = String(currentDate.getMonth() + 1).padStart(2, "0");
+  let day = String(currentDate.getDate()).padStart(2, "0");
+  let year = currentDate.getFullYear();
+  let dateString = `${month}/${day}/${year}`;
+  dateString = validation.checkDate(dateString);
+  console.log(dateString);
+  const gameCollection = await games();
+  let trendingGameList = await gameCollection
+    .find({ date: dateString })
+    .project({
+      _id: 1,
+      courtID: 1,
+      courtName: 1,
+      location: 1,
+      date: 1,
+      time: 1,
+    })
+    .toArray();
+
+  return trendingGameList;
+};
+
+export {
+  create,
+  getAll,
+  get,
+  update,
+  remove,
+  removeAllPastGames,
+  getAllTrending,
+};

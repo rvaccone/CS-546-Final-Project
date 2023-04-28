@@ -5,567 +5,648 @@ import * as games_functions from "../data/games.js";
 import * as games_members_functions from "../data/gameMembers.js";
 import * as courts_functions from "../data/courts.js";
 import * as court_rev_functions from "../data/courtReviews.js";
-import { getRounds } from "bcrypt";
-import { ConnectionCheckOutStartedEvent } from "mongodb";
-const db = await dbConnection();
-await db.dropDatabase();
 
-let user1;
-let user2;
-let user3;
+// Connect to the database
+const db = await dbConnection();
+
+// Clear the database
+// await db.dropDatabase();
 
 /* ------------------- USERS ------------------- */
+console.log("/* ------------------- USERS ------------------- */");
+
+// Creating a list of users
+let user1 = null,
+  user2 = null,
+  user3 = null,
+  user4 = null; // user4 will be deleted later
+
+// Create the first user
+console.log("Creating user 1 with user 1");
 try {
-  // Creates a user.
   user1 = await users_functions.create(
     "John",
     "Doe",
-    "johndoe@gmail.com",
+    "jdoe@gmail.com",
     "Password1$",
     20,
-    "KX5Y0eBIdiVOg7EW2AF7RZEgpcRSjFUtgIk2qypGN0dRZGHgVSJUeH5b7rLPZ5OLKTaeM0GcS6NtzgAC4ZP9TCFAT3eSWgDJR1Ca1QVSoYX7W50vAPCJd0aAEvWs9Wc3Vbqd32M3pkXdzbIg7UKDKw8JP9jAS8oqywI0CvUSOlkrrVer5K8fEVGnqJWMAbc7Ra5bGShASldPufIk9xmbneproIElyZiaaGpWpnJCfLwbS21QEbJ4ciHue1L5cp0huH2VFR9bBmUrmeDX7qr1U9PtW538gRKUTP6arcVYwemeiPp3uT1kV69KnPjxmchFpZ0AvghTiaQqzHCqIDuYQmZ8Ljz8PRPjJS5FwjHKdjjjy7aix5NJLbah7ZloZBnjzjNApf2btd42VOVISN1Dm3rVLProUXQcXDnm22D7nl46kYnHERmP5ksNuqY9TWEG0igDGPgzahxFa2S4Y3AEsJwLX0FkjBnpKl22LGRnXzzTKyVnTKHs",
-    "https://t3.ftcdn.net/jpg/02/95/26/46/360_F_295264675_clwKZxogAhxLS9sD163Tgkz1WMHsq1RJ.png"
+    "Likes long walks on the beach",
+    "https://www.patrickhill.nyc/images/logo.jpg"
   );
+  console.log(user1);
 } catch (e) {
   console.log(e);
 }
+console.log("-".repeat(10));
 
+// Create the second user
+console.log("Creating user 2");
 try {
-  // Creates a user.
   user2 = await users_functions.create(
-    "Another",
-    "Person",
-    "johndoe345@gmail.com",
-    "Password1$",
-    21,
-    "This is my bio.",
-    "https://t3.ftcdn.net/jpg/02/95/26/46/360_F_295264675_clwKZxogAhxLS9sD163Tgkz1WMHsq1RJ.png"
+    "Kevin",
+    "Smith",
+    "ksmith@gmail.com",
+    "Password1$Password1$",
+    32,
+    "Spikeball fanatic",
+    "https://www.patrickhill.nyc/images/logo.jpg"
   );
+  console.log(user2);
 } catch (e) {
   console.log(e);
 }
+console.log("-".repeat(10));
 
+// Create the third user
+console.log("Creating user 3");
 try {
-  // Creates a user.
   user3 = await users_functions.create(
-    "Jane",
-    "Doe",
-    "johndoe211@gmail.com",
-    "Password1$",
-    20,
-    "Hello, my name is Jane Doe.",
-    "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.com%2Fpin.jpg"
+    "Patrick",
+    "Hill",
+    "iinfo@graffixnyc.com",
+    "iNsan3PAss&",
+    25,
+    "Cool guy",
+    "https://www.patrickhill.nyc/images/logo.jpg"
   );
+  console.log(user3);
 } catch (e) {
   console.log(e);
 }
+console.log("-".repeat(10));
 
+// Create the fourth user
+console.log("Creating user 4");
 try {
-  // Creates a user.
   user4 = await users_functions.create(
-    "Sai",
-    "Bandla",
-    "saipranav789@gmail.com",
-    "Password1789$",
-    20,
-    "Hello, my name is sai and I can't dunk.",
-    "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.com%2Fpin.jpg"
+    "Delete",
+    "Me",
+    "deleteme@gmail.com",
+    "d3l3teM&",
+    50,
+    "uncool guy",
+    "https://www.patrickhill.nyc/images/logo.jpg"
+  );
+  console.log(user4);
+} catch (e) {
+  console.log(e);
+}
+console.log("-".repeat(10));
+
+// Using the get function for the first user
+console.log("Getting user 1");
+try {
+  console.log(await users_functions.get(user1._id.toString()));
+} catch (e) {
+  console.log(e);
+}
+console.log("-".repeat(10));
+
+// Getting all users
+console.log("Getting all users");
+try {
+  console.log(await users_functions.getAll());
+} catch (e) {
+  console.log(e);
+}
+console.log("-".repeat(10));
+
+// Update the second user
+console.log("Updating user 2");
+try {
+  console.log(
+    await users_functions.update(
+      user2._id.toString(),
+      "Clark",
+      "Kent",
+      user2.email,
+      "Password1$Password1$",
+      user2.age,
+      user2.bio,
+      user2.imgLink
+    )
   );
 } catch (e) {
   console.log(e);
 }
+console.log("-".repeat(10));
 
+// Using the get function for the second user
+console.log("Getting user 2");
 try {
-  let allUsers = await users_functions.getAll();
-  console.log(allUsers);
+  console.log(await users_functions.get(user2._id.toString()));
+} catch (e) {
+  console.log(e);
+}
+console.log("-".repeat(10));
+
+// Delete the last user
+console.log("Deleting user 4");
+try {
+  console.log(await users_functions.remove(user4._id.toString()));
+} catch (e) {
+  console.log(e);
+}
+console.log("-".repeat(10));
+
+// Getting all users
+console.log("Getting all users");
+try {
+  console.log(await users_functions.getAll());
 } catch (e) {
   console.log(e);
 }
 
-// try {
-//   // Removes a user.
-//   const removal = await users_functions.remove(user3._id);
-//   console.log(removal);
-// } catch (e) {
-//   console.log(e);
-// }
+/* ------------------- COURTS ------------------- */
+console.log("/* ------------------- COURTS ------------------- */");
 
-try {
-  // Renames user
-  const rename_user = await users_functions.update(
-    user1._id,
-    "Jack",
-    "Harrington",
-    "johndoe@gmail.com",
-    "Password1$",
-    20,
-    "KX5Y0eBIdiVOg7EW2AF7RZEgpcRSjFUtgIk2qypGN0dRZGHgVSJUeH5b7rLPZ5OLKTaeM0GcS6NtzgAC4ZP9TCFAT3eSWgDJR1Ca1QVSoYX7W50vAPCJd0aAEvWs9Wc3Vbqd32M3pkXdzbIg7UKDKw8JP9jAS8oqywI0CvUSOlkrrVer5K8fEVGnqJWMAbc7Ra5bGShASldPufIk9xmbneproIElyZiaaGpWpnJCfLwbS21QEbJ4ciHue1L5cp0huH2VFR9bBmUrmeDX7qr1U9PtW538gRKUTP6arcVYwemeiPp3uT1kV69KnPjxmchFpZ0AvghTiaQqzHCqIDuYQmZ8Ljz8PRPjJS5FwjHKdjjjy7aix5NJLbah7ZloZBnjzjNApf2btd42VOVISN1Dm3rVLProUXQcXDnm22D7nl46kYnHERmP5ksNuqY9TWEG0igDGPgzahxFa2S4Y3AEsJwLX0FkjBnpKl22LGRnXzzTKyVnTKHs",
-    "https://t3.ftcdn.net/jpg/02/95/26/46/360_F_295264675_clwKZxogAhxLS9sD163Tgkz1WMHsq1RJ.png"
-  );
-  console.log(rename_user);
-} catch (e) {
-  console.log(e);
-}
-
-/* ---------------------- Courts ---------------------- */
-// Create two courts to be used later
-let court1 = null;
-let court2 = null;
-
-// Printing out a spacer for readability
-console.log("-".repeat(20) + " Courts " + "-".repeat(20));
+// Creating a list of users
+let court1 = null,
+  court2 = null,
+  court3 = null,
+  court4 = null; // court4 will be deleted later
 
 // Create the first court
-console.log("Creating the first court");
+console.log("Creating court 1");
 try {
   court1 = await courts_functions.create(
-    "court1",
-    "122 Bloomfield Ave",
-    4,
-    false,
+    "Court 1",
+    "123 Main St",
     10,
-    33
-  );
-} catch (e) {
-  console.log(e);
-}
-
-// Create the second court
-console.log("Creating the second court");
-try {
-  court2 = await courts_functions.create(
-    "court2",
-    "122 Bloomfield Ave",
-    2,
-    true,
-    -10,
+    false,
+    33,
     -33
   );
+  console.log(court1);
 } catch (e) {
   console.log(e);
 }
+console.log("-".repeat(10));
 
-// Get all the courts
-console.log("Get all the courts for the first time");
+// Create the second court
+console.log("Creating court 2");
 try {
-  let allCourts = await courts_functions.getAll();
-  console.log(allCourts);
+  court2 = await courts_functions.create(
+    "Court 2",
+    "30 5th Ave",
+    8,
+    true,
+    -33,
+    33
+  );
+  console.log(court2);
 } catch (e) {
   console.log(e);
 }
-console.log("Done getting all courts");
+console.log("-".repeat(10));
 
-// Get the first court
-console.log("Get the first court");
+// Create the third court
+console.log("Creating court 3");
 try {
-  let court = await courts_functions.get(court1._id.toString());
-  console.log(court);
+  court3 = await courts_functions.create(
+    "Court 3",
+    "100 Bloomfield Ave",
+    3,
+    true,
+    -10,
+    -15
+  );
+  console.log(court3);
 } catch (e) {
   console.log(e);
 }
+console.log("-".repeat(10));
 
-// Remove the first court
-console.log("Remove the first court");
+// Create the fourth court
+console.log("Creating court 4");
 try {
-  let removeCourt = await courts_functions.remove(court1._id.toString());
-  console.log(removeCourt);
-} catch (e) {
-  console.log(e);
-}
-
-// Get all the courts again
-console.log("Get all the courts for the second time");
-try {
-  let allCourts = await courts_functions.getAll();
-  console.log(allCourts);
-} catch (e) {
-  console.log(e);
-}
-console.log("Done getting all courts");
-
-// Update the second court
-console.log("Update the second court");
-try {
-  let updateCourt = await courts_functions.update(
-    court2._id.toString(),
-    "court3",
-    "55 Bloom Ave",
+  court4 = await courts_functions.create(
+    "Court 4",
+    "23 7th St",
     3,
     false,
-    -15,
-    -35
+    73,
+    20
   );
-  console.log(updateCourt);
+  console.log(court4);
 } catch (e) {
   console.log(e);
 }
+console.log("-".repeat(10));
 
-// Get all the courts one last time
-console.log("Get all the courts for the third time");
+// Using the get function for the first court
+console.log("Getting court 1");
 try {
-  let allCourts = await courts_functions.getAll();
-  console.log(allCourts);
+  console.log(await courts_functions.get(court1._id.toString()));
 } catch (e) {
   console.log(e);
 }
-console.log("Done getting all courts");
+console.log("-".repeat(10));
 
-console.log("Done seeding database");
-//====pranavs court review functions testing=====//
-console.log(
-  "creating reviews in the courts inorder to do that i first create 2 courts"
-);
-let rev_court1 = null;
-let rev_court2 = null;
+// Getting all courts
+console.log("Getting all courts");
 try {
-  console.log("review testing court 1");
-  rev_court1 = await courts_functions.create(
-    "court for review 1",
-    "12 webster Ave",
-    4,
-    false,
-    10,
-    36
-  );
+  console.log(await courts_functions.getAll());
 } catch (e) {
   console.log(e);
 }
+console.log("-".repeat(10));
 
+// Update the second court
+console.log("Updating court 2");
 try {
-  console.log("review testing court 2");
-  rev_court2 = await courts_functions.create(
-    "court for review 2",
-    "167 field Ave",
-    4,
-    false,
-    10,
-    30
+  console.log(
+    await courts_functions.update(
+      court2._id.toString(),
+      "Court 2.0",
+      "30 5th Ave",
+      13,
+      true,
+      -33,
+      33
+    )
   );
 } catch (e) {
   console.log(e);
 }
+console.log("-".repeat(10));
 
+// Using the get function for the second court
+console.log("Getting court 2");
 try {
-  let allCourts = await courts_functions.getAll();
-  console.log(allCourts);
+  console.log(await courts_functions.get(court2._id.toString()));
 } catch (e) {
   console.log(e);
 }
-console.log("Done getting all courts");
+console.log("-".repeat(10));
 
-console.log("now adding reviews to the courts");
-console.log(rev_court1._id);
+// Delete the last user
+console.log("Deleting court 4");
 try {
-  let review1 = await court_rev_functions.create(
-    rev_court1._id.toString(),
-    "sai bandla",
-    4,
-    "its a damn good court"
+  console.log(await courts_functions.remove(court4._id.toString()));
+} catch (e) {
+  console.log(e);
+}
+console.log("-".repeat(10));
+
+// Getting all users
+console.log("Getting all courts");
+try {
+  console.log(await courts_functions.getAll());
+} catch (e) {
+  console.log(e);
+}
+
+/* ------------------- COURTS REVIEWS ------------------- */
+console.log("/* ------------------- COURTS REVIEWS ------------------- */");
+
+// Creating a list of reviews
+let review1 = null,
+  review2 = null,
+  review3 = null,
+  review4 = null; // review4 will be deleted later
+
+// Create the first review
+console.log("Creating review 1 on court 1 with user 1");
+try {
+  review1 = await court_rev_functions.create(
+    court1._id.toString(),
+    user1._id.toString(),
+    5,
+    "This is a great court!"
   );
   console.log(review1);
 } catch (e) {
   console.log(e);
 }
-let review2 = null;
+console.log("-".repeat(10));
+
+// Create the second review
+console.log("Creating review 2 on court 1 with user 2");
 try {
   review2 = await court_rev_functions.create(
-    rev_court1._id.toString(),
-    "jack",
-    3.5,
-    "its was nice but nets need to be fixed to the hoops"
+    court1._id.toString(),
+    user2._id.toString(),
+    1,
+    "This is a bad court!"
   );
   console.log(review2);
 } catch (e) {
   console.log(e);
 }
+console.log("-".repeat(10));
 
-// testing get all reviews function
-console.log("+===============================================+");
+// Create the third review
+console.log("Creating review 3 on court 2 with user 1");
 try {
-  let all_rev = await court_rev_functions.getAll(rev_court1._id.toString());
-  console.log(all_rev);
-} catch (e) {
-  console.log(e);
-}
-//testing get review by id
-console.log("+===============================================+");
-try {
-  let rev = await court_rev_functions.get(review2.reviews[1]._id.toString());
-  console.log(rev);
-} catch (e) {
-  console.log(e);
-}
-// testing updating a review function
-console.log("+===============================================+");
-try {
-  let updated_rev = await court_rev_functions.update(
-    review2.reviews[1]._id.toString(),
-    "Sam",
+  review3 = await court_rev_functions.create(
+    court2._id.toString(),
+    user1._id.toString(),
     5,
-    "Amazing court!!!"
+    "This court is better than court 1!"
   );
-  console.log(updated_rev);
+  console.log(review3);
 } catch (e) {
   console.log(e);
 }
-//testing deletion of a review
-console.log("+===============================================+");
+console.log("-".repeat(10));
+
+// Create the fourth review
+console.log("Creating review 4 on court 2 with user 2");
 try {
-  let updated_rev = await court_rev_functions.remove(
-    review2.reviews[1]._id.toString()
+  review4 = await court_rev_functions.create(
+    court2._id.toString(),
+    user2._id.toString(),
+    1,
+    "This court is worse than court 1!"
   );
-  console.log(updated_rev, "is gone");
+  console.log(review4);
 } catch (e) {
   console.log(e);
 }
-console.log("+===============================================+");
-//creating a court for game
-let game_court1 = null;
+console.log("-".repeat(10));
+
+// Using the get function for the first review
+console.log("Getting review 1");
 try {
-  game_court1 = await courts_functions.create(
-    "court to host game",
-    "122 Bloomfield Ave",
+  console.log(
+    await court_rev_functions.get(court1._id.toString(), user1._id.toString())
+  );
+} catch (e) {
+  console.log(e);
+}
+console.log("-".repeat(10));
+
+// Getting all reviews for court1
+console.log("Getting all reviews for court1");
+try {
+  console.log(await court_rev_functions.getAll(court1._id.toString()));
+} catch (e) {
+  console.log(e);
+}
+console.log("-".repeat(10));
+
+// Update the second review
+console.log("Updating review 2");
+try {
+  review2 = await court_rev_functions.update(
+    court1._id.toString(),
+    user2._id.toString(),
     4,
-    false,
-    10,
-    33
+    "This is a pretty great court!"
   );
-  console.log("court is created now creating game");
+  console.log(review2);
+} catch (e) {
+  console.log(e);
+}
+console.log("-".repeat(10));
+
+// Using the get function for the second review
+console.log("Getting review 2");
+try {
+  console.log(
+    await court_rev_functions.get(court1._id.toString(), user2._id.toString())
+  );
+} catch (e) {
+  console.log(e);
+}
+console.log("-".repeat(10));
+
+// Delete the fourth review
+console.log("Deleting review 4 on court 2 with user 2");
+try {
+  review4 = await court_rev_functions.remove(
+    court2._id.toString(),
+    user2._id.toString()
+  );
+  console.log(review4);
 } catch (e) {
   console.log(e);
 }
 
-let game_court2 = null;
-try {
-  game_court2 = await courts_functions.create(
-    "court to host game2",
-    "124 Webster Ave",
-    4,
-    false,
-    10,
-    33
-  );
-  console.log("court is created for testing now creating game");
-} catch (e) {
-  console.log(e);
-}
-/* ---------------------- GAMES ---------------------- */
-let game3 = null;
+/* ------------------- GAMES ------------------- */
+console.log("/* ------------------- GAMES ------------------- */");
 
+// Creating a list of games
+let game1 = null,
+  game2 = null,
+  game3 = null; // game3 will be deleted later
+
+// Create the first game
+console.log("Creating game 1 on court 1 with user 1");
 try {
   game1 = await games_functions.create(
-    game_court1._id.toString(),
-    "06/13/2023",
-    "10:00 AM",
-    10
+    court1._id.toString(),
+    user1._id.toString(),
+    "02/21/2024",
+    "10:00 PM",
+    4
   );
-  console.log("game 1 created");
+  console.log(game1);
 } catch (e) {
   console.log(e);
 }
+console.log("-".repeat(10));
 
+// Create the first game
+console.log("Creating game 2 on court 2 with user 2");
 try {
   game2 = await games_functions.create(
-    game_court1._id.toString(),
-    "06/13/2023",
-    "11:00 PM",
-    10
+    court2._id.toString(),
+    user2._id.toString(),
+    "10/24/2023",
+    "2:00 AM",
+    8
   );
-  console.log("game 2 created");
+  console.log(game2);
 } catch (e) {
   console.log(e);
 }
+console.log("-".repeat(10));
 
+// Create the third game
+console.log("Creating game 3 on court 3 with user 3");
 try {
   game3 = await games_functions.create(
-    game_court1._id.toString(),
-    "06/13/2023",
-    "10:00 PM",
-    10
+    court3._id.toString(),
+    user3._id.toString(),
+    "04/30/2023",
+    "8:00 AM",
+    4
   );
-  console.log("game 3 created");
+  console.log(game3);
 } catch (e) {
   console.log(e);
 }
-let game4 = null;
+console.log("-".repeat(10));
+
+// Using the get function for the first game
+console.log("Getting game 1");
 try {
-  game4 = await games_functions.create(
-    game_court1._id.toString(),
-    "06/13/2023",
-    "10:00 AM",
-    10
-  );
-  console.log("game 4 created");
+  console.log(await games_functions.get(game1._id.toString()));
 } catch (e) {
   console.log(e);
 }
-let game5 = null;
+console.log("-".repeat(10));
+
+// Getting all users for court1
+console.log("Getting all games for court1");
 try {
-  game5 = await games_functions.create(
-    game_court2._id.toString(),
-    "06/13/2023",
-    "10:00 AM",
-    10
+  console.log(await games_functions.getAll(court1._id.toString()));
+} catch (e) {
+  console.log(e);
+}
+console.log("-".repeat(10));
+
+// Update the second game
+console.log("Updating game 2");
+try {
+  console.log(
+    await games_functions.update(
+      game2._id.toString(),
+      game2.courtID.toString(),
+      game2.userID.toString(),
+      "03/19/2020",
+      "12:00 PM",
+      6
+    )
   );
-  console.log("game 5 created");
+} catch (e) {
+  console.log(e);
+}
+console.log("-".repeat(10));
+
+// Using the get function for the second game
+console.log("Getting game 2 for court 2");
+try {
+  console.log(await games_functions.get(game2._id.toString()));
+} catch (e) {
+  console.log(e);
+}
+console.log("-".repeat(10));
+
+// Delete the last game
+console.log("Deleting game 3");
+try {
+  console.log(await games_functions.remove(game3._id.toString()));
+} catch (e) {
+  console.log(e);
+}
+console.log("-".repeat(10));
+
+// Getting all users
+console.log("Getting all users for court 1");
+try {
+  console.log(await games_functions.getAll(court1._id.toString()));
 } catch (e) {
   console.log(e);
 }
 
-//adding a member to a game
-let game_w_member = null;
+/* ------------------- GAME MEMBERS ------------------- */
+console.log("/* ------------------- GAME MEMBERS ------------------- */");
+
+// Creating a list of gameMembers
+let gameMember1 = null,
+  gameMember2 = null,
+  gameMember3 = null; // gameMember3 will be deleted later
+
+// Create the first gameMember
+console.log("Creating gameMember 1 on game 2 with user 1");
 try {
-  game_w_member = await games_members_functions.create(
+  gameMember1 = await games_members_functions.create(
+    game2._id.toString(),
+    user1._id.toString()
+  );
+  console.log(gameMember1);
+} catch (e) {
+  console.log(e);
+}
+console.log("-".repeat(10));
+
+// Create the first gameMember
+console.log("Creating gameMember 2 on game 1 with user 2");
+try {
+  gameMember2 = await games_members_functions.create(
     game1._id.toString(),
-    user1._id
+    user2._id.toString()
   );
-  console.log("created member in game");
+  console.log(gameMember2);
 } catch (e) {
   console.log(e);
 }
+console.log("-".repeat(10));
 
-let game_w_member2 = null;
+// Create the third gameMember
+console.log("Creating gameMember 3 on game 1 with user 3");
 try {
-  game_w_member2 = await games_members_functions.create(
-    game5._id.toString(),
-    user1._id
-  );
-  console.log("created member in game");
-} catch (e) {
-  console.log(e);
-}
-console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-console.log("I am trying to add the same player to the same game to see error");
-try {
-  game_w_member = await games_members_functions.create(
+  gameMember3 = await games_members_functions.create(
     game1._id.toString(),
-    user1._id
+    user3._id.toString()
   );
-  console.log("created member in game");
+  console.log(gameMember3);
 } catch (e) {
   console.log(e);
 }
+console.log("-".repeat(10));
 
-let game_w_member3 = null;
+// Using the get function for the first gameMember
+console.log("Getting gameMember 1");
 try {
-  game_w_member3 = await games_members_functions.create(
-    game1._id.toString(),
-    user2._id
+  console.log(
+    await games_members_functions.get(
+      user1._id.toString(),
+      game1._id.toString()
+    )
   );
-  console.log("created member in game");
 } catch (e) {
   console.log(e);
 }
+console.log("-".repeat(10));
 
-let game_w_member4 = null;
+// Getting all users for game 1
+console.log("Getting all gameMembers for game 1");
 try {
-  game_w_member4 = await games_members_functions.create(
-    game1._id.toString(),
-    user3._id
+  console.log(await games_members_functions.getAll(game1._id.toString()));
+} catch (e) {
+  console.log(e);
+}
+console.log("-".repeat(10));
+
+// Using the get function for the second gameMember
+console.log("Getting gameMember 2");
+try {
+  console.log(
+    await games_members_functions.get(
+      user2._id.toString(),
+      game2._id.toString()
+    )
   );
-  console.log("created member in game");
 } catch (e) {
   console.log(e);
 }
-console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-try {
-  let allGames = await games_functions.getAll(game_court1._id);
-  console.log(allGames);
-} catch (e) {
-  console.log(e);
-}
+console.log("-".repeat(10));
 
-//testing get and removing game member function:
-
-console.log("*********TESTING GET AND REMOVE GAMEMEMBERS ***************");
-let getGM = null;
-let getGM2 = null;
-console.log(`game id: ${game1._id}`);
+// Delete the last gameMember
+console.log("Deleting gameMember 3");
 try {
-  getGM = await games_members_functions.get(user3._id, game1._id.toString());
-  console.log("got 1st member in game1");
-  console.log(getGM);
-} catch (e) {
-  console.log(e);
-}
-
-try {
-  getGM2 = await games_members_functions.get(user2._id, game1._id.toString());
-  console.log("got 2nd member in game1");
-  console.log(getGM2);
-} catch (e) {
-  console.log(e);
-}
-
-try {
-  getGM2 = await games_members_functions.remove(
-    user2._id,
-    game1._id.toString()
+  console.log(
+    await games_members_functions.remove(
+      user3._id.toString(),
+      game1._id.toString()
+    )
   );
-  console.log("removing 2nd member in game1");
-  console.log(getGM2);
 } catch (e) {
   console.log(e);
 }
+console.log("-".repeat(10));
 
-//creating a game in the past
-
-let past_game = null;
+// Getting all users for game 1
+console.log("Getting all users");
 try {
-  past_game = await games_functions.create(
-    game_court2._id.toString(),
-    "02/13/2023",
-    "10:00 AM",
-    10
-  );
-  console.log("game in past created");
-  console.log(past_game);
+  console.log(await games_members_functions.getAll(game1._id.toString()));
 } catch (e) {
   console.log(e);
 }
 
-//testing delete all past games
-try {
-  past_game = await games_functions.removeAllPastGames();
-  console.log("removing past games");
-  console.log(past_game);
-} catch (e) {
-  console.log(e);
-}
-//TO TEST LATER
-// try {
-//   let removedList = await games_functions.removeAllPastGames();
-//   console.log(removedList);
-// } catch (e) {
-//   console.log(e);
-// }
-
-// removing game
-// try {
-//   let removeGame = await games_functions.remove(game1._id);
-//   console.log(removeGame);
-//   console.log("removed game successfully");
-// } catch (e) {
-//   console.log(e);
-// }
-
-// try {
-//   let gameMember1 = await games_members_functions.create(
-//     game2._id,
-//     user1._id,
-//     user1.firstName,
-//     user1.lastName
-//   );
-//   console.log(gameMember1);
-// } catch (e) {
-//   console.log(e);
-// }
-
-// try {
-//   let allMembers = await games_members_functions.getAll(game2._id);
-//   console.log(allMembers);
-// } catch (e) {
-//   console.log(e);
-// }
-
+// Close the connection
 await closeConnection();

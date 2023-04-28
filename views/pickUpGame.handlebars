@@ -1,0 +1,22 @@
+<div class="game">
+  <h2>PickUp Game at {{gameDetails.courtName}}</h2>
+  <p>Host: {{Host}}</p>
+  <p>Date: {{gameDetails.date}}</p>
+  <p>Time: {{gameDetails.time}}</p>
+  <p>Max Players: {{gameDetails.maxPlayers}}</p>
+  <p>Players Joined: {{gameDetails.gameMembers.length}}</p>
+  <p>Player List:</p>
+  <ol>
+    {{#each gameDetails.gameMembers}}
+      <li>{{this.fullName}}</li>
+    {{/each}}
+  </ol>
+  <form action="/rsvp" method="post">
+    <input type="hidden" name="gameId" value="{{gameDetails._id}}">
+    <button type="submit">RSVP</button>
+  </form>
+</div>
+
+
+
+

@@ -49,8 +49,8 @@ const create = async (gameID, userID) => {
     }
   }
   // Creates fullName variable.
-  let fullName = memberName.firstName + " " + memberName.lastName;
-
+  // let fullName = memberName.firstName + " " + memberName.lastName;
+  let fullName = await users_functions.getFullName(userID);
   // Initalizes a newGameMember.
   let newGameMember = {
     _id: new ObjectId(userID),
