@@ -5,7 +5,7 @@ import * as users_functions from '../data/users.js';
 import * as validation from '../validation.js';
 import xss from 'xss';
 
-// Register Route
+// Register Routes
 router
 	// Render the registration page.
 	.get('/register', async (req, res) => {
@@ -117,7 +117,7 @@ router
 		}
 	});
 
-// Login Route
+// Login Routes
 router
 
 	// Render the login page.
@@ -169,6 +169,7 @@ router
 		}
 	});
 
+// Edit User Routes
 router
 
 	// TODO: get route for user to display profile.
@@ -240,5 +241,12 @@ router
 			res.status(500).json({ error: e });
 		}
 	});
+
+// Logout Route
+router.get('/logout', async (req, res) => {
+	// Destroys the session.
+	req.session.destroy();
+	return res.redirect('/');
+});
 
 export default router;
