@@ -18,20 +18,21 @@ const create = async (courtID, userID, date, time, maxPlayers) => {
   ];
   userID = validation.checkID(userID, "userID");
   //todo: make it so that pick up games can be hosted only a month from the current date
+  //console.log(date);
   date = validation.checkDate(date, "date");
+  //console.log(date);
   time = validation.checkTime(time, "time");
   maxPlayers = validation.checkMaxPlayer(maxPlayers, "maxPlayers");
-  // after checking date format we need to make sure games cannot be created in the past
-  //   const gameDateofCreation = new Date(date);
+
   // Combine date and time strings into a single string
   const dateTimeString = `${date} ${time}`;
-
+  // console.log(dateTimeString);
   // Create a Date object using the concatenated string
   const gameDateofCreation = new Date(dateTimeString);
   // Get the current date
   const currentDate = new Date();
   // Check if the game date is in the past
-  console.log(gameDateofCreation, currentDate);
+  //console.log(gameDateofCreation, "*******", currentDate);
   if (gameDateofCreation < currentDate) {
     throw "Error: Cannot schedule games for past dates.";
   }
