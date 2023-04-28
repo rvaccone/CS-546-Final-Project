@@ -1,12 +1,31 @@
 import { Router } from "express";
 const router = Router();
-import { gamesData, usersData } from "../data/index.js";
+import { gamesData, usersData, courtsData } from "../data/index.js";
 import * as validation from "../validation.js";
 
 // TODO: render instead of json. Including data you want to render with it.
 
 router
   .route("/:courtID")
+  .get(async (req, res) => {
+    let id = req.params.courtID;
+
+    // Validate the id
+    try {
+      id = validation.checkID(id, "id");
+    } catch (e) {
+      return res.status(400).render("Error", { errorMessage: e });
+    }
+
+    // Get the court details
+    let courtDetails = null;
+    try {
+      courtDetails = await courtsData.get(id);
+    } catch (e) {
+      return res.status(400).render("Error", { errorMessage: e });
+    }
+    return res.render("createGame");
+  })
 
   // Create Game by courtID
   .post(async (req, res) => {
