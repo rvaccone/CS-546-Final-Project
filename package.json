@@ -6,8 +6,9 @@
 	"type": "module",
 	"scripts": {
 		"start": "node app.js",
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"seed": "node ./tasks/seed.js"
+		"test": "echo \"Error: no test specified\" && exit 1"
+		
+		
 	},
 	"author": "Jack Harrington (10463675)",
 	"license": "ISC",
