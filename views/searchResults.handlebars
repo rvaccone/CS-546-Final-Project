@@ -1,0 +1,8 @@
+<h1>Search Results</h1>
+{{#each searchResults}}
+  <div class="court">
+    <a href="/court/{{_id}}"><h2>{{name}}</h2></a>
+    <p>Location: {{location}}</p>
+    <p>Number of Courts: {{numCourts}}</p>
+  </div>
+{{/each}}

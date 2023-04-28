@@ -17,9 +17,19 @@
     </div>
     
 </section>
-
+<br>
+<h2>Pick Up Games:</h2>
 <section>
-    <button id="pick-up-games-btn" name="pick-up-games-btn" type="submit">Pick Up Games</button>
-    <div id="pickUpDiv">
+    <div id="pick-up-games">
+        {{#each pickUpGames}}
+  <div class="game">
+    <p>Game at {{courtName}}</p>
+    <p>Date: {{date}}</p>
+    <p>Time: {{time}}</p>
+    <p>Max Players: {{maxPlayers}}</p>
+    <p>Players Joined: {{gameMembers.length}}</p>
+  </div>
+{{/each}}
     </div>
 </section>
+<p>Court Reviews:</p>
