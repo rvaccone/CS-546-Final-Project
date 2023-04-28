@@ -1,1 +1,21 @@
-<p>I am the homepage</p>
+<head>
+	<title>Homepage</title>
+</head>
+<body>
+	<h1>NYC court finder</h1>
+	<form>
+		<input type="text" placeholder="Search...">
+		<button type="submit">Search</button>
+	</form>
+	<a href="login">Login</a>
+	<a href="register">Sign up</a>
+	<h1>Trending Games</h1>
+	{{#each trendingGameList}}
+		<div class="trending-game">
+			<a href="/games/{{this._id}}">
+				<h4>{{this.courtName}}</h4>
+			</a>
+            <p>{{this.location}} - {{this.date}} - {{this.time}}</p>
+		</div>
+	{{/each}}
+</body>

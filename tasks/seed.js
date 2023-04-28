@@ -431,6 +431,8 @@ console.log("/* ------------------- GAMES ------------------- */");
 let game1 = null,
   game2 = null,
   game3 = null; // game3 will be deleted later
+let game4 = null;
+let game5 =null
 
 // Create the first game
 console.log("Creating game 1 on court 1 with user 1");
@@ -479,6 +481,48 @@ try {
   console.log(e);
 }
 console.log("-".repeat(10));
+
+// Create the forth game
+console.log('Creating game 4 on court 1 with user 1');
+try {
+	game4 = await games_functions.create(
+		court1._id.toString(),
+		user1._id.toString(),
+		'04/27/2023',
+		'10:00 PM',
+		4
+	);
+	console.log(game4);
+} catch (e) {
+	console.log(e);
+}
+console.log('-'.repeat(10));
+
+// Create the five game
+console.log('Creating game 5 on court 2 with user 1');
+try {
+	game5 = await games_functions.create(
+		court2._id.toString(),
+		user2._id.toString(),
+		'04/27/2023',
+		'11:00 PM',
+		4
+	);
+	console.log(game5);
+} catch (e) {
+	console.log(e);
+}
+console.log('-'.repeat(10));
+
+console.log('geting trending games')
+try{
+	console.log(await games_functions.getAllTrending())
+
+}catch (e) {
+	console.log(e);
+}
+
+
 
 // Using the get function for the first game
 console.log("Getting game 1");
