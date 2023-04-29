@@ -5,14 +5,12 @@ import bcrypt from 'bcrypt';
 const saltRounds = 1;
 
 // Creates a new user and logs it in the users collection.
-const create = async (firstName, lastName, email, password, age, bio, imgLink) => {
+const create = async (firstName, lastName, email, password, age) => {
 	firstName = validation.checkString(firstName, 'firstName');
 	lastName = validation.checkString(lastName, 'lastName');
 	email = validation.checkEmail(email, 'email');
 	password = validation.checkPassword(password, 'password');
 	age = validation.checkAge(age, 'age');
-	bio = validation.checkBio(bio, 'bio');
-	imgLink = validation.checkImgLink(imgLink, 'imgLink');
 
 	// Hashes password.
 	let hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -24,8 +22,8 @@ const create = async (firstName, lastName, email, password, age, bio, imgLink) =
 		email: email.toLowerCase(),
 		password: hashedPassword,
 		age: age,
-		bio: bio,
-		imgLink: imgLink,
+		bio: '',
+		imgLink: 'https://img.freepik.com/premium-vector/basketball_319667-191.jpg',
 	};
 	// Waits for collection and attempts to insert newUser.
 	const userCollection = await users();
@@ -95,7 +93,13 @@ const update = async (id, firstName, lastName, email, password, age, bio, imgLin
 	email = validation.checkEmail(email, 'email');
 	password = validation.checkPassword(password, 'password');
 	age = validation.checkAge(age, 'age');
-	bio = validation.checkBio(bio, 'bio');
+
+	// Makes the bio input optional.
+	if (bio.trim() == '') {
+		bio = '';
+	} else {
+		bio = validation.checkBio(bio, 'bio');
+	}
 	imgLink = validation.checkImgLink(imgLink, 'imgLink');
 
 	const user = await get(id);

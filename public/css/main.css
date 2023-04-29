@@ -132,3 +132,15 @@ a:hover {
 	font-weight: bold;
 	text-decoration: underline;
 }
+
+#profile-image {
+	max-width: 20%;
+	max-height: 20%;
+	border: 3px solid #000000;
+	border-radius: 60%;
+	margin: auto;
+}
+
+#image-wrapper {
+	text-align: center;
+}
