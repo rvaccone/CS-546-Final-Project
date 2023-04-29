@@ -5,7 +5,7 @@ import * as users_functions from '../data/users.js';
 import * as validation from '../validation.js';
 import xss from 'xss';
 
-// Register Route
+// Register Routes
 router
 	// Render the registration page.
 	.get('/register', async (req, res) => {
@@ -31,8 +31,6 @@ router
 		userRegistration.passwordInput = xss(userRegistration.passwordInput);
 		userRegistration.confirmPasswordInput = xss(userRegistration.confirmPasswordInput);
 		userRegistration.ageInput = xss(userRegistration.ageInput);
-		userRegistration.bioInput = xss(userRegistration.bioInput);
-		userRegistration.imglinkInput = xss(userRegistration.imglinkInput);
 
 		try {
 			// Validate the first name.
@@ -65,17 +63,6 @@ router
 			userRegistration.ageInput = validation.checkAge(
 				Number(userRegistration.ageInput),
 				'ageInput'
-			);
-
-			// Validate the bio.
-
-			userRegistration.bioInput = validation.checkBio(userRegistration.bioInput, 'bioInput');
-
-			// Validate the image link.
-
-			userRegistration.imglinkInput = validation.checkImgLink(
-				userRegistration.imglinkInput,
-				'imglinkInput'
 			);
 		} catch (e) {
 			return res.status(400).render('error', { error: e });
@@ -117,7 +104,7 @@ router
 		}
 	});
 
-// Login Route
+// Login Routes
 router
 
 	// Render the login page.
@@ -135,16 +122,14 @@ router
 				.render('login', { title: 'Login', error: 'No user data provided.' });
 		}
 
+		// XSS Protection on login form.
+		userLogin.email = xss(userLogin.email);
+		userLogin.password = xss(userLogin.password);
+
 		// Preform validation on the user input.
 		try {
-			userLogin.emailAddressInput = validation.validateEmailInputs(
-				userLogin.emailAddressInput,
-				'email address'
-			);
-			userLogin.passwordInput = validation.validatePasswordInputs(
-				userLogin.passwordInput,
-				'password'
-			);
+			userLogin.email = validation.checkEmail(userLogin.email, 'email address');
+			userLogin.password = validation.checkPassword(userLogin.password, 'password');
 		} catch (e) {
 			return res.status(400).render('login', { title: 'Login', error: e });
 		}
@@ -152,19 +137,18 @@ router
 		// Authenticate the user.
 		try {
 			// Validates the user.
-			const validatedUser = await users.checkUser(
-				userLogin.emailAddressInput,
-				userLogin.passwordInput
+			const validatedUser = await users_functions.checkUser(
+				userLogin.email,
+				userLogin.password
 			);
+			console.log(validatedUser);
 			if (validatedUser) {
 				// Sets the user session in the cookie.
 				req.session.user = validatedUser;
-
-				// Checks the role of the validated user and redirects.
-				if (validatedUser.role === 'admin') return res.redirect('/admin');
-				if (validatedUser.role === 'user') return res.redirect('/protected');
+				return res.redirect(`/user/:${validatedUser._id}`);
 			}
 		} catch (e) {
+			console.log('Here is the error:' + e);
 			return res.status(400).render('login', {
 				title: 'Login',
 				error: e,
@@ -172,16 +156,45 @@ router
 		}
 	});
 
+// Edit User Routes
 router
+	.get('/logout', async (req, res) => {
+		// Destroys the session.
+		console.log('you are hitting logout route');
+		req.session.destroy();
+		return res.status(200).redirect('/');
+	})
 
-	// TODO: get route for user to display profile.
-	//! Should you be printing the user's ID in the URL?
 	.get('/:id', async (req, res) => {
-		//something
+		// Send the user's session information to the page.
+		return res.render('profile', {
+			title: 'My Profile',
+			_id: req.session.user._id,
+			firstName: req.session.user.firstName,
+			lastName: req.session.user.lastName,
+			email: req.session.user.emailAddress,
+			age: req.session.user.age,
+			bio: req.session.user.bio,
+			imgLink: req.session.user.imgLink,
+		});
+	})
+
+	// TODO: Edit the editProfile page to have correct action, entries, and link back to profile.
+	.get('/editProfile/:id', async (req, res) => {
+		return res.status(200).render('editProfile', {
+			title: 'Edit Profile',
+			_id: req.session.user._id,
+			firstName: req.session.user.firstName,
+			lastName: req.session.user.lastName,
+			email: req.session.user.emailAddress,
+			age: req.session.user.age,
+			bio: req.session.user.bio,
+			imgLink: req.session.user.imgLink,
+		});
 	})
 
 	// Edit Profile Route
-	.put('/:id/', async (req, res) => {
+	.post('/editProfile/:id', async (req, res) => {
 		const updatedUser = req.body;
 
 		// Checks if the req.body is empty.
@@ -189,20 +202,58 @@ router
 			return res.status(400).json({ error: 'There are no fields in the request body' });
 		}
 
-		// Checks to see if the correct number of fields were returned.
-		if (Object.keys(updatedUser).length !== 7) {
-			return res.status(400).json({ error: 'The schema does not match the database.' });
-		}
+		// XSS Protection on registration form.
+		updatedUser.firstNameInput = xss(updatedUser.firstNameInput);
+		updatedUser.lastNameInput = xss(updatedUser.lastNameInput);
+		updatedUser.emailAddressInput = xss(updatedUser.emailAddressInput);
+		updatedUser.passwordInput = xss(updatedUser.passwordInput);
+		updatedUser.confirmPasswordInput = xss(updatedUser.confirmPasswordInput);
+		updatedUser.ageInput = xss(updatedUser.ageInput);
+		updatedUser.bioInput = xss(updatedUser.bioInput);
+		updatedUser.imglinkInput = xss(updatedUser.imglinkInput);
 
 		// Validates the input.
 		try {
-			updatedUser.firstName = validation.checkString(updatedUser.firstName, 'firstName');
-			updatedUser.lastName = validation.checkString(updatedUser.lastName, 'lastName');
-			updatedUser.email = validation.checkEmail(updatedUser.email, 'email');
-			updatedUser.password = validation.checkPassword(updatedUser.password, 'password');
-			updatedUser.age = validation.checkAge(updatedUser.age, 'age');
-			updatedUser.bio = validation.checkBio(updatedUser.bio, 'bio');
-			updatedUser.imgLink = validation.checkImgLink(updatedUser.imgLink, 'imgLink');
+			updatedUser.firstNameInput = validation.checkString(
+				updatedUser.firstNameInput,
+				'firstName'
+			);
+			updatedUser.lastNameInput = validation.checkString(
+				updatedUser.lastNameInput,
+				'lastName'
+			);
+			updatedUser.emailAddressInput = validation.checkEmail(
+				updatedUser.emailAddressInput,
+				'email'
+			);
+			updatedUser.passwordInput = validation.checkPassword(
+				updatedUser.passwordInput,
+				'password'
+			);
+			updatedUser.ageInput = Number(updatedUser.ageInput);
+			updatedUser.ageInput = validation.checkAge(updatedUser.ageInput, 'age');
+
+			// Makes the bio input optional.
+			if (updatedUser.bioInput.trim() == '') {
+				updatedUser.bioInput = '';
+			} else {
+				updatedUser.bioInput = validation.checkBio(updatedUser.bioInput, 'bio');
+			}
+
+			// Makes the imgLink input optional.
+			if (updatedUser.imglinkInput.trim() == '') {
+				updatedUser.imglinkInput =
+					'https://img.freepik.com/premium-vector/basketball_319667-191.jpg';
+			} else {
+				updatedUser.imglinkInput = validation.checkImgLink(
+					updatedUser.imglinkInput,
+					'imgLink'
+				);
+			}
+
+			// Checks if the passwords match.
+			if (updatedUser.passwordInput != updatedUser.confirmPasswordInput)
+				throw 'Passwords do not match.';
 		} catch (e) {
 			return res.status(400).json({ error: e });
 		}
@@ -210,16 +261,26 @@ router
 		// Preforms the data function.
 		try {
 			const updatedUserData = await usersData.update(
-				req.params.id,
-				updatedUserData.firstName,
-				updatedUserData.lastName,
-				updatedUserData.email,
-				updatedUserData.password,
-				updatedUserData.age,
-				updatedUserData.bio,
-				updatedUserData.imgLink
+				//req.params.id,
+				req.session.user._id,
+				updatedUser.firstNameInput,
+				updatedUser.lastNameInput,
+				updatedUser.emailAddressInput,
+				updatedUser.passwordInput,
+				updatedUser.ageInput,
+				updatedUser.bioInput,
+				updatedUser.imglinkInput
 			);
-			res.status(200).json(updatedUserData);
+
+			// Reassign the session values.
+			req.session.user.firstName = updatedUserData.firstName;
+			req.session.user.lastName = updatedUserData.lastName;
+			req.session.user.email = updatedUserData.emailAddress;
+			req.session.user.age = updatedUserData.age;
+			req.session.user.bio = updatedUserData.bio;
+			req.session.user.imgLink = updatedUserData.imgLink;
+
+			res.status(200).redirect(`/user/${updatedUserData._id}`);
 		} catch (e) {
 			res.status(500).json({ error: e });
 		}
