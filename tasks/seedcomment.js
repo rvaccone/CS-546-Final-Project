@@ -47,9 +47,7 @@ try {
 		'Doe',
 		'jdoe@gmail.com',
 		'Password1$',
-		20,
-		'Likes long walks on the beach',
-		'https://www.patrickhill.nyc/images/logo.jpg'
+		20
 	);
 	console.log(user1);
 } catch (e) {
@@ -62,9 +60,7 @@ try {
 		'Smith',
 		'ksmith@gmail.com',
 		'Password1$Password1$',
-		32,
-		'Spikeball fanatic',
-		'https://www.patrickhill.nyc/images/logo.jpg'
+		32
 	);
 	console.log(user2);
 } catch (e) {
@@ -77,9 +73,7 @@ try {
 		'Hill',
 		'iinfo@graffixnyc.com',
 		'iNsan3PAss&',
-		25,
-		'Cool guy',
-		'https://www.patrickhill.nyc/images/logo.jpg'
+		25
 	);
 	console.log(user3);
 } catch (e) {
@@ -92,9 +86,7 @@ try {
 		'Me',
 		'deleteme@gmail.com',
 		'd3l3teM&',
-		50,
-		'uncool guy',
-		'https://www.patrickhill.nyc/images/logo.jpg'
+		50
 	);
 	console.log(user4);
 } catch (e) {
