@@ -1,6 +1,11 @@
 import { Router } from 'express';
 const router = Router();
-import { usersData, courtsData, gamesData, gameMembersData } from '../data/index.js';
+import {
+	usersData,
+	courtsData,
+	gamesData,
+	gameMembersData,
+} from '../data/index.js';
 import * as validation from '../validation.js';
 
 router.route('/:id').get(async (req, res) => {
