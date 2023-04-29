@@ -27,6 +27,9 @@ router.route("/:searchTerm").get(async (req, res) => {
   }
 
   // Render the searchResults page with the court details
-  return res.render("searchResults", { searchResults: courtDetails });
+  return res.render("searchResults", {
+    searchResults: courtDetails,
+    keyword: searchTerm,
+  });
 });
 export default router;
