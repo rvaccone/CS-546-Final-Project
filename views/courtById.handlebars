@@ -37,4 +37,16 @@
 {{/each}}
     </div>
 </section>
-<p>Court Reviews:</p>
+
+<section name="courtReviews">
+    <p>Court Reviews</p>
+    <ul>
+        {{#each reviews}}
+            <li>
+                <h3><a href="/user/{{this.userID}}">{{this.fullName}}</a></h1>
+                <p>Rating: {{this.rating}}</p>
+                <p>{{this.comment}}</p>
+            </li>
+        {{/each}}
+    </ul>
+</section>
