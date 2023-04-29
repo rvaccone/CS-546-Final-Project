@@ -85,7 +85,11 @@ const create = async (courtID, userID, date, time, maxPlayers) => {
 
   // Adds the user to the gameMembers collection
   try {
-    await game_members_functions.create(newGame._id.toString(), userID);
+    let createdMember = await game_members_functions.create(
+      newGame._id.toString(),
+      userID
+    );
+    console.log("after", createdMember);
   } catch (e) {
     throw e;
   }

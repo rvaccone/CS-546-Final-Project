@@ -28,22 +28,25 @@
     <div id="pick-up-games">
         {{#each pickUpGames}}
   <div class="game">
-    <p>Game at {{courtName}}</p>
-    <p>Date: {{date}}</p>
-    <p>Time: {{time}}</p>
-    <p>Max Players: {{maxPlayers}}</p>
-    <p>Players Joined: {{gameMembers.length}}</p>
+    <p>Game at {{this.courtName}}</p>
+    <p>Date: {{this.date}}</p>
+    <p>Time: {{this.time}}</p>
+    <p>Max Players: {{this.maxPlayers}}</p>
+    <p>Players Joined: {{this.gameMembers.length}}</p>
+    {{!-- todo players needed  --}}
+    <button class="button" onclick="location.href='http://localhost:3000/game/gameDetails/{{this._id}}'"></button>
   </div>
 {{/each}}
     </div>
 </section>
 
 <section name="courtReviews">
+    <h2>Court Reviews</h2>
     <ul>
         {{#each reviews}}
             <li>
                 <h3><a href="/user/{{this.userID}}">{{this.fullName}}</a></h1>
-                <p>Rating: {{this.rating}}</p>
+                <p>Rating: {{this.rating}}/5</p>
                 <p>{{this.comment}}</p>
             </li>
         {{/each}}

@@ -13,6 +13,26 @@
     <label for="maxPlayers">Maximum Players:</label>
     <input type="number" id="maxPlayers" name="maxPlayers" min="1" max="100" required>
     <br>
-    <input type="submit" value="Create Game">
+    <input type="hidden" name="courtId" value="{{courtId}}">
+    <input name="createGameButton" type="submit" value="Create Game">
   </form>
 </section>
+
+{{!-- Script to redirect back to the court render --}}
+<script>
+  // Get the submit button
+  let createGameButton = document.getElementById('createGameButton')
+  let courtIdInput = document.getElementById('courtId')
+
+  // Add an event listener
+  createGameButton.addEventListener('submit', (e) => {
+    //Prevent default
+    e.preventDefault()
+
+    let courtID = courtIdInput.value;
+
+    // Redirect back to the court details page
+    window.location.href = `http://localhost:3000/courts/${courtID}`;
+  })
+</script>
+
