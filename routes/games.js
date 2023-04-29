@@ -143,7 +143,7 @@ router
     const gameMemberPutData = req.body;
 
     // Checks to see if the req.body is empty
-    if (!bandInfo || Object.keys(bandInfo).length === 0)
+    if (!gameMemberPutData || Object.keys(gameMemberPutData).length === 0)
       return res
         .status(400)
         .render("Error", { error: "Error: The request was empty" });
