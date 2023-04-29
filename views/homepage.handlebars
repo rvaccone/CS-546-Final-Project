@@ -8,7 +8,7 @@
     <div class="search-bar">
       <form id="searchForm">
         <label for="searchField">Search Bar: </label>
-        <input type="text" id="searchField" name="searchTerm" placeholder="Type a court name to search for.">
+        <input type="text" id="searchField" name="searchTerm" placeholder="Type a court name to search for." required>
         <button class="search-button" id="searchButton" type="submit">Search</button>
       </form>
     </div>
@@ -22,7 +22,7 @@
   <h3>Trending Pick Up Games</h3>
   {{#each trendingGameList}}
     <div class="trending-game">
-      <a href="/games/{{this._id}}">
+      <a href="game/gameDetails/{{this._id}}">
         <h4>{{this.courtName}}</h4>
       </a>
       <p>{{this.location}} - {{this.date}} - {{this.time}}</p>

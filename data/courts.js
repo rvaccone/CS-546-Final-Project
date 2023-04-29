@@ -141,12 +141,31 @@ const remove = async (courtID) => {
   return { ...deleteInfo.value, deleted: true };
 };
 
-const getCourtsByName = async (courtName) => {
+const getCourtsByName = async (courtName, longitude, latitude) => {
   courtName = validation.checkString(courtName, "courtName");
   const courtCollection = await courts();
 
-  // find all courts with a name that matches the search query
-  const query = { name: { $regex: new RegExp(courtName, "i") } };
+  // find all courts with a name or location that matches the search query
+  const query = {
+    $or: [
+      { name: { $regex: new RegExp(courtName, "i") } },
+      { location: { $regex: new RegExp(courtName, "i") } },
+    ],
+  };
+
+  // add geospatial search based on the user's location
+  if (longitude && latitude) {
+    query.location = {
+      $nearSphere: {
+        $geometry: {
+          type: "Point",
+          coordinates: [longitude, latitude],
+        },
+        $maxDistance: 10000,
+      },
+    };
+  }
+
   const courtSearched = await courtCollection.find(query).toArray();
 
   // check if any courts were found
@@ -156,4 +175,42 @@ const getCourtsByName = async (courtName) => {
   return courtSearched;
 };
 
-export { create, getAll, get, update, remove, getCourtsByName };
+const getCourtsByZipCode = async (zipCode, latitude, longitude) => {
+  // Convert the zip code to a string and validate it
+  zipCode = validation.checkString(zipCode, "zipCode");
+
+  // Connect to the courts collection in the database
+  const courtCollection = await courts();
+
+  // Get the courts within a 10km radius of the user's location
+  const query = {
+    location: {
+      $nearSphere: {
+        $geometry: {
+          type: "Point",
+          coordinates: [longitude, latitude],
+        },
+        $maxDistance: 10000,
+      },
+    },
+    zipCode: zipCode,
+  };
+  const nearbyCourts = await courtCollection.find(query).toArray();
+
+  // Check if any courts were found
+  if (!nearbyCourts || nearbyCourts.length === 0) {
+    throw `Could not find any basketball courts near ${zipCode}`;
+  }
+
+  return nearbyCourts;
+};
+
+export {
+  create,
+  getAll,
+  get,
+  update,
+  remove,
+  getCourtsByName,
+  getCourtsByZipCode,
+};
