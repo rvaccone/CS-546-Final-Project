@@ -43,6 +43,7 @@ router.route("/:id").get(async (req, res) => {
     latitude: courtDetails.lat,
     longitude: courtDetails.long,
     pickUpGames: pickUpGames,
+    courtId: id,
   });
 });
 
