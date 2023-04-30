@@ -1,8 +1,10 @@
 <section class="court-details">
-    <h1>NYC Court Finder</h1>
-    <h2>{{courtName}}</h2>
-    <p>Address: {{address}}</p>
-    <p>Rating: {{overallRating}}</p>
+    <div id="court-info">
+      <h1>NYC Court Finder</h1>
+      <h2>{{courtName}}</h2>
+      <p>Address: {{address}}</p>
+      <p>Rating: {{overallRating}}</p>
+    </div>
     <div id="map">
         <iframe
             width="600"
@@ -15,23 +17,24 @@
                 &q={{latitude}},{{longitude}}">
         </iframe>
     </div>
-    
 </section>
-<br>
-<h2>Pick Up Games:</h2>
-<p id="disclaimer">Disclaimer: The pickup games listed on this website are organized and managed entirely by the users. The developers of this website are not responsible for any events or activities that take place as a result of the information provided on this website. We provide this information solely as a service to our users, and it is up to each individual to determine whether or not to participate in any pickup games listed on this website. Any decision to participate in such games is entirely at the individual's own risk and discretion. The developers of this website assume no responsibility for any injuries, damages, or other consequences that may arise from participation in pickup games listed on this website. By using this website, you agree to these terms and conditions.
-  </p>
-<section>
-    <div id="pick-up-games">
+<div id="games-wrapper">
+  <h2>Pick Up Games:</h2>
+  <p id="disclaimer">Disclaimer: The pickup games listed on this website are organized and managed entirely by the users. The developers of this website are not responsible for any events or activities that take place as a result of the information provided on this website. We provide this information solely as a service to our users, and it is up to each individual to determine whether or not to participate in any pickup games listed on this website. Any decision to participate in such games is entirely at the individual's own risk and discretion. The developers of this website assume no responsibility for any injuries, damages, or other consequences that may arise from participation in pickup games listed on this website. By using this website, you agree to these terms and conditions.</p>
+  <section>
+      <div id="pick-up-games">
         {{#each pickUpGames}}
-  <div class="game">
-    <p>Game at {{courtName}}</p>
-    <p>Date: {{date}}</p>
-    <p>Time: {{time}}</p>
-    <p>Max Players: {{maxPlayers}}</p>
-    <p>Players Joined: {{gameMembers.length}}</p>
-  </div>
-{{/each}}
-    </div>
-</section>
-<p>Court Reviews:</p>
+            <div class="game">
+              <p>Game at {{courtName}}</p>
+              <p>Date: {{date}}</p>
+              <p>Time: {{time}}</p>
+              <p>Max Players: {{maxPlayers}}</p>
+              <p>Players Joined: {{gameMembers.length}}</p>
+            </div>
+        {{/each}}
+      </div>
+  </section>
+</div>
+<div id="review-wrapper">
+  <p>Court Reviews:</p>
+</div>

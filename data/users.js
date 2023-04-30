@@ -100,6 +100,7 @@ const update = async (id, firstName, lastName, email, password, age, bio, imgLin
 	} else {
 		bio = validation.checkBio(bio, 'bio');
 	}
+
 	imgLink = validation.checkImgLink(imgLink, 'imgLink');
 
 	const user = await get(id);
