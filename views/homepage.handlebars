@@ -1,1 +1,47 @@
-<p>I am the homepage</p>
+
+<h1>Basketball Court Finder</h1>
+<h2>Powered by NYC Open Data</h2>
+
+<section id="search-bar">
+  <div class="search-container">
+    <h1 class="header">Search for basketball-courts in NYC</h1>
+    <div class="search-bar">
+      <form id="searchForm">
+        <label for="searchField">Search Bar: </label>
+        <input type="text" id="searchField" name="searchTerm" placeholder="Type a court name to search for." required>
+        <button class="search-button" id="searchButton" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<a href="/user/login" class="nav-item">Login</a>
+<a href="/user/register" class="nav-item">Sign Up</a>
+
+<div class="basketball-courts">
+  <h3>Trending Pick Up Games</h3>
+  {{#each trendingGameList}}
+    <div class="trending-game">
+      <a href="game/gameDetails/{{this._id}}">
+        <h4>{{this.courtName}}</h4>
+      </a>
+      <p>{{this.location}} - {{this.date}} - {{this.time}}</p>
+    </div>
+  {{/each}}
+</div>
+
+<script>
+  const searchForm = document.getElementById('searchForm');
+  searchForm.addEventListener('submit', (event) => {
+    event.preventDefault(); 
+
+    const searchField = document.getElementById('searchField');
+    const searchText = searchField.value.trim();
+    window.location.href = `http://localhost:3000/search/${searchText}`;
+  });
+</script>
+
+
+
+
+

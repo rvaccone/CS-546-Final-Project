@@ -18,23 +18,38 @@
         </iframe>
     </div>
 </section>
-<div id="games-wrapper">
-  <h2>Pick Up Games:</h2>
-  <p id="disclaimer">Disclaimer: The pickup games listed on this website are organized and managed entirely by the users. The developers of this website are not responsible for any events or activities that take place as a result of the information provided on this website. We provide this information solely as a service to our users, and it is up to each individual to determine whether or not to participate in any pickup games listed on this website. Any decision to participate in such games is entirely at the individual's own risk and discretion. The developers of this website assume no responsibility for any injuries, damages, or other consequences that may arise from participation in pickup games listed on this website. By using this website, you agree to these terms and conditions.</p>
-  <section>
-      <div id="pick-up-games">
+<br>
+<h2>Pick Up Games:</h2>
+<p id="disclaimer">Disclaimer: The pickup games listed on this website are organized and managed entirely by the users. The developers of this website are not responsible for any events or activities that take place as a result of the information provided on this website. We provide this information solely as a service to our users, and it is up to each individual to determine whether or not to participate in any pickup games listed on this website. Any decision to participate in such games is entirely at the individual's own risk and discretion. The developers of this website assume no responsibility for any injuries, damages, or other consequences that may arise from participation in pickup games listed on this website. By using this website, you agree to these terms and conditions.
+  </p>
+<section>
+  <button class="create-game-btn" onclick="location.href='http://localhost:3000/game/{{courtId}}'">
+  <span>Create Pick-Up Game</span>
+</button>
+    <div id="pick-up-games">
         {{#each pickUpGames}}
-            <div class="game">
-              <p>Game at {{courtName}}</p>
-              <p>Date: {{date}}</p>
-              <p>Time: {{time}}</p>
-              <p>Max Players: {{maxPlayers}}</p>
-              <p>Players Joined: {{gameMembers.length}}</p>
-            </div>
+  <div class="game">
+    <p>Game at {{this.courtName}}</p>
+    <p>Date: {{this.date}}</p>
+    <p>Time: {{this.time}}</p>
+    <p>Max Players: {{this.maxPlayers}}</p>
+    <p>Players Joined: {{this.gameMembers.length}}</p>
+    {{!-- todo players needed  --}}
+    <button class="button" onclick="location.href='http://localhost:3000/game/gameDetails/{{this._id}}'"></button>
+  </div>
+{{/each}}
+    </div>
+</section>
+
+<section name="courtReviews">
+    <h2>Court Reviews</h2>
+    <ul>
+        {{#each reviews}}
+            <li>
+                <h3><a href="/user/{{this.userID}}">{{this.fullName}}</a></h1>
+                <p>Rating: {{this.rating}}/5</p>
+                <p>{{this.comment}}</p>
+            </li>
         {{/each}}
-      </div>
-  </section>
-</div>
-<div id="review-wrapper">
-  <p>Court Reviews:</p>
-</div>
+    </ul>
+</section>

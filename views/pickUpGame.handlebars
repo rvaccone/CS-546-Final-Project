@@ -1,22 +1,28 @@
-<div class="game">
-  <h2>PickUp Game at {{gameDetails.courtName}}</h2>
+{{!-- Information about the game --}}
+<div class="gameInformation">
+  <h2>PickUp Game at <a href="/courts/{{gameDetails.courtID}}">{{gameDetails.courtName}}</a></h2>
   <p>Host: {{Host}}</p>
   <p>Date: {{gameDetails.date}}</p>
   <p>Time: {{gameDetails.time}}</p>
   <p>Max Players: {{gameDetails.maxPlayers}}</p>
   <p>Players Joined: {{gameDetails.gameMembers.length}}</p>
+
+  {{!-- List of all of the current game members --}}
   <p>Player List:</p>
-  <ol>
+  <ol name="gameMemberList">
     {{#each gameDetails.gameMembers}}
       <li>{{this.fullName}}</li>
     {{/each}}
   </ol>
-  <form action="/rsvp" method="post">
-    <input type="hidden" name="gameId" value="{{gameDetails._id}}">
-    <button type="submit">RSVP</button>
-  </form>
 </div>
 
+  {{!-- Form to add the user to the game --}}
+  <div class="gameJoinForm">
+    <form action="http://localhost:3000/game/addUser/{{gameDetails._id}}" method="post">
+      <input type="hidden" name="gameId" value="{{gameDetails._id}}">
+      <button name="rsvpButton" type="submit">RSVP</button>
+    </form>
+  </div>
 
-
-
+{{!-- Script for a button event caller --}}
+{{!-- <script src="/public/js/pickUpGames.js"></script> --}}

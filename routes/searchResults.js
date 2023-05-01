@@ -27,6 +27,50 @@ router.route("/:searchTerm").get(async (req, res) => {
   }
 
   // Render the searchResults page with the court details
-  return res.render("searchResults", { searchResults: courtDetails });
+  return res.render("searchResults", {
+    searchResults: courtDetails,
+    keyword: searchTerm,
+  });
 });
+
+// router.route(":searchTerm").get(async (req, res) => {
+//   try {
+//     let searchTerm = req.params.searchTerm;
+
+//     // Check if the search term is a valid zip code
+//     let isValidZipCode = validation.isValidNYCZipCode(searchTerm, "searchTerm");
+
+//     let searchResults = [];
+//     if (isValidZipCode) {
+//       // Perform location search
+//       const courtCollection = await courts();
+//       const zipCode = await zipcodes.lookup(isValidZipCode);
+//       const longitude = zipCode.longitude;
+//       const latitude = zipCode.latitude;
+//       const query = {
+//         location: {
+//           $nearSphere: {
+//             $geometry: {
+//               type: "Point",
+//               coordinates: [longitude, latitude],
+//             },
+//             $maxDistance: 16093.4, // 10 miles in meters
+//           },
+//         },
+//       };
+//       searchResults = await courtCollection.find(query).toArray();
+//     } else {
+//       // Perform court name search
+//       searchResults = await courtsData.getCourtsByName(searchTerm);
+//     }
+//     res.render("searchResults", {
+//       title: "Search Results",
+//       keyword: searchTerm,
+//       searchResults,
+//     });
+//   } catch (e) {
+//     res.status(500).json({ error: e });
+//   }
+// });
+
 export default router;

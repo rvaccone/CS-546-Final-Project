@@ -1,6 +1,11 @@
 import { Router } from "express";
 const router = Router();
-import { courtsData, gamesData, gameMembersData } from "../data/index.js";
+import {
+  usersData,
+  courtsData,
+  gamesData,
+  gameMembersData,
+} from "../data/index.js";
 import * as validation from "../validation.js";
 
 router.route("/:id").get(async (req, res) => {
@@ -35,6 +40,20 @@ router.route("/:id").get(async (req, res) => {
       .status(400)
       .render("Error", { errorMessage: "Error: Court not found" });
 
+  // Adding the full name to the reviews
+  for (let review of courtDetails.reviews) {
+    // Creating a variable to store the full name
+    let fullName = null;
+
+    // Try to get the full name
+    try {
+      fullName = await usersData.getFullName(review.userID.toString());
+    } catch (e) {}
+
+    // Add the full name to the review
+    review.fullName = fullName;
+  }
+
   // Render the courtByID page with the court details
   res.render("courtById", {
     courtName: courtDetails.name,
@@ -43,6 +62,8 @@ router.route("/:id").get(async (req, res) => {
     latitude: courtDetails.lat,
     longitude: courtDetails.long,
     pickUpGames: pickUpGames,
+    courtId: id,
+    reviews: courtDetails.reviews,
   });
 });
 

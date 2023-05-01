@@ -1,6 +1,11 @@
 import { Router } from "express";
 const router = Router();
-import { gamesData, usersData, courtsData } from "../data/index.js";
+import {
+  gamesData,
+  usersData,
+  courtsData,
+  gameMembersData,
+} from "../data/index.js";
 import * as validation from "../validation.js";
 import { ObjectId } from "mongodb";
 
@@ -25,6 +30,7 @@ router
     } catch (e) {
       return res.status(400).render("Error", { errorMessage: e });
     }
+    console.log("cookie details", req.session.user);
     return res.status(200).render("createGame", { courtId: id });
   })
 
@@ -38,11 +44,14 @@ router
         errorMessage: "Error: There are no fields in the request body",
       });
     }
+    console.log("this is courts post data", courtsPostData);
 
     // Checks to see if the correct number of fields were returned.
-    if (Object.keys(courtsPostData).length !== 3) {
+    if (Object.keys(courtsPostData).length < 3) {
       return res.status(400).render("Error", {
-        errorMessage: "Error: The schema does not match the database",
+        errorMessage: `Error: The schema does not match the database. The current body's keys are ${Object.keys(
+          courtsPostData
+        )}`,
       });
     }
     let dateStr = courtsPostData.date;
@@ -70,24 +79,33 @@ router
 
     // Creates a new game.
     try {
-      console.log(courtsPostData);
+      //console.log(courtsPostData);
       const { time, maxPlayers } = courtsPostData;
       const newGame = await gamesData.create(
         courtID,
         // userID, replace with the userid from cookie
-        "6448d870a99c1b67a0324ec4",
+        req.session.user._id,
         dateFormatted,
         time,
         maxPlayers
       );
-      return res.status(200).json(newGame);
+      // return res.status(200).json(newGame);
+      return res.render("createConfirmation", {
+        courtName: newGame.courtName,
+        date: newGame.date,
+        time: newGame.time,
+        maxPlayers: newGame.maxPlayers,
+        gameMembers: newGame.gameMembers,
+      });
     } catch (e) {
-      return res.status(400).render("Error", { errorMessage: e });
+      res.status(400).render("createConfirmation", {
+        errorMessage: e,
+      });
     }
   });
 
 router
-  .route("/:gameID")
+  .route("/gameDetails/:gameID")
 
   .get(async (req, res) => {
     // Store the gameID from the url
@@ -107,7 +125,12 @@ router
     } catch (e) {
       return res.status(400).render("Error", { errorMessage: e });
     }
-    let Host = await usersData.getFullName(gameDetails.userID.toString());
+    let Host;
+    try {
+      Host = await usersData.getFullName(gameDetails.userID.toString());
+    } catch (e) {
+      Host = "NO HOST";
+    }
     // Check that the game exists
     if (!gameDetails)
       return res
@@ -143,7 +166,7 @@ router
     const gameMemberPutData = req.body;
 
     // Checks to see if the req.body is empty
-    if (!bandInfo || Object.keys(bandInfo).length === 0)
+    if (!gameMemberPutData || Object.keys(gameMemberPutData).length === 0)
       return res
         .status(400)
         .render("Error", { error: "Error: The request was empty" });
@@ -183,5 +206,58 @@ router
       return res.status(400).render("Error", { errorMessage: e });
     }
   });
+
+// Post route to add a user to the game
+router.route("/addUser/:gameID").post(async (req, res) => {
+  // Get the request body
+  try {
+    req.params.gameID = validation.checkID(req.params.gameID, "gameID");
+  } catch (e) {
+    return res.status(400).render("Error", {
+      errorMessage: `Error: Invalid gameId with id ${gameID}`,
+    });
+  }
+
+  // Get the game details
+  let game = null;
+  try {
+    game = await gamesData.get(req.params.gameID);
+  } catch (e) {
+    return res.status(400).render("Error", {
+      errorMessage: `Error: Getting the game failed with error ${e}`,
+    });
+  }
+
+  // Check if the game exists
+  if (!game)
+    return res.status(400).render("Error", {
+      errorMessage: `Error: There is no game with id`,
+    });
+
+  // Check if the user is signed in or not
+  if (req.session.user) {
+    // Try to call the gameMembersData create function
+    try {
+      console.log(`User id: ${req.session.user._id}`);
+      await gameMembersData.create(req.params.gameID, req.session.user._id);
+      return res.render("joinConfirmation", {
+        gameDetails: game,
+        session: req.session.user,
+        success: true,
+      });
+    } catch (e) {
+      // If the user cannot be added to the game, render the joinConfirmation page
+      return res.render("joinConfirmation", {
+        session: req.session.user,
+        errorMessage: e,
+      });
+    }
+  } else {
+    // If the user is not signed in, render the joinConfirmation page
+    return res.render("joinConfirmation", {
+      errorMessage: "User is not signed in",
+    });
+  }
+});
 
 export default router;
