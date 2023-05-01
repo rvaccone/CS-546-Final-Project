@@ -34,32 +34,58 @@ const loginForm = document.getElementById('login-form');
 if (loginForm) {
 	// Gets the values from the form.
 	const emailAddress = document.getElementById('email');
-	const password = document.getElementById('password');
-	const errorContainer = document.querySelector('error-container');
+	const userPassword = document.getElementById('password');
+	const errorContainer = document.getElementById('error-container');
+	const routeErrorWrapper = document.getElementById('route-error-wrapper');
+	const list = document.createElement('dl');
+	let error_array = [];
 
 	// Event listener for submit button.
 	loginForm.addEventListener('submit', (event) => {
 		console.log('Form fires');
-		try {
-			event.preventDefault();
-			error.hidden = true;
 
+		try {
 			// Sets error container to empty.
 			errorContainer.innerHTML = '';
+			list.innerHTML = '';
+			routeErrorWrapper.innerHTML = '';
+			error_array = [];
 
-			// Validates the form values.
-			let email = checkEmail(emailAddress.value, 'email');
-			let pass = checkPassword(password.value, 'password');
-			event.target.submit();
+			// Validates the email.
+			try {
+				let email = checkEmail(emailAddress.value, 'email');
+			} catch (e) {
+				error_array.push(e);
+				emailAddress.style.borderColor = 'red';
+			}
+
+			// Validates the password.
+			try {
+				let pass = checkPassword(userPassword.value, 'password');
+			} catch (e) {
+				error_array.push(e);
+				userPassword.style.borderColor = 'red';
+			}
+
+			// Throws if there are errors in the validation.
+			if (error_array.length > 0) {
+				throw 'There are errors.';
+			}
 		} catch (e) {
 			// Prevents the server from getting bad input.
 			event.preventDefault();
 
 			// Creates an error message and appends.
-			error.hidden = false;
-			const errorMessage = document.createElement('p');
-			errorMessage.innerText = e;
-			errorContainer.appendChild(errorMessage);
+			errorContainer.removeAttribute('hidden');
+			let errorMessage = null;
+			for (let i = 0; i < error_array.length; i++) {
+				console.log(error_array[i]);
+				errorMessage = document.createElement('dt');
+				errorMessage.innerHTML = error_array[i];
+				list.appendChild(errorMessage);
+				errorMessage.style.color = 'red';
+			}
+			errorContainer.appendChild(list);
 		}
 	});
 }

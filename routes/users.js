@@ -148,7 +148,6 @@ router
 				return res.redirect(`/user/:${validatedUser._id}`);
 			}
 		} catch (e) {
-			console.log('Here is the error:' + e);
 			return res.status(400).render('login', {
 				title: 'Login',
 				error: e,

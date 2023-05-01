@@ -1,19 +1,22 @@
 <section class='login'>
-	<h2>Login</h2>
-	<div class='error-container' hidden="true"></div>
-	<div class='form-wrapper'>
-		<form id='login-form' action='/user/login' method='post'>
-			<label class='button_text' for='email'>Email:</label>
-			<input type='email' id='email' name='email' required />
+	<h2>Good to see you again!</h2>
+	<div id='route-error-wrapper'>{{{error}}}</div>
+	<div id='error-container' hidden></div>
+	<div class="full-form-wrapper">
+		<div class='form-wrapper'>
+			<form id='login-form' action='/user/login' method='post'>
+				<label class='button_text' for='email'>Email:</label>
+				<input type='email' id='email' name='email' required />
 
-			<label class='button_text' for='password'>Password:</label>
-			<input type='password' id='password' name='password' required />
+				<label class='button_text' for='password'>Password:</label>
+				<input type='password' id='password' name='password' required />
 
-			<button class='button' type='submit'>Login</button>
-		</form>
-	</div>
-	<div class='link-wrapper'>
-		<a href='/user/register'>Click here to register!</a>
+				<button class='button' type='submit'>Login</button>
+			</form>
+		</div>
+		<div class='link-wrapper'>
+			<a href='/user/register'>Click here to register!</a>
+		</div>
 	</div>
 </section>
 <script src='/public/js/login.js'></script>
