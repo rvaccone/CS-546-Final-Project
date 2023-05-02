@@ -1,16 +1,9 @@
 {{#if errorMessage}}
-    <div class="error-message">{{errorMessage}}</div>
-    {{else}}
-    <h1>Game Created!</h1>
-    <p>Court Name: {{courtName}}</p>
-    <p>Date: {{date}}</p>
-    <p>Time: {{time}}</p>
-    <p>Max Players: {{maxPlayers}}</p>
-    <p>Game Members:</p>
-    <ul>
-      {{#each gameMembers}}
-      <li>{{fullName}}</li>
-      {{/each}}
-    </ul>
-    {{/if}}
-    <a href="/" class="nav-item">Go back to homepage</a>
+  <div class="error-message">{{errorMessage}}</div>
+{{else}}
+  <script>
+    const message = `Game Created!\n\nCourt Name: {{courtName}}\nDate: {{date}}\nTime: {{time}}\nMax Players: {{maxPlayers}}\nGame Members:\n{{#each gameMembers}}{{fullName}}\n{{/each}}`;
+    window.alert(message);
+    window.location.href = "{{link}}";
+  </script>
+{{/if}}
