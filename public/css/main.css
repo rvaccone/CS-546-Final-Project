@@ -1,3 +1,7 @@
+body {
+	background-color: #F6F3EC;
+}
+
 h1 {
 	color: #000000;
 	font-family: Arial, Helvetica, sans-serif;
@@ -22,16 +26,28 @@ h3 {
     text-align: center;
 }
 
+.nav-left-links {
+	float: left;
+	height: 60px;
+	padding-left: 20px;
+}
+
+.nav-right-links {
+	float: right;
+	height: 60px;
+	padding-right: 20px;
+}
+
 nav {
-	background-color: #E8E8E8;
+	background-color: #5577d1;
 	border: 2px solid black;
 	border-radius: 5px;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	font-weight: bold;
-	text-align: center;
 	padding: 5px;
 	margin-bottom: 2%;
+	height: 40px;
 }
 
 #error-container {
@@ -110,7 +126,7 @@ select {
 }
 
 .button {
-	background-color: #6591e2;
+	background-color: #536caa;
 	color: #ffffff;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
@@ -150,7 +166,7 @@ select {
 p {
 	color: #000000;
 	font-family: Arial, Helvetica, sans-serif;
-	font-size: 12px;
+	font-size: 14px;
 	font-weight: bold;
 	text-align: center;
 }
@@ -160,14 +176,22 @@ p {
     margin-top: 10px;
 }
 
+.search-bar {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
 a {
 	color: #000000;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
+	text-decoration: none;
 }
 
 a:hover {
-	color: #103fbf;
+	color: #000000;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	font-weight: bold;
@@ -213,4 +237,15 @@ iframe {
 #review-wrapper {
 	margin: auto;
 	display:inline-block;
+}
+
+.court {
+	background-color: #E8E8E8;
+	border: 2px solid black;
+	border-radius: 5px;
+	width: 35%;
+	padding-top: 2%;
+	padding-bottom: 2%;
+	margin: auto;
+	margin-bottom: 1%;
 }

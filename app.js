@@ -35,6 +35,13 @@ app.use(
 	})
 );
 
+app.use('/', (req, res, next) => {
+	if (req.session.user) {
+		res.locals.user = req.session.user;
+	}
+	next();
+});
+
 // Protects login from signed in user.
 //* This works.
 app.use('/user/login', (req, res, next) => {
@@ -66,18 +73,27 @@ app.use('/user/logout', (req, res, next) => {
 });
 
 // Protects user/:id from unsigned in user.
+// app.use('/user/:id', (req, res, next) => {
+// 	if (req.session.user) {
+// 		next();
+// 	} else {
+// 		return res.redirect('/user/login');
+// 	}
+// });
+
+// Protects user/:id from unsigned in user.
 // TODO: test this middleware. Might not even need it as the user seemingly cannot enter other profiles...
 // app.use('/user/:id', (req, res, next) => {
-// 	// // Prevents logged in user from accessing other user's pages.
-// 	// let idCompareString = ':' + req.session.user._id;
-// 	// if (idCompareString != req.params.id) {
-// 	// 	res.redirect(`/user/:${req.session.user._id}`);
-// 	// 	// Prevents unsigned in user from accessing user pages.
-// 	// } else if (!req.session.user) {
-// 	// 	res.redirect('/user/login');
-// 	// } else {
-// 	// 	next();
-// 	// }
+// 	// Prevents logged in user from accessing other user's pages.
+// 	let idCompareString = ':' + req.session.user._id;
+// 	if (idCompareString != req.params.id) {
+// 		res.redirect('/error');
+// 		// Prevents unsigned in user from accessing user pages.
+// 	} else if (!req.session.user) {
+// 		res.redirect('/user/login');
+// 	} else {
+// 		next();
+// 	}
 // 	if (!req.session.user) {
 // 		res.redirect('/');
 // 	} else {

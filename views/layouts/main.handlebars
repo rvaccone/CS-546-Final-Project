@@ -9,8 +9,27 @@
 </head>
 <body>
     <nav>
-        <p>This will be the nav bar.</p>
+        <div class="nav-left-links">
+            <a href="/" id="home-log"><p>NYC Court Finder</p></a>
+        </div>
+        <ul>
+            {{#if user}}
+                <div class="nav-right-links">
+                    <a href="/user/:{{user._id}}">Hi, {{user.firstName}}</a>
+                    <a href="/user/logout">Logout</a>
+                </div>
+            {{else}}
+                <div class="nav-right-links">
+                    <a href="/user/login">Login</a>
+                    <a href="/user/register">Sign Up</a>
+                </div>
+            {{/if}}
+        </ul>
     </nav>
         {{{body}}}
+    <footer>
+        <a href="https://opendata.cityofnewyork.us/"><p>Powered by NYC Open Data<p/></a>
+        <p>&copy; 2023 NYC Court Finder</p>
+    </footer>
 </body>
 </html>

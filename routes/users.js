@@ -271,10 +271,12 @@ router
 				updatedUser.imglinkInput
 			);
 
+			console.log('This is the updated user:' + updatedUserData);
+
 			// Reassign the session values.
 			req.session.user.firstName = updatedUserData.firstName;
 			req.session.user.lastName = updatedUserData.lastName;
-			req.session.user.email = updatedUserData.emailAddress;
+			req.session.user.emailAddress = updatedUserData.email;
 			req.session.user.age = updatedUserData.age;
 			req.session.user.bio = updatedUserData.bio;
 			req.session.user.imgLink = updatedUserData.imgLink;
