@@ -2,7 +2,7 @@
     <h1>NYC Court Finder</h1>
     <h2>{{courtName}}</h2>
     <p>Address: {{address}}</p>
-    <p>Rating: {{overallRating}}</p>
+    <p>Rating: {{overallRating}}/5</p>
     <div id="map">
         <iframe
             width="600"
@@ -34,7 +34,7 @@
     <p>Max Players: {{this.maxPlayers}}</p>
     <p>Players Joined: {{this.gameMembers.length}}</p>
     {{!-- todo players needed  --}}
-    <button class="button" onclick="location.href='http://localhost:3000/game/gameDetails/{{this._id}}'"></button>
+    <button class="button" onclick="location.href='http://localhost:3000/game/gameDetails/{{this._id}}'">Game Details</button>
   </div>
 {{/each}}
     </div>
@@ -42,6 +42,7 @@
 
 <section name="courtReviews">
     <h2>Court Reviews</h2>
+       <button class="button" onclick="location.href='http://localhost:3000/game/gameDetails/{{this._id}}'">Write a review</button>
     <ul>
         {{#each reviews}}
             <li>

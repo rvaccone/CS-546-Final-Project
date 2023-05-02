@@ -8,7 +8,7 @@ import * as validation from "../validation.js";
 router.route("/:searchTerm").get(async (req, res) => {
   // Store the id from the url
   let searchTerm = req.params.searchTerm;
-
+  console.log("its is inside search term route");
   // Validate the id
   try {
     searchTerm = validation.checkString(searchTerm, "searchTerm");
@@ -19,6 +19,7 @@ router.route("/:searchTerm").get(async (req, res) => {
   try {
     courtDetails = await courtsData.getCourtsByName(searchTerm);
   } catch (e) {
+    console.log("failing");
     return res.status(400).render("Error", { errorMessage: e });
   }
   //todo change this to render
