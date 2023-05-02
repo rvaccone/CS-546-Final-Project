@@ -52,4 +52,30 @@
             </li>
         {{/each}}
     </ul>
+
+    <button id="add-comment-btn">Add Comment</button>
+
+<form id="add-comment-form" action="/courts/{{courtID}}" method="POST" style="display: none;">
+  <label for="comment-input">Comment:</label>
+  <input type="text" id="comment-input" name="comment">
+
+  <label for="rating-input">Rating:</label>
+  <input type="number" id="rating-input" name="rating" min="1" max="5">
+  
+  <button type="submit" id="submit-review-btn">Submit</button>
+</form>
 </section>
+
+<script>
+  const courtID = "{{courtID}}"
+  console.log(courtID)
+  const form = document.querySelector('#add-comment-form');
+  const submitBtn = document.querySelector('#submit-review-btn');
+  const addCommentBtn = document.querySelector('#add-comment-btn');
+
+  addCommentBtn.addEventListener('click', () => {
+    form.style.display = 'block';
+    submitBtn.style.display = 'block';
+  });
+  form.action = `/courts/${courtID}`;
+</script>

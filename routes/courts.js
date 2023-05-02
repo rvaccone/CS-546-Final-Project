@@ -91,4 +91,26 @@ router.route("/:id/review").get(async (req, res) => {
   res.render("Error", { errorMessage: "Error: Court not found" });
 });
 
+router.route('/courts/courtID').post(async (req, res) => {
+  try {
+    // extract the necessary data from the request body
+    const { courtID, userID, rating, comment } = req.body;
+
+    // validate the input data
+    const validatedCourtID = validation.checkID(courtID, 'courtID');
+    const validatedUserID = validation.checkID(userID, 'userID');
+    const validatedRating = validation.checkRatingNumber(rating, 'rating');
+    const validatedComment = validation.checkComment(comment, 'comment');
+
+    // create the review
+    const result = await courtReviewsData.create(validatedCourtID, validatedUserID, validatedRating, validatedComment);
+    console.log(result)
+    return res.status(400).json(result);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+}); 
+
 export default router;
+
+
