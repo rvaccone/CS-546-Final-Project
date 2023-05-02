@@ -7,7 +7,7 @@ import {
   gameMembersData,
 } from "../data/index.js";
 import * as validation from "../validation.js";
-
+//get courtbyid handlebar page
 router.route("/:id").get(async (req, res) => {
   // Store the id from the url
   let id = req.params.id;
@@ -65,6 +65,30 @@ router.route("/:id").get(async (req, res) => {
     courtId: id,
     reviews: courtDetails.reviews,
   });
+});
+// TODO court review route
+router.route("/:id/review").get(async (req, res) => {
+  // Store the id from the url
+  let id = req.params.id;
+  //user who should write a review
+  let userId = req.session.user._id;
+  // Validate the id
+  try {
+    id = validation.checkID(id, "id");
+  } catch (e) {
+    return res.status(400).render("Error", { errorMessage: e });
+  }
+
+  // Get the court details
+  let courtDetails = null;
+  try {
+    courtDetails = await courtsData.get(id);
+  } catch (e) {
+    return res.status(400).render("Error", { errorMessage: e });
+  }
+
+  //rending court review page
+  res.render("Error", { errorMessage: "Error: Court not found" });
 });
 
 export default router;

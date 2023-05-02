@@ -1,6 +1,7 @@
 import { courts } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 import * as validation from "../validation.js";
+import { courtsData } from "./index.js";
 
 // Creates a new court and logs it in the courts collection.
 const create = async (name, location, numCourts, accessible, lat, long) => {
@@ -147,12 +148,14 @@ const getCourtsByName = async (courtName, longitude, latitude) => {
 
   // find all courts with a name or location that matches the search query
   const query = {
+    //todo account for escape characters
+
     $or: [
       { name: { $regex: new RegExp(courtName, "i") } },
       { location: { $regex: new RegExp(courtName, "i") } },
     ],
   };
-
+  console.log(query);
   // add geospatial search based on the user's location
   if (longitude && latitude) {
     query.location = {
@@ -167,7 +170,7 @@ const getCourtsByName = async (courtName, longitude, latitude) => {
   }
 
   const courtSearched = await courtCollection.find(query).toArray();
-
+  console.log(courtSearched);
   // check if any courts were found
   if (!courtSearched || courtSearched.length === 0)
     throw `Could not find courts for search term: ${courtName}`;

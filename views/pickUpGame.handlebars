@@ -1,4 +1,3 @@
-{{!-- Information about the game --}}
 <div class="gameInformation">
   <h2>PickUp Game at <a href="/courts/{{gameDetails.courtID}}">{{gameDetails.courtName}}</a></h2>
   <p>Host: {{Host}}</p>
@@ -16,13 +15,20 @@
   </ol>
 </div>
 
-  {{!-- Form to add the user to the game --}}
+{{!-- RSVP button --}}
+{{#if userIsGameMember}}
+  {{!-- Button to unjoin the game --}}
+   <div class="gameJoinForm">
+    <button id="unjoinButton" type="button">Unjoin</button>
+  </div>
+{{else}}
+  {{!-- Button to join the game --}}
   <div class="gameJoinForm">
-    <form action="http://localhost:3000/game/addUser/{{gameDetails._id}}" method="post">
+    <form action="/game/addUser/{{gameDetails._id}}" method="post">
       <input type="hidden" name="gameId" value="{{gameDetails._id}}">
       <button name="rsvpButton" type="submit">RSVP</button>
     </form>
   </div>
-
+{{/if}}
 {{!-- Script for a button event caller --}}
-{{!-- <script src="/public/js/pickUpGames.js"></script> --}}
+<script src="/public/js/pickUpGames.js"></script>
