@@ -23,11 +23,14 @@ const create = async (gameID, userID) => {
   if (memberName === null) throw "could not find user in usersCollection";
   const gameCollection = await games();
   const game = await gameCollection.findOne({ _id: new ObjectId(gameID) });
-
+  let gameDate = game.date;
   //Make sure the user is not already in the game.
 
   let game_details = await game_functions.get(gameID);
   let players_in_this_game = game_details.gameMembers;
+  if (players_in_this_game.length === game_details.maxPlayers) {
+    throw "Game is full cannot add players";
+  }
   for (let i = 0; i < players_in_this_game.length; i++) {
     if (new ObjectId(userID).equals(players_in_this_game[i]._id))
       throw "player is already a member of this game";
@@ -36,7 +39,7 @@ const create = async (gameID, userID) => {
   //making sure the player is not in another game at same time
   //   console.log("@@@@@@@@@@@@@@@@@@@@@@");
   let playersInSameTimeGames = await gameCollection
-    .find({ time: game.time })
+    .find({ time: game.time, date: gameDate })
     .project({ gameMembers: 1 })
     .toArray();
   //   console.log(playersInSameTimeGames);
@@ -93,7 +96,7 @@ const getAll = async (gameID) => {
 };
 
 // Gets a game member by their id.
-const get = async (userID, gameID) => {
+const get = async (gameID, userID) => {
   userID = validation.checkID(userID, "userID");
   gameID = validation.checkID(gameID, "gameID");
 
@@ -119,19 +122,40 @@ const get = async (userID, gameID) => {
 };
 
 // Removes a game member by their id.
-const remove = async (userID, gameID) => {
+const remove = async (gameID, userID) => {
   userID = validation.checkID(userID, "userID");
   gameID = validation.checkID(gameID, "gameID");
 
   const gameCollection = await games();
+  const game = await gameCollection.findOne({ _id: new ObjectId(gameID) });
+
+  if (!game) {
+    throw "Error: Game not found";
+  }
+
+  let gameMembers = game.gameMembers;
+  let memberIndex = -1;
+  for (let i = 0; i < gameMembers.length; i++) {
+    if (gameMembers[i]._id.toString() === userID) {
+      memberIndex = i;
+      break;
+    }
+  }
+
+  if (memberIndex === -1) {
+    throw "Error: Game member not found";
+  }
+
+  gameMembers.splice(memberIndex, 1);
+
   const updatedGame = await gameCollection.findOneAndUpdate(
     { _id: new ObjectId(gameID) },
-    { $pull: { gameMembers: { _id: new ObjectId(userID) } } },
+    { $set: { gameMembers: gameMembers } },
     { returnDocument: "after" }
   );
 
-  if (updatedGame.lastErrorObject.n === 0) {
-    throw "could not update game in database successfully";
+  if (!updatedGame || updatedGame.lastErrorObject.nModified === 0) {
+    throw "Error: Failed to remove game member";
   }
 
   return updatedGame.value;

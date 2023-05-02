@@ -7,6 +7,12 @@ router
 	.route('/')
 
 	.get(async (req, res) => {
+		let removedGames;
+		try {
+			removedGames = await gamesData.removeAllPastGames();
+		} catch (e) {
+			return res.status(500).json({ error: e });
+		}
 		try {
 			const trendingGameList = await gamesData.getAllTrending();
 			console.log('cookie details', req.session.user);

@@ -72,6 +72,9 @@ const create = async (courtID, userID, date, time, maxPlayers) => {
       game.time.toString() === newGame.time.toString() &&
       game.courtID.toString() === newGame.courtID.toString()
     ) {
+      console.log(game.date.toString(), newGame.date.toString());
+      console.log(game.time.toString(), newGame.time.toString());
+      console.log(game.courtID.toString(), newGame.courtID.toString());
       throw "Error: Cannot schedule games for overlapping times.";
     }
   }
