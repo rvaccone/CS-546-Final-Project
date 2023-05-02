@@ -39,6 +39,11 @@
     </div>
 </section>
 
+{{!-- Section to show if the created comment is successful --}}
+{{#if createComment}}
+  <h5 class="successMessage">Created court comment successfully</h5>
+{{/if}}
+
 <section name="courtReviews">
     <h2>Court Reviews</h2>
        <button class="button" onclick="location.href='http://localhost:3000/game/gameDetails/{{this._id}}'">Write a review</button>
@@ -51,4 +56,40 @@
             </li>
         {{/each}}
     </ul>
-</section>
+
+    <button id="add-comment-btn">Add Comment</button>
+
+<form id="add-comment-form" action="/courts/{{courtId}}" method="POST" style="display: none;">
+  <input type="hidden" name="courtID" value="{{courtId}}">
+  <input type="hidden" name="userID" value="{{userId}}">
+
+  <label for="comment-input">Comment:</label>
+  <input type="text" id="comment-input" name="comment">
+
+  <label for="rating-input">Rating:</label>
+  <input type="number" id="rating-input" name="rating" min="1" max="5">
+  
+  <button type="submit" id="submit-review-btn">Submit</button>
+</form>
+
+<script>
+
+const form = document.querySelector('#add-comment-form');
+const submitBtn = document.querySelector('#submit-review-btn');
+const addCommentBtn = document.querySelector('#add-comment-btn');
+
+if (form) {
+  addCommentBtn.addEventListener('click', () => {
+    form.style.display = 'block';
+    submitBtn.style.display = 'block';
+  });
+
+  submitBtn.addEventListener('click', (event) => {
+    event.preventDefault(); 
+    form.submit(); 
+  });
+}
+
+form.action = `/courts/${courtId}`;
+
+</script>
