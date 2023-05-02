@@ -5,6 +5,7 @@ import {
   courtsData,
   gamesData,
   gameMembersData,
+  courtReviewsData
 } from "../data/index.js";
 import * as validation from "../validation.js";
 //get courtbyid handlebar page
@@ -64,6 +65,7 @@ router.route("/:id").get(async (req, res) => {
     pickUpGames: pickUpGames,
     courtId: id,
     reviews: courtDetails.reviews,
+    userId: req.session.user._id,
   });
 });
 // TODO court review route
@@ -91,23 +93,93 @@ router.route("/:id/review").get(async (req, res) => {
   res.render("Error", { errorMessage: "Error: Court not found" });
 });
 
-router.route('/courts/courtID').post(async (req, res) => {
+router.route('/:courtID').post(async (req, res) => {
+  // Try to get all the information needed to add a comment
   try {
+    // Get the courtID from the url
+    let courtID = req.params.courtID
+
     // extract the necessary data from the request body
-    const { courtID, userID, rating, comment } = req.body;
+    let { userID, rating, comment } = req.body;
 
-    // validate the input data
-    const validatedCourtID = validation.checkID(courtID, 'courtID');
-    const validatedUserID = validation.checkID(userID, 'userID');
-    const validatedRating = validation.checkRatingNumber(rating, 'rating');
-    const validatedComment = validation.checkComment(comment, 'comment');
+    // Converting the rating to a number
+    rating = parseInt(rating)
+  } catch (e) {
+    // Otherwise, render the error page
+    return res.status(400).render("Error", { errorMessage: e });
+  }
 
-    // create the review
-    const result = await courtReviewsData.create(validatedCourtID, validatedUserID, validatedRating, validatedComment);
-    console.log(result)
-    return res.status(400).json(result);
+  // Validate the input data
+  try {
+    let validatedCourtID = validation.checkID(courtID, 'courtID');
+    let validatedUserID = validation.checkID(userID, 'userID');
+    let validatedRating = validation.checkRatingNumber(rating, 'rating');
+    let validatedComment = validation.checkComment(comment, 'comment');
+  } catch (e) {
+    return res.status(400).render("Error", { errorMessage: e });
+  }
+
+  // Create the review
+  let createResult = null
+  try {
+    createResult = await courtReviewsData.create(validatedCourtID, validatedUserID, validatedRating, validatedComment);
+  } catch (e) {
+    return res.status(400).render("Error", { errorMessage: e });
+  }
+  
+  // Get the court details
+  let courtDetails = null
+  try {
+    courtDetails = await courtsData.get(courtID);
+  } catch (e) {
+    return res.status(400).render("Error", { errorMessage: e });
+  }
+
+  // Get all the pickup games
+  let pickUpGames = null;
+  try {
+    pickUpGames = await gamesData.getAll(courtID);
+    console.log("gotem", pickUpGames);
+  } catch (e) {
+    return res.status(400).render("Error", { errorMessage: e });
+  }
+
+  // Check that the court exists
+  if (!courtDetails)
+    return res
+      .status(400)
+      .render("Error", { errorMessage: "Error: Court not found" });
+    
+    // Adding the full name to the reviews
+    for (let review of courtDetails.reviews) {
+      // Creating a variable to store the full name
+      let fullName = null;
+
+      // Try to get the full name
+      try {
+        fullName = await usersData.getFullName(review.userID.toString());
+      } catch (e) {}
+
+      // Add the full name to the review
+      review.fullName = fullName;
+    }
+
+  // Render the courtById page
+  try {
+    res.status(400).render("courtById", { courtName: courtDetails.name,
+      address: courtDetails.location,
+      overallRating: courtDetails.overallRating,
+      latitude: courtDetails.lat,
+      longitude: courtDetails.long,
+      pickUpGames: pickUpGames,
+      courtId: courtID,
+      reviews: courtDetails.reviews,
+      userId: userID,
+      createComment: true,
+    });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    // Render the error page if one arises
+    res.status(400).render("Error", { errorMessage: error });
   }
 }); 
 

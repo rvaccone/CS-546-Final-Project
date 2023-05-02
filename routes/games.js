@@ -96,6 +96,7 @@ router
         time: newGame.time,
         maxPlayers: newGame.maxPlayers,
         gameMembers: newGame.gameMembers,
+        link: `http://localhost:3000/courts/${courtID}`
       });
     } catch (e) {
       res.status(400).render("createConfirmation", {
