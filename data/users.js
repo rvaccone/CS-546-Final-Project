@@ -100,6 +100,7 @@ const update = async (id, firstName, lastName, email, password, age, bio, imgLin
 	} else {
 		bio = validation.checkBio(bio, 'bio');
 	}
+
 	imgLink = validation.checkImgLink(imgLink, 'imgLink');
 
 	const user = await get(id);
@@ -167,7 +168,7 @@ const checkUser = async (emailAddress, password) => {
 	// Gets the user with the matching email.
 	const user = await usersCollection.findOne({ email: emailAddress.toLowerCase() });
 	if (user == null) {
-		throw 'Error: Either the email address or password is invalid. ervfweoiurvhweorivuweh';
+		throw 'Error: Either the email address or password is invalid.';
 	}
 
 	// Checks if the password matches the hashed password.
