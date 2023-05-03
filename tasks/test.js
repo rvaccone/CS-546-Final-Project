@@ -82,13 +82,18 @@ const db = await dbConnection();
 //testing remove game member
 let removed;
 try {
-  removed = await games_members_functions.remove(
-    "644d3dc123216c70b7bd3372",
-    "644d3d8a23216c70b7bd3371"
-  );
-  console.log(removed);
+  removed = await games_functions.removeAllPastGames();
 } catch (error) {
   console.log(error);
 }
+// try {
+//   removed = await games_members_functions.remove(
+//     "644d3dc123216c70b7bd3372",
+//     "644d3d8a23216c70b7bd3371"
+//   );
+//   console.log(removed);
+// } catch (error) {
+//   console.log(error);
+// }
 
 await closeConnection();
