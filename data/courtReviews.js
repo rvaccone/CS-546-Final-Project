@@ -1,6 +1,6 @@
 import { courts, users } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
-import * as validation from '../validation.js';
+import * as validation from '../_utils/validation.js';
 
 // Function to calculate the average rating of a court
 const calculateAverageRating = (reviews) => {

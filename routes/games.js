@@ -6,7 +6,7 @@ import {
   courtsData,
   gameMembersData,
 } from "../data/index.js";
-import * as validation from "../validation.js";
+import * as validation from '../_utils/validation.js';
 import { ObjectId } from "mongodb";
 
 // TODO: render instead of json. Including data you want to render with it.

@@ -6,7 +6,7 @@ const router = Router();
 import { usersData, courtsData, gamesData } from '../data/index.js';
 
 // Importing the validation functions
-import * as validation from '../validation.js';
+import * as validation from '../_utils/validation.js';
 
 //get courtById handlebar page
 router.route('/:courtID').get(async (req, res) => {
@@ -64,11 +64,11 @@ router.route('/:courtID').get(async (req, res) => {
 // TODO court review route
 router.route('/:courtID/review').get(async (req, res) => {
 	// Store the courtID from the url
-    let courtID = req.params.courtID;
-    
+	let courtID = req.params.courtID;
+
 	//user who should write a review
-    let userId = req.session.user._id;
-    
+	let userId = req.session.user._id;
+
 	// Validate the courtID
 	try {
 		courtID = validation.checkID(courtID, 'courtID');

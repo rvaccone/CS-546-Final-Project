@@ -2,7 +2,7 @@ import { Router } from 'express';
 const router = Router();
 import { usersData } from '../data/index.js';
 import * as users_functions from '../data/users.js';
-import * as validation from '../validation.js';
+import * as validation from '../_utils/validation.js';
 import xss from 'xss';
 
 // Register Routes
