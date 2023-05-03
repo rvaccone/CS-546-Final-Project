@@ -1,6 +1,6 @@
 // Function to return the user session
 const userSession = (req, res) => {
-	return req.session.user;
+	return req.session.user ? req.session.user : null;
 };
 
 // Function to return the user session id without crashing
