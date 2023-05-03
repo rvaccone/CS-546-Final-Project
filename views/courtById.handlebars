@@ -1,8 +1,8 @@
 <section class="court-details">
     <h1>NYC Court Finder</h1>
-    <h2>{{courtName}}</h2>
-    <p>Address: {{address}}</p>
-    <p>Rating: {{overallRating}}/5</p>
+    <h2>{{court.name}}</h2>
+    <p>Address: {{court.location}}</p>
+    <p>Rating: {{court.overallRating}}/5</p>
     <div id="map">
         <iframe
             width="600"
@@ -12,7 +12,7 @@
             allowfullscreen
             referrerpolicy="no-referrer-when-downgrade"
             src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDFFwqO140DVnI3leB_luDuu3133GDLfaI
-                &q={{latitude}},{{longitude}}">
+                &q={{court.lat}},{{court.long}}">
         </iframe>
     </div>
 </section>
@@ -21,7 +21,7 @@
 <p id="disclaimer">Disclaimer: The pickup games listed on this website are organized and managed entirely by the users. The developers of this website are not responsible for any events or activities that take place as a result of the information provided on this website. We provide this information solely as a service to our users, and it is up to each individual to determine whether or not to participate in any pickup games listed on this website. Any decision to participate in such games is entirely at the individual's own risk and discretion. The developers of this website assume no responsibility for any injuries, damages, or other consequences that may arise from participation in pickup games listed on this website. By using this website, you agree to these terms and conditions.
   </p>
 <section>
-  <button class="create-game-btn" onclick="location.href='http://localhost:3000/game/{{courtId}}'">
+  <button class="create-game-btn" onclick="location.href='http://localhost:3000/game/{{court._id}}'">
   <span>Create Pick-Up Game</span>
 </button>
     <div id="pick-up-games">
@@ -43,7 +43,7 @@
     <h2>Court Reviews</h2>
        <button class="button" onclick="location.href='http://localhost:3000/game/gameDetails/{{this._id}}'">Write a review</button>
     <ul>
-        {{#each reviews}}
+        {{#each court.reviews}}
             <li>
                 <h3><a href="/user/{{this.userID}}">{{this.fullName}}</a></h1>
                 <p>Rating: {{this.rating}}/5</p>

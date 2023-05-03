@@ -1,94 +1,91 @@
-import { Router } from "express";
+// Importing express and setting up the router
+import { Router } from 'express';
 const router = Router();
-import {
-  usersData,
-  courtsData,
-  gamesData,
-  gameMembersData,
-} from "../data/index.js";
-import * as validation from "../validation.js";
-//get courtbyid handlebar page
-router.route("/:id").get(async (req, res) => {
-  // Store the id from the url
-  let id = req.params.id;
 
-  // Validate the id
-  try {
-    id = validation.checkID(id, "id");
-  } catch (e) {
-    return res.status(400).render("Error", { errorMessage: e });
-  }
+// Importing the data functions
+import { usersData, courtsData, gamesData } from '../data/index.js';
 
-  // Get the court details
-  let courtDetails = null;
-  try {
-    courtDetails = await courtsData.get(id);
-  } catch (e) {
-    return res.status(400).render("Error", { errorMessage: e });
-  }
-  let pickUpGames = null;
-  try {
-    pickUpGames = await gamesData.getAll(id);
-    console.log("gotem", pickUpGames);
-  } catch (e) {
-    return res.status(400).render("Error", { errorMessage: e });
-  }
+// Importing the validation functions
+import * as validation from '../validation.js';
 
-  // Check that the court exists
-  if (!courtDetails)
-    return res
-      .status(400)
-      .render("Error", { errorMessage: "Error: Court not found" });
+//get courtById handlebar page
+router.route('/:courtID').get(async (req, res) => {
+	// Store the id from the url
+	let courtID = req.params.courtID;
 
-  // Adding the full name to the reviews
-  for (let review of courtDetails.reviews) {
-    // Creating a variable to store the full name
-    let fullName = null;
+	// Validate the courtID
+	try {
+		courtID = validation.checkID(courtID, 'courtID');
+	} catch (e) {
+		return res.status(400).render('Error', { errorMessage: e });
+	}
 
-    // Try to get the full name
-    try {
-      fullName = await usersData.getFullName(review.userID.toString());
-    } catch (e) {}
+	// Get the court
+	let court = null;
+	try {
+		court = await courtsData.get(courtID);
+	} catch (e) {
+		return res.status(400).render('Error', { errorMessage: e });
+	}
 
-    // Add the full name to the review
-    review.fullName = fullName;
-  }
+	// Get the pick up games
+	let pickUpGames = null;
+	try {
+		pickUpGames = await gamesData.getAll(courtID);
+		console.log('gotem', pickUpGames);
+	} catch (e) {
+		return res.status(400).render('Error', { errorMessage: e });
+	}
 
-  // Render the courtByID page with the court details
-  res.render("courtById", {
-    courtName: courtDetails.name,
-    address: courtDetails.location,
-    overallRating: courtDetails.overallRating,
-    latitude: courtDetails.lat,
-    longitude: courtDetails.long,
-    pickUpGames: pickUpGames,
-    courtId: id,
-    reviews: courtDetails.reviews,
-  });
+	// Check that the court exists
+	if (!court)
+		return res
+			.status(400)
+			.render('Error', { errorMessage: 'Error: Court not found' });
+
+	// Iterate through the reviews to add more information
+	for (let review of court.reviews) {
+		// Get the full name
+		let fullName = null;
+		try {
+			fullName = await usersData.getFullName(review.userID.toString());
+		} catch (e) {}
+
+		// Add the full name to the review
+		review.fullName = fullName;
+	}
+
+	// Render the courtByID page with the court details
+	res.render('courtById', {
+		court,
+		pickUpGames,
+	});
 });
 // TODO court review route
-router.route("/:id/review").get(async (req, res) => {
-  // Store the id from the url
-  let id = req.params.id;
-  //user who should write a review
-  let userId = req.session.user._id;
-  // Validate the id
-  try {
-    id = validation.checkID(id, "id");
-  } catch (e) {
-    return res.status(400).render("Error", { errorMessage: e });
-  }
+router.route('/:courtID/review').get(async (req, res) => {
+	// Store the courtID from the url
+    let courtID = req.params.courtID;
+    
+	//user who should write a review
+    let userId = req.session.user._id;
+    
+	// Validate the courtID
+	try {
+		courtID = validation.checkID(courtID, 'courtID');
+	} catch (e) {
+		return res.status(400).render('Error', { errorMessage: e });
+	}
 
-  // Get the court details
-  let courtDetails = null;
-  try {
-    courtDetails = await courtsData.get(id);
-  } catch (e) {
-    return res.status(400).render("Error", { errorMessage: e });
-  }
+	// Get the court details
+	let court = null;
+	try {
+		court = await courtsData.get(courtID);
+	} catch (e) {
+		return res.status(400).render('Error', { errorMessage: e });
+	}
 
-  //rending court review page
-  res.render("Error", { errorMessage: "Error: Court not found" });
+	//rending court review page
+	res.render('Error', { errorMessage: 'Error: Court not found' });
 });
 
 export default router;
