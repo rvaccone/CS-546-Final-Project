@@ -2,7 +2,6 @@ import { courts } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 import * as validation from "../validation.js";
 import { courtsData } from "./index.js";
-import axios from "axios";
 
 // Creates a new court and logs it in the courts collection.
 const create = async (name, location, numCourts, accessible, lat, long) => {
@@ -179,48 +178,27 @@ const getCourtsByName = async (courtName, longitude, latitude) => {
   return courtSearched;
 };
 
-const getCoordinatesForZipCode = async (zipCode) => {
-  try {
-    const response = await axios.get(
-      `https://nominatim.openstreetmap.org/search.php?postalcode=${zipCode}&country=US&format=json`
-    );
-    const { lat, lon } = response.data[0];
-    return { latitude: lat, longitude: lon };
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const getCourtsByZipCode = async (zipCode) => {
-  console.log("inside the zipcode data function");
+const getCourtsByZipCode = async (zipCode, latitude, longitude) => {
   // Convert the zip code to a string and validate it
-  zipCode = validation.isValidNYCZipCode(zipCode, "zipcode");
+  zipCode = validation.checkString(zipCode, "zipCode");
 
-  // Use the getCoordinatesForZipCode function to get the longitude and latitude coordinates for the zip code
-  const { latitude, longitude } = await getCoordinatesForZipCode(zipCode);
   // Connect to the courts collection in the database
   const courtCollection = await courts();
 
-  const nearbyCourts = await courtCollection
-    .find({
-      lat: { $exists: true },
-      long: { $exists: true },
-      $and: [
-        {
-          lat: {
-            $gt: Number(latitude) - 0.1,
-            $lt: Number(latitude) + 0.1,
-          },
+  // Get the courts within a 10km radius of the user's location
+  const query = {
+    location: {
+      $nearSphere: {
+        $geometry: {
+          type: "Point",
+          coordinates: [longitude, latitude],
         },
-        {
-          long: {
-            $gt: Number(longitude) - 0.1,
-            $lt: Number(longitude) + 0.1,
-          },
-        },
-      ],
-    })
-    .toArray();
+        $maxDistance: 10000,
+      },
+    },
+    zipCode: zipCode,
+  };
+  const nearbyCourts = await courtCollection.find(query).toArray();
 
   // Check if any courts were found
   if (!nearbyCourts || nearbyCourts.length === 0) {
@@ -229,6 +207,7 @@ const getCourtsByZipCode = async (zipCode) => {
 
   return nearbyCourts;
 };
+
 export {
   create,
   getAll,
