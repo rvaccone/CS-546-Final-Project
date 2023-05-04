@@ -8,6 +8,8 @@ import {
   courtReviewsData,
 } from "../data/index.js";
 import * as validation from "../validation.js";
+import { userSessionID, checkUserSession } from '../utils/session.js';
+
 //get courtbyid handlebar page
 router.route("/:id").get(async (req, res) => {
   // Store the id from the url
@@ -58,7 +60,7 @@ router.route("/:id").get(async (req, res) => {
 
   let userId;
   try {
-    userId = req.session.user._id;
+    userId = userSessionID(req, res);
   } catch (error) {
     console.log(error);
   }
@@ -100,8 +102,8 @@ router.route("/:id/review").post(async (req, res) => {
   rating = parseInt(rating);
   let courtReview = req.body.courtReview;
   //user who should write a review
-  let userId = req.session.user._id;
-  if (!userId) {
+  let userId = userSessionID(req, res);
+  if (!checkUserSession(req, res)) {
     return res.status(400).render("Error", {
       errorMessage: "User must be signed in to write a review",
     });
@@ -154,8 +156,8 @@ router.route("/:id/review/delete").delete(async (req, res) => {
   // Store the id from the url
   let courtId = req.params.id;
   //user who should write a review
-  let userId = req.session.user._id;
-  if (!userId) {
+  let userId = userSessionID(req, res);
+  if (!checkUserSession(req, res)) {
     return res.status(400).render("Error", {
       errorMessage: "User must be signed in to write a review",
     });

@@ -8,6 +8,7 @@ import {
 } from "../data/index.js";
 import * as validation from "../validation.js";
 import { ObjectId } from "mongodb";
+import { userSessionID } from '../utils/session.js';
 
 // TODO: render instead of json. Including data you want to render with it.
 //route to get the create game form page
@@ -84,7 +85,7 @@ router
       const newGame = await gamesData.create(
         courtID,
         // userID, replace with the userid from cookie
-        req.session.user._id,
+        userSessionID(req, res),
         dateFormatted,
         time,
         maxPlayers
@@ -132,11 +133,11 @@ router
     // console.log("HERE RIGHT NOW");
     try {
       console.log("GAME MEMBERS:", gameDetails.gameMembers);
-      console.log("session user id", req.session.user._id);
+      console.log("session user id", userSessionID(req, res));
 
       gameDetails.gameMembers.forEach((member) => {
         console.log(member.userId);
-        if (member._id.equals(req.session.user._id)) {
+        if (member._id.equals(userSessionID(req, res))) {
           userIsGameMember = true;
         }
       });
@@ -270,10 +271,10 @@ router
       let addedMember;
       // Try to call the gameMembersData create function
       try {
-        console.log(`User id: ${req.session.user._id}`);
+        console.log(`User id: ${userSessionID(req, res)}`);
         addedMember = await gameMembersData.create(
           req.params.gameID,
-          req.session.user._id
+          userSessionID(req, res)
         );
         res.render("joinConfirmation", {
           courtName: game.courtName,
@@ -324,10 +325,10 @@ router
     if (req.session.user) {
       // Try to call the gameMembersData remove function
       try {
-        console.log(`User id: ${req.session.user._id}`);
+        console.log(`User id: ${userSessionID(req, res)}`);
         removedResult = await gameMembersData.remove(
           req.params.gameID,
-          req.session.user._id
+          userSessionID(req, res)
         );
         console.log(removedResult);
         res.json(removedResult);

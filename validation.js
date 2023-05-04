@@ -148,8 +148,6 @@ function checkRatingNumber(numVal, varName) {
 
 // Validates string inputs.
 function checkString(strVal, varName) {
-	let string_format = /^[a-zA-Z]+$/;
-	if (!strVal.match(string_format)) throw `Error: ${varName} must be a valid string!`;
 	if (!strVal) throw `Error: You must supply a ${varName}!`;
 	if (typeof strVal !== 'string') throw `Error: ${varName} must be a string!`;
 	strVal = strVal.trim();
@@ -158,6 +156,19 @@ function checkString(strVal, varName) {
 	if (!isNaN(strVal))
 		throw `Error: ${strVal} is not a valid value for ${varName} as it only contains digits`;
 	return strVal;
+}
+
+// Validates name inputs
+function checkName(nameVal, varName) {
+    // Call the checkString function to validate the name
+    nameVal = checkString(nameVal, varName);
+
+    // Make sure that names do not contain non-letters
+    let string_format = /^[a-zA-Z]+$/;
+    if (!strVal.match(string_format)) throw `Error: ${varName} must be a valid name!`;
+    
+    // Return the value
+    return nameVal;
 }
 
 //checks time
@@ -265,7 +276,8 @@ export {
 	checkNumber,
 	checkPassword,
 	checkRatingNumber,
-	checkString,
+    checkString,
+    checkName,
 	checkTime,
 	isValidNYCZipCode,
 };
