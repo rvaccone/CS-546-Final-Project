@@ -221,12 +221,18 @@ const removeAllPastGames = async () => {
     .find({})
     .project({ _id: 1, courtID: 1, date: 1 })
     .toArray();
+  console.log(gameList);
   const currentDate = new Date();
+  console.log(currentDate);
   let removedGamesCount = 0;
   for (let i = 0; i < gameList.length; i++) {
     if (gameList[i].date) {
       const gameDateofCreation = new Date(gameList[i].date);
+      console.log(gameDateofCreation);
       if (gameDateofCreation < currentDate) {
+        console.log(
+          `REMOVING GAME BECAUSE sch date${gameDateofCreation} and curr date ${currentDate}`
+        );
         let game = await remove(gameList[i]._id.toString());
         if (game) {
           removedGamesCount += 1;

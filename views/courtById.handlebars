@@ -37,17 +37,159 @@
 {{/each}}
     </div>
 </section>
+<hr>
+<section id="courtReviews">
+<h2>Court Reviews</h2>
+<h3>Write a review</h3>
+<form id="reviewForm">
+  <div class="input-group mb-3">
+    <label for="courtReview">Review</label>
+    <input type="text" id="courtReview" name="courtReview" placeholder="Write a review here" required maxlength="280">
+    <br>
+    <label class="input-group-text" for="inputGroupSelect01">Rating</label>
+    <select class="form-select" id="inputGroupSelect01" name="rating" required>
+      <option value="">Give a rating</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+    </select>
+  </div>
+  <button type="submit" class="button">Submit review</button>
+</form>
+<hr>
+<ul id="reviews-list">
+  {{#each reviews}}
+  <li>
+    <h3><a href="/user/{{this.userID}}">{{this.fullName}}</a></h1>
+    <p>Rating: {{this.rating}}/5</p>
+    <p>{{this.comment}}</p>
+    {{#if this.isOwner}}
+    <button class="delete-comment">Delete Review</button>
+    {{/if}}
+  </li>
+  {{/each}}
+</ul>
+<hr>
+<script>
+const reviewForm = document.getElementById("reviewForm");
+const reviewsList = document.getElementById("reviews-list");
 
-<section name="courtReviews">
-    <h2>Court Reviews</h2>
-       <button class="button" onclick="location.href='http://localhost:3000/game/gameDetails/{{this._id}}'">Write a review</button>
-    <ul>
-        {{#each reviews}}
-            <li>
-                <h3><a href="/user/{{this.userID}}">{{this.fullName}}</a></h1>
-                <p>Rating: {{this.rating}}/5</p>
-                <p>{{this.comment}}</p>
-            </li>
-        {{/each}}
-    </ul>
-</section>
+//event listener for before ajax delete button
+    reviewsList.addEventListener("click", function(event) {
+  if (event.target.classList.contains("delete-comment")) {
+    event.preventDefault(); 
+
+    fetch("/courts/{{courtId}}/review/delete", {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }).then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    }).then(courtDetails => {
+        console.log(courtDetails.reviews);
+
+        // Reload the page
+        window.location.reload();
+    }).catch(error => {
+        console.log("Error deleting review:", error);
+    });
+  }
+});
+reviewForm.addEventListener("submit", function(event) {
+  event.preventDefault(); 
+
+  const reviewData = {
+    courtReview: document.getElementById("courtReview").value,
+    rating: document.getElementById("inputGroupSelect01").value
+  }
+
+  console.log(reviewData)
+
+  fetch("/courts/{{courtId}}/review", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(reviewData)
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(courtDetails => {
+    console.log(courtDetails.reviews)
+    let reviews = courtDetails.reviews
+    let review
+for (let i = 0; i < reviews.length; i++) {
+  if (reviews[i].isOwner === true) {
+    // Found the object with isOwner set to true
+    console.log(reviews[i]);
+    review = reviews[i]
+    break;
+  }
+}
+    
+
+    //end
+    const reviewItem = document.createElement("li");
+    const reviewHeading = document.createElement("h3");
+    const reviewRating = document.createElement("p");
+    const reviewComment = document.createElement("p");
+    //delete button
+    const deleteReviewBtn = document.createElement("button");
+    deleteReviewBtn.textContent = "Delete Review";
+    deleteReviewBtn.classList.add("delete-review-btn");
+    deleteReviewBtn.dataset.reviewId = review._id;
+
+    reviewHeading.innerHTML = `<a href="/user/${review.userID}">${review.fullName}</a>`;
+    reviewRating.textContent = `Rating: ${review.rating}/5`;
+    reviewComment.textContent = review.comment;
+    reviewCommentDeleteLink = `/courts/${courtDetails._id}/review`
+    reviewItem.appendChild(reviewHeading);
+    reviewItem.appendChild(reviewRating);
+    reviewItem.appendChild(reviewComment);
+    reviewItem.appendChild(deleteReviewBtn);
+    reviewsList.appendChild(reviewItem);
+  })
+  .catch(error => {
+    console.log("Error submitting review:", error);
+  });
+//post ajax event listener for delete
+  reviewsList.addEventListener("click", function(event) {
+  if (event.target.classList.contains("delete-review-btn")) {
+    
+    event.preventDefault(); 
+    // Send a DELETE request to the server to delete the review with the given ID
+
+    fetch("/courts/{{courtId}}/review/delete", {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }).then(response => {
+        if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    }).then(courtDetails => {
+      console.log(courtDetails.reviews);
+
+      // Reload the page
+      window.location.reload();
+    })
+    .catch(error => {
+      console.log("Error deleting review:", error);
+    });
+  }
+});
+});
+
+</script>

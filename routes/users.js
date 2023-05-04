@@ -19,9 +19,10 @@ router
 		const userRegistration = req.body;
 		console.log(userRegistration);
 		if (!userRegistration || Object.keys(userRegistration).length === 0) {
-			return res
-				.status(400)
-				.render('register', { title: 'Register', error: 'No user data provided.' });
+			return res.status(400).render('register', {
+				title: 'Register',
+				error: 'No user data provided.',
+			});
 		}
 
 		// XSS Protection on registration form.
@@ -145,6 +146,7 @@ router
 			if (validatedUser) {
 				// Sets the user session in the cookie.
 				req.session.user = validatedUser;
+				console.log(req.session);
 				return res.redirect(`/user/:${validatedUser._id}`);
 			}
 		} catch (e) {
@@ -160,9 +162,7 @@ router
 	.get('/logout', async (req, res) => {
 		// Destroys the session.
 		console.log('you are hitting logout route');
-		console.log(req.session);
 		req.session.destroy();
-		console.log(req.session);
 		return res.status(200).redirect('/');
 	})
 
@@ -201,8 +201,6 @@ router
 	// Edit Profile Route
 	.post('/editProfile/:id', async (req, res) => {
 		const updatedUser = req.body;
-
-		// TODO: prevent other user from getting onto other profiles.
 
 		// Checks if the req.body is empty.
 		if (!updatedUser || Object.keys(updatedUser).length === 0) {
