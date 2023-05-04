@@ -6,8 +6,8 @@ const saltRounds = 1;
 
 // Creates a new user and logs it in the users collection.
 const create = async (firstName, lastName, email, password, age) => {
-	firstName = validation.checkName(firstName, 'firstName');
-	lastName = validation.checkName(lastName, 'lastName');
+	firstName = validation.checkString(firstName, 'firstName');
+	lastName = validation.checkString(lastName, 'lastName');
 	email = validation.checkEmail(email, 'email');
 	password = validation.checkPassword(password, 'password');
 	age = validation.checkAge(age, 'age');
@@ -88,8 +88,8 @@ const remove = async (id) => {
 
 // Updates a user in the users collection.
 const update = async (id, firstName, lastName, email, password, age, bio, imgLink) => {
-	firstName = validation.checkName(firstName, 'firstName');
-	lastName = validation.checkName(lastName, 'lastName');
+	firstName = validation.checkString(firstName, 'firstName');
+	lastName = validation.checkString(lastName, 'lastName');
 	email = validation.checkEmail(email, 'email');
 	password = validation.checkPassword(password, 'password');
 	age = validation.checkAge(age, 'age');
