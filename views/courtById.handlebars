@@ -62,7 +62,7 @@
 <ul id="reviews-list">
   {{#each reviews}}
   <li>
-    <h3><a href="/user/{{this.userID}}">{{this.fullName}}</a></h1>
+    <h3><p>{{this.fullName}}<p></h1>
     <p>Rating: {{this.rating}}/5</p>
     <p>{{this.comment}}</p>
     {{#if this.isOwner}}
@@ -149,7 +149,7 @@ for (let i = 0; i < reviews.length; i++) {
     deleteReviewBtn.classList.add("delete-review-btn");
     deleteReviewBtn.dataset.reviewId = review._id;
 
-    reviewHeading.innerHTML = `<a href="/user/${review.userID}">${review.fullName}</a>`;
+    reviewHeading.innerHTML = `<p>${review.fullName}</p>`;
     reviewRating.textContent = `Rating: ${review.rating}/5`;
     reviewComment.textContent = review.comment;
     reviewCommentDeleteLink = `/courts/${courtDetails._id}/review`
