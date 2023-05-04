@@ -160,25 +160,31 @@ router
 	.get('/logout', async (req, res) => {
 		// Destroys the session.
 		console.log('you are hitting logout route');
+		console.log(req.session);
 		req.session.destroy();
+		console.log(req.session);
 		return res.status(200).redirect('/');
 	})
 
 	.get('/:id', async (req, res) => {
 		// Send the user's session information to the page.
-		return res.render('profile', {
-			title: 'My Profile',
-			_id: req.session.user._id,
-			firstName: req.session.user.firstName,
-			lastName: req.session.user.lastName,
-			email: req.session.user.emailAddress,
-			age: req.session.user.age,
-			bio: req.session.user.bio,
-			imgLink: req.session.user.imgLink,
-		});
+		console.log('Message ' + req.session.user);
+		if (!req.session.user) {
+			return res.status(200).redirect('/');
+		} else {
+			return res.render('profile', {
+				title: 'My Profile',
+				_id: req.session.user._id,
+				firstName: req.session.user.firstName,
+				lastName: req.session.user.lastName,
+				email: req.session.user.emailAddress,
+				age: req.session.user.age,
+				bio: req.session.user.bio,
+				imgLink: req.session.user.imgLink,
+			});
+		}
 	})
 
-	// TODO: Edit the editProfile page to have correct action, entries, and link back to profile.
 	.get('/editProfile/:id', async (req, res) => {
 		return res.status(200).render('editProfile', {
 			title: 'Edit Profile',
@@ -195,6 +201,8 @@ router
 	// Edit Profile Route
 	.post('/editProfile/:id', async (req, res) => {
 		const updatedUser = req.body;
+
+		// TODO: prevent other user from getting onto other profiles.
 
 		// Checks if the req.body is empty.
 		if (!updatedUser || Object.keys(updatedUser).length === 0) {

@@ -1,8 +1,8 @@
 <section class="court-details">
     <h1>NYC Court Finder</h1>
-    <h2>{{courtName}}</h2>
-    <p>Address: {{address}}</p>
-    <p>Rating: {{overallRating}}/5</p>
+    <div id="court-info">
+        <p>Court: {{courtName}}&nbsp;&nbsp; | &nbsp;&nbsp;Address: {{address}} &nbsp;&nbsp;| &nbsp;&nbsp;Rating: {{overallRating}}/5</p>
+    </div>
     <div id="map">
         <iframe
             width="600"
@@ -16,25 +16,24 @@
         </iframe>
     </div>
 </section>
-<br>
-<h2>Pick Up Games:</h2>
 <p id="disclaimer">Disclaimer: The pickup games listed on this website are organized and managed entirely by the users. The developers of this website are not responsible for any events or activities that take place as a result of the information provided on this website. We provide this information solely as a service to our users, and it is up to each individual to determine whether or not to participate in any pickup games listed on this website. Any decision to participate in such games is entirely at the individual's own risk and discretion. The developers of this website assume no responsibility for any injuries, damages, or other consequences that may arise from participation in pickup games listed on this website. By using this website, you agree to these terms and conditions.
   </p>
 <section>
   <button class="create-game-btn" onclick="location.href='http://localhost:3000/game/{{courtId}}'">
-  <span>Create Pick-Up Game</span>
+  <p id="create-button-text">Create Pick-Up Game</p>
 </button>
     <div id="pick-up-games">
         {{#each pickUpGames}}
-  <div class="game">
-    <p>Game at {{this.courtName}}</p>
-    <p>Date: {{this.date}}</p>
-    <p>Time: {{this.time}}</p>
-    <p>Max Players: {{this.maxPlayers}}</p>
-    <p>Players Joined: {{this.gameMembers.length}}</p>
-    {{!-- todo players needed  --}}
-    <button class="button" onclick="location.href='http://localhost:3000/game/gameDetails/{{this._id}}'">Game Details</button>
-  </div>
+    <div class="full-game-wrapper">
+        <div class="game-wrapper">
+            <p>Date: {{this.date}}</p>
+            <p>Time: {{this.time}}</p>
+            <p>Max Players: {{this.maxPlayers}}</p>
+            <p>Players Joined: {{this.gameMembers.length}}</p>
+            {{!-- todo players needed  --}}
+            <button class="gameButton" onclick="location.href='http://localhost:3000/game/gameDetails/{{this._id}}'">Game Details</button>
+        </div>
+    </div>
 {{/each}}
     </div>
 </section>

@@ -1,13 +1,12 @@
 // Validates email inputs.
 function checkEmail(emailVal, varName) {
 	let mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-	if (!emailVal) throw `Error: You must supply a ${varName}.`;
-	if (typeof emailVal !== 'string') throw `Error: ${varName} should be a string.`;
+	if (!emailVal) throw `Either the email or password is incorrect.`;
+	if (typeof emailVal !== 'string') throw `Either the email or password is incorrect.`;
 	emailVal = emailVal.trim();
-	if (emailVal.length === 0)
-		throw `Error: ${varName} cannot be an empty string or string with just spaces`;
-	if (!emailVal.includes('@')) throw `Error: ${varName} is not a valid email.`;
-	if (!emailVal.match(mailformat)) throw `Error: ${varName} is not a valid email.`;
+	if (emailVal.length === 0) throw `Either the email or password is incorrect.`;
+	if (!emailVal.includes('@')) throw `Either the email or password is incorrect.`;
+	if (!emailVal.match(mailformat)) throw `Either the email or password is incorrect.`;
 	return emailVal;
 }
 
@@ -15,15 +14,13 @@ function checkEmail(emailVal, varName) {
 function checkPassword(passwordVal, varName) {
 	// Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character.
 	let passwordFormat = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/;
-	if (!passwordVal) throw `Error: You must supply a ${varName}.`;
-	if (typeof passwordVal !== 'string') throw `Error: ${varName} should be a string.`;
+	if (!passwordVal) throw `Either the email or password is incorrect.`;
+	if (typeof passwordVal !== 'string') throw `Either the email or password is incorrect.`;
 	passwordVal = passwordVal.trim();
-	if (passwordVal.length === 0)
-		throw `Error: ${varName} cannot be an empty string or string with just spaces`;
-	if (passwordVal.length < 8) throw `Error: ${varName} must be at least 8 characters.`;
-	if (passwordVal.length > 30) throw `Error: ${varName} cannot be longer than 50 characters.`;
-	if (!passwordVal.match(passwordFormat))
-		throw `Error: ${varName} must contain at least one lowercase letter, one uppercase letter, one number, and one special character.`;
+	if (passwordVal.length === 0) throw `Either the email or password is incorrect.`;
+	if (passwordVal.length < 8) throw `Either the email or password is incorrect.`;
+	if (passwordVal.length > 30) throw `Either the email or password is incorrect.`;
+	if (!passwordVal.match(passwordFormat)) throw `Either the email or password is incorrect.`;
 	return passwordVal;
 }
 
@@ -43,6 +40,7 @@ if (loginForm) {
 	// Event listener for submit button.
 	loginForm.addEventListener('submit', (event) => {
 		console.log('Form fires');
+		// if class to style the red border on the route errors
 
 		try {
 			// Sets error container to empty.
@@ -57,6 +55,7 @@ if (loginForm) {
 			} catch (e) {
 				error_array.push(e);
 				emailAddress.style.borderColor = 'red';
+				userPassword.style.borderColor = 'red';
 			}
 
 			// Validates the password.
@@ -64,6 +63,7 @@ if (loginForm) {
 				let pass = checkPassword(userPassword.value, 'password');
 			} catch (e) {
 				error_array.push(e);
+				emailAddress.style.borderColor = 'red';
 				userPassword.style.borderColor = 'red';
 			}
 
