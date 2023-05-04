@@ -35,13 +35,13 @@ router
 
 		try {
 			// Validate the first name.
-			userRegistration.firstNameInput = validation.checkString(
+			userRegistration.firstNameInput = validation.checkName(
 				userRegistration.firstNameInput,
 				'firstNameInput'
 			);
 
 			// Validate the last name.
-			userRegistration.lastNameInput = validation.checkString(
+			userRegistration.lastNameInput = validation.checkName(
 				userRegistration.lastNameInput,
 				'lastNameInput'
 			);
@@ -219,11 +219,11 @@ router
 
 		// Validates the input.
 		try {
-			updatedUser.firstNameInput = validation.checkString(
+			updatedUser.firstNameInput = validation.checkName(
 				updatedUser.firstNameInput,
 				'firstName'
 			);
-			updatedUser.lastNameInput = validation.checkString(
+			updatedUser.lastNameInput = validation.checkName(
 				updatedUser.lastNameInput,
 				'lastName'
 			);
