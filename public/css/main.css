@@ -26,6 +26,11 @@ h3 {
     text-align: center;
 }
 
+footer {
+	padding-top: 2%;
+	text-align: center;
+}
+
 .nav-left-links {
 	float: left;
 	height: 60px;
@@ -239,6 +244,11 @@ iframe {
 	display:inline-block;
 }
 
+#court-info {
+	display: flex;
+	justify-content: center;
+} 
+
 .court {
 	background-color: #E8E8E8;
 	border: 2px solid black;
@@ -248,4 +258,77 @@ iframe {
 	padding-bottom: 2%;
 	margin: auto;
 	margin-bottom: 1%;
+}
+
+.gameButton {
+	background-color: #536caa;
+	color: #ffffff;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 5px;
+	text-decoration: none;
+	display: block;
+	margin-top: 10px;
+	width: 40%;
+	border-radius: 5px;
+	text-align: center;
+	margin-left: 3%;
+}
+
+.game-wrapper {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+	margin: 2%;
+}
+
+.full-game-wrapper {
+	background-color: #E8E8E8;
+	border: 2px solid black;
+	border-radius: 5px;
+	margin-top: 10px;
+	margin-left: .5%;
+	width: 45%;
+	padding: 1%;
+	display: block;
+}
+
+#disclaimer {
+	color: #000000;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	text-align: center;
+}
+
+.create-game-btn {
+	background-color: #536caa;
+	text-decoration: none;
+	display: block;
+	margin-top: 10px;
+	width: 45%;
+	border-radius: 5px;
+	text-align: center;
+	margin: auto;
+	max-width: 30%;
+}
+
+#create-button-text {
+	color: #ffffff;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.create-game-btn:hover {
+	background-color: #103fbf;
+	text-decoration: none;
+	display: block;
+	margin-top: 10px;
+	width: 45%;
+	border-radius: 5px;
+	text-align: center;
+	margin: auto;
 }

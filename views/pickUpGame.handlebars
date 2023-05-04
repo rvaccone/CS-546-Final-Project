@@ -16,19 +16,25 @@
 </div>
 
 {{!-- RSVP button --}}
-{{#if userIsGameMember}}
-  {{!-- Button to unjoin the game --}}
-   <div class="gameJoinForm">
-    <button id="unjoinButton" type="button">Unjoin</button>
-  </div>
+<!-- Prevents guests from seeing the join button -->
+{{#if user}}
+  {{#if userIsGameMember}}
+    {{!-- Button to unjoin the game --}}
+    <div class="gameJoinForm">
+      <button id="unjoinButton" type="button">Unjoin</button>
+    </div>
+  {{else}}
+    {{!-- Button to join the game --}}
+    <div class="gameJoinForm">
+      <form action="/game/addUser/{{gameDetails._id}}" method="post">
+        <input type="hidden" name="gameId" value="{{gameDetails._id}}">
+        <button name="rsvpButton" type="submit">RSVP</button>
+      </form>
+    </div>
+  {{/if}}
 {{else}}
-  {{!-- Button to join the game --}}
-  <div class="gameJoinForm">
-    <form action="/game/addUser/{{gameDetails._id}}" method="post">
-      <input type="hidden" name="gameId" value="{{gameDetails._id}}">
-      <button name="rsvpButton" type="submit">RSVP</button>
-    </form>
-  </div>
 {{/if}}
+
+{{!-- Script for a button event caller --}}
 {{!-- Script for a button event caller --}}
 <script src="/public/js/pickUpGames.js"></script>
