@@ -41,6 +41,12 @@
 <section id="courtReviews">
 <h2>Court Reviews</h2>
 <h3>Write a review</h3>
+
+{{!-- Section to display error messages --}}
+<div id='error-container' hidden>
+    <p>I'm a error</p>
+</div>
+
 <form id="reviewForm">
   <div class="input-group mb-3">
     <label for="courtReview">Review</label>
@@ -120,7 +126,8 @@ reviewForm.addEventListener("submit", function(event) {
   })
   .then(response => {
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+        console.log("error",response)
+        throw new Error(`HTTP error! status: ${response.status}`);
     }
     return response.json();
   })
@@ -160,7 +167,7 @@ for (let i = 0; i < reviews.length; i++) {
     reviewsList.appendChild(reviewItem);
   })
   .catch(error => {
-    console.log("Error submitting review:", error);
+    console.log(error)
   });
 //post ajax event listener for delete
   reviewsList.addEventListener("click", function(event) {
