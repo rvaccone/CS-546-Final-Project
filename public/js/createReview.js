@@ -14,7 +14,7 @@ if (createReviewForm) {
 	const courtRating = document.getElementById('rating');
 
 	// Get the error container
-	const errorContainer = document.getElementById('error-container');
+	const errorContainer = document.getElementById('error-message');
 
 	// Create an array to hold the errors
 	let errors = [];
@@ -32,16 +32,16 @@ if (createReviewForm) {
 		try {
 			validation.checkComment(courtReview.value, 'courtReview');
 		} catch (e) {
-            errors.push(e);
-            courtReview.style.borderColor = 'red';
+			errors.push(e);
+			courtReview.style.borderColor = 'red';
 		}
 
 		// Validate the rating
 		try {
 			validation.checkRatingNumber(courtRating.value, 'courtRating');
 		} catch (e) {
-            errors.push(e);
-            courtRating.style.borderColor = 'red';
+			errors.push(e);
+			courtRating.style.borderColor = 'red';
 		}
 
 		// If there are errors, prevent the form from submitting and display the errors
@@ -65,10 +65,10 @@ if (createReviewForm) {
 				errorItem.innerHTML = error;
 
 				// Add the error to the list
-                list.appendChild(errorItem);
-                
-                // Style the color to red
-                errorItem.style.color = 'red';
+				list.appendChild(errorItem);
+
+				// Style the color to red
+				errorItem.style.color = 'red';
 			}
 			// Add the list to the error container
 			errorContainer.appendChild(list);

@@ -90,9 +90,13 @@ router.route('/:id').get(async (req, res) => {
 // TODO court review route
 router.route('/:id/review').post(async (req, res) => {
 	// Check if the user is not signed
-    if (!checkUserSession(req, res)) {
-		res.statusText = 'User not signed in';
-		return res.json({ errorMessage: 'User not signed in' });
+	try {
+		if (!checkUserSession(req, res))
+			throw 'User should be logged in to write a review';
+	} catch (e) {
+		return res
+			.status(400)
+			.json({ error: 'User should be logged in to write a review' });
 	}
 
 	// Store the id from the url
@@ -130,6 +134,18 @@ router.route('/:id/review').post(async (req, res) => {
 		courtDetails = await courtsData.get(courtId);
 	} catch (e) {
 		return res.status(400).render('Error', { errorMessage: e });
+	}
+	// before the creating a review I am checking if the user already has a review for this court
+	console.log('HERE WITH ROCCO');
+	console.log(courtDetails);
+	if (
+		courtDetails.reviews.some(
+			(review) => review.userID.toString() === userId
+		)
+	) {
+		return res
+			.status(400)
+			.json({ error: 'User has already posted a review for this court' });
 	}
 	//store the review in database
 	//const create = async (courtID, userID, rating, comment) => {
