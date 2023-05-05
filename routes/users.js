@@ -289,7 +289,7 @@ router
 
 			res.status(200).redirect(`/user/${updatedUserData._id}`);
 		} catch (e) {
-			res.status(500).json({ error: e });
+			res.status(500).render('editprofile',{ error_message: e});
 		}
 	});
 

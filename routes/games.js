@@ -71,6 +71,7 @@ router
       courtsPostData.maxPlayers = validation.checkMaxPlayer(
         courtsPostData.maxPlayers,
         "maxPlayers"
+      
       );
     } catch (e) {
       console.log(e);
