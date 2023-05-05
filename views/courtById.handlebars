@@ -1,7 +1,7 @@
 <section class="court-details">
     <h1>NYC Court Finder</h1>
     <div id="court-info">
-        <p>Court: {{courtName}}&nbsp;&nbsp; | &nbsp;&nbsp;Address: {{address}} &nbsp;&nbsp;| &nbsp;&nbsp;Rating: {{overallRating}}/5</p>
+        <p>Court: {{courtName}}&nbsp;&nbsp; | &nbsp;&nbsp;Address: {{address}} &nbsp;&nbsp;| &nbsp;&nbsp;Rating: <span id="overall-rating">{{overallRating}}</span>/5</p>
     </div>
     <div id="map">
         <iframe
@@ -41,6 +41,7 @@
 <section id="courtReviews">
 <h2>Court Reviews</h2>
 <h3>Write a review</h3>
+<div id="error-message" hidden></div>
 <form id="reviewForm">
   <div class="input-group mb-3">
     <label for="courtReview">Review</label>
@@ -73,6 +74,8 @@
 </ul>
 <hr>
 <script>
+
+
 const reviewForm = document.getElementById("reviewForm");
 const reviewsList = document.getElementById("reviews-list");
 
@@ -101,6 +104,8 @@ const reviewsList = document.getElementById("reviews-list");
     });
   }
 });
+
+
 reviewForm.addEventListener("submit", function(event) {
   event.preventDefault(); 
 
@@ -120,7 +125,16 @@ reviewForm.addEventListener("submit", function(event) {
   })
   .then(response => {
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      if (response.status === 400) {
+        response.json().then(data => {
+          const errorMessage = document.getElementById("error-message");
+          errorMessage.innerHTML = data.error;
+          errorMessage.hidden = false;
+          errorMessage.style.color = 'red';
+        });
+      } else {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
     }
     return response.json();
   })
@@ -137,6 +151,8 @@ for (let i = 0; i < reviews.length; i++) {
   }
 }
     
+  const overallRatingSpan = document.getElementById("overall-rating");
+  overallRatingSpan.textContent = courtDetails.overallRating;
 
     //end
     const reviewItem = document.createElement("li");

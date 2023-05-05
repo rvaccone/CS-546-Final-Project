@@ -3,9 +3,13 @@
   <p id="disclaimer">
     Disclaimer: The pickup games listed on this website are organized and managed entirely by the users. The developers of this website are not responsible for any events or activities that take place as a result of the information provided on this website. We provide this information solely as a service to our users, and it is up to each individual to determine whether or not to participate in any pickup games listed on this website. Any decision to participate in such games is entirely at the individual's own risk and discretion. The developers of this website assume no responsibility for any injuries, damages, or other consequences that may arise from participation in pickup games listed on this website. By using this website, you agree to these terms and conditions.
   </p>
+
+{{!-- Section to display error messages --}}
+<div id='error-container' hidden></div>
+
   <div class="full-form-wrapper">
     <div class='form-wrapper'>
-      <form action="/game/{{courtId}}" method="POST">
+      <form id="createGameForm" action="/game/{{courtId}}" method="POST">
         <label class='button_text' for="date">Date (MM/DD/YYYY):</label>
         <input type="date" id="date" name="date" required>
         <br>
@@ -15,7 +19,7 @@
         <label class='button_text' for="maxPlayers">Maximum Players:</label>
         <input type="number" id="maxPlayers" name="maxPlayers" min="1" max="100" required>
         <br>
-        <input type="hidden" name="courtId" value="{{courtId}}">
+        <input type="hidden" name="courtId" id="courtId" value="{{courtId}}">
         <input class='button' name="createGameButton" type="submit" value="Create Game">
       </form>
     </div>
@@ -23,20 +27,5 @@
 </section>
 
 {{!-- Script to redirect back to the court render --}}
-<script>
-  // Get the submit button
-  let createGameButton = document.getElementById('createGameButton')
-  let courtIdInput = document.getElementById('courtId')
-
-  // Add an event listener
-  createGameButton.addEventListener('submit', (e) => {
-    //Prevent default
-    e.preventDefault()
-
-    let courtID = courtIdInput.value;
-
-    // Redirect back to the court details page
-    window.location.href = `http://localhost:3000/courts/${courtID}`;
-  })
-</script>
+<script src="/public/js/createGame.js"></script>
 

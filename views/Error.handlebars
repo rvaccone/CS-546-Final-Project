@@ -1,2 +1,10 @@
-{{errorMessage}}
-<p>403: Forbidden</p>
+{{!-- If statement to display the passed error message --}}
+{{#if errorMessage}}
+    {{#if status}}
+        <h1>Error {{statusCode}}: {{errorMessage}}</h1>
+    {{else}}
+        <h1>Error: {{errorMessage}}</h1>
+    {{/if}}
+{{else}}
+    <h1>Undefined error</h1>
+{{/if}}

@@ -15,6 +15,9 @@
   </ol>
 </div>
 
+{{!-- Section to display error messages --}}
+<div id='error-container' hidden></div>
+
 {{!-- RSVP button --}}
 <!-- Prevents guests from seeing the join button -->
 {{#if user}}
@@ -35,6 +38,5 @@
 {{else}}
 {{/if}}
 
-{{!-- Script for a button event caller --}}
 {{!-- Script for a button event caller --}}
 <script src="/public/js/pickUpGames.js"></script>
