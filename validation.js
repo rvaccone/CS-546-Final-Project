@@ -35,7 +35,7 @@ function checkComment(comment, varName) {
 	comment = comment.trim();
 	if (comment.length === 0)
 		throw `Error: ${varName} cannot be an empty string or string with just spaces`;
-	if (comment.length > 300) throw `Error: ${varName} cannot be longer than 300 characters.`;
+	if (comment.length > 280) throw `Error: ${varName} cannot be longer than 280 characters.`;
 	return comment;
 }
 

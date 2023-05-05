@@ -4,6 +4,9 @@ import * as validation from '../../validation.js';
 // Get the create comment form
 const createReviewForm = document.getElementById('reviewForm');
 
+// Create a list for the errors
+const list = document.createElement('dl');
+
 // Check that the form exists before adding the event listener
 if (createReviewForm) {
 	// Get the values from the form
@@ -12,9 +15,6 @@ if (createReviewForm) {
 
 	// Get the error container
 	const errorContainer = document.getElementById('error-container');
-
-	// Create a list for the errors
-	const list = document.createElement('dl');
 
 	// Create an array to hold the errors
 	let errors = [];
@@ -32,14 +32,16 @@ if (createReviewForm) {
 		try {
 			validation.checkComment(courtReview.value, 'courtReview');
 		} catch (e) {
-			errors.push(e);
+            errors.push(e);
+            courtReview.style.borderColor = 'red';
 		}
 
 		// Validate the rating
 		try {
 			validation.checkRatingNumber(courtRating.value, 'courtRating');
 		} catch (e) {
-			errors.push(e);
+            errors.push(e);
+            courtRating.style.borderColor = 'red';
 		}
 
 		// If there are errors, prevent the form from submitting and display the errors
@@ -54,7 +56,7 @@ if (createReviewForm) {
 			let errorItem = null;
 
 			// Display the errors
-			for (let error in errors) {
+			for (let error of errors) {
 				// Log the error to the console
 				console.log(error);
 
@@ -63,7 +65,10 @@ if (createReviewForm) {
 				errorItem.innerHTML = error;
 
 				// Add the error to the list
-				list.appendChild(errorItem);
+                list.appendChild(errorItem);
+                
+                // Style the color to red
+                errorItem.style.color = 'red';
 			}
 			// Add the list to the error container
 			errorContainer.appendChild(list);
