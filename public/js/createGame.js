@@ -20,12 +20,10 @@ function checkDate(date, varName) {
 		throw `Error: ${varName} cannot be an empty string or string with just spaces`;
 	if (!isNaN(date))
 		throw `Error: ${strVal} is not a valid value for ${varName} as it only contains digits`;
-	let dateRegex =
-		/^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d$/;
+	let dateRegex = /^20\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
 
-	if (!date.match(dateRegex)) throw 'enter a valid date format of mm/dd/yyyy';
+	if (!date.match(dateRegex)) throw 'enter a valid date';
 
-	if (!Moment(date, 'MM/DD/YYYY', true).isValid()) throw 'enter a valid date';
 	// checking if 1990 < releaseDate < currentYear+1
 	let minYear = 1900;
 	let maxYear = new Date();
@@ -102,6 +100,7 @@ if (createGameForm) {
 
 		// Validate the date
 		try {
+			console.log('date: ', dateInput.value);
 			checkDate(dateInput.value, 'date');
 		} catch (e) {
 			errors.push(e);
