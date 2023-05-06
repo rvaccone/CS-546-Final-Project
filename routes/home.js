@@ -2,6 +2,7 @@ import { Router } from 'express';
 const router = Router();
 import { gamesData } from '../data/index.js';
 import { checkUserSession } from '../utils/session.js';
+import { xssProtectObject } from '../utils/input.js';
 
 // Main Route
 router
@@ -26,6 +27,9 @@ router
 
 // Route to store the user's location
 router.post('/storeLocation', (req, res) => {
+	// XSS Protection for the location data
+	req.body = xssProtectObject(req.body);
+
 	// Get the user's location data from the request body
 	const { latitude, longitude } = req.body;
 
