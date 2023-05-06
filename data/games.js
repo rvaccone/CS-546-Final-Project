@@ -1,7 +1,6 @@
 import { games } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 import * as validation from '../validation.js';
-import * as user_functions from '../data/users.js';
 import * as courts_functions from '../data/courts.js';
 import * as game_members_functions from '../data/gameMembers.js';
 
@@ -267,6 +266,38 @@ const getAllTrending = async () => {
 	return trendingGameList;
 };
 
+// Function to check if a user can start a game with the given parameters
+const checkUserInGame = async (userID, time, date) => {
+	// Validate the input
+	userID = validation.checkID(userID, 'userID');
+	time = validation.checkTime(time, 'time');
+	date = validation.checkDate(date, 'date');
+
+	// Retrieve the games collection
+	const gameCollection = await games();
+
+	let gameData = await gameCollection.find({}).toArray();
+
+	// Filter games that have the same time and date
+	const gamesWithSameTimeAndDate = gameData.filter((game) => {
+		return (
+			game.time.toLowerCase() === time.toLowerCase() && game.date === date
+		);
+	});
+
+	// Filter games with the user as a gameMember
+	const gamesWithUser = gamesWithSameTimeAndDate.filter((game) => {
+		return (
+			game.gameMembers.filter((member) => {
+				return member._id.toString() === userID.toString();
+			}).length > 0
+		);
+	});
+
+	// Return true if user has a game conflict
+	return gamesWithUser.length > 0;
+};
+
 export {
 	create,
 	getAll,
@@ -275,4 +306,5 @@ export {
 	remove,
 	removeAllPastGames,
 	getAllTrending,
+	checkUserInGame,
 };

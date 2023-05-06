@@ -9,6 +9,7 @@ import {
 import * as validation from '../validation.js';
 import { xssProtectObject } from '../utils/input.js';
 import { userSessionID, checkUserSession } from '../utils/session.js';
+import { checkUserInGame } from '../data/games.js';
 
 //route to get the create game form page
 router
@@ -93,6 +94,29 @@ router
 
 		// Creates a new game.
 		try {
+			// Check that the user does not have a game conflict
+			console.log(
+				'-'.repeat(50),
+				'Testing checkUserInGame',
+				'-'.repeat(50)
+			);
+			console.log(
+				await checkUserInGame(
+					userSessionID(req, res),
+					courtsPostData.time,
+					dateFormatted
+				)
+			);
+			if (
+				await checkUserInGame(
+					userSessionID(req, res),
+					courtsPostData.time,
+					dateFormatted
+				)
+			) {
+				throw 'User has a time and day conflict with another game';
+			}
+
 			const { time, maxPlayers } = courtsPostData;
 			const newGame = await gamesData.create(
 				courtID,
