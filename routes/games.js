@@ -123,7 +123,7 @@ router
 		// Store the gameID from the url and validate it
 		let gameID = null;
 		try {
-			gameID = validation.checkID(gameID, 'gameID');
+			gameID = validation.checkID(req.params.gameID, 'gameID');
 		} catch (e) {
 			return res.status(400).render('Error', { errorMessage: e });
 		}
