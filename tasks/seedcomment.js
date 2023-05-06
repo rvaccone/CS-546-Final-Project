@@ -41,16 +41,10 @@ for (const court of courtOpenData) {
 		const insertCourts = await courts_functions.create(
 			court.Name === null ? 'Unknown Name' : court.Name,
 			court.Location === null ? 'Unknown Location' : court.Location,
-			court.Num_of_Courts !== null
-				? parseFloat(court.Num_of_Courts)
-				: randomNum(1, 10),
+			court.Num_of_Courts !== null ? parseInt(court.Num_of_Courts) : 1,
 			court.Accessible === 'Y',
-			court.lat === null
-				? randomNum(-100, 100, true)
-				: parseFloat(court.lat),
-			court.lon === null
-				? randomNum(-100, 100, true)
-				: parseFloat(court.lon)
+			court.lat === null ? null : parseInt(court.lat),
+			court.lon === null ? null : parseInt(court.lon)
 		);
 		courtIds.push(insertCourts._id);
 		console.log(`Created new court with ID ${insertCourts._id}`);
@@ -108,8 +102,8 @@ try {
 
 try {
 	user4 = await users_functions.create(
-		'Delete',
-		'Me',
+		'Indiana',
+		'Jones',
 		'deleteme@gmail.com',
 		'd3l3teM&',
 		randomNum(14, 100)
@@ -198,7 +192,7 @@ for (let courtId of courtIds) {
 
 	// If a user loves the court have them create a game for today or soon
 	for (let review of court.reviews) {
-		if (parseFloat(review.rating) === 5) {
+		if (parseInt(review.rating) === 5) {
 			// Create the time
 			temp = randomNum(1, 12);
 			time =
@@ -225,7 +219,7 @@ for (let courtId of courtIds) {
 			} catch (err) {}
 		}
 		// Else if they liked the court have them join a game
-		else if (parseFloat(review.rating) === 4) {
+		else if (parseInt(review.rating) === 4) {
 			// Get all games for the court
 			game = await games_functions.getAll(courtId.toString());
 
