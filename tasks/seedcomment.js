@@ -43,8 +43,8 @@ for (const court of courtOpenData) {
 			court.Location === null ? 'Unknown Location' : court.Location,
 			court.Num_of_Courts !== null ? parseInt(court.Num_of_Courts) : 1,
 			court.Accessible === 'Y',
-			court.lat === null ? null : parseInt(court.lat),
-			court.lon === null ? null : parseInt(court.lon)
+			court.lat === null ? null : parseFloat(court.lat),
+			court.lon === null ? null : parseFloat(court.lon)
 		);
 		courtIds.push(insertCourts._id);
 		console.log(`Created new court with ID ${insertCourts._id}`);
