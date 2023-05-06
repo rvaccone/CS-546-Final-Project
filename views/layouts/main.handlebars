@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-<title>{{{title}}}</title>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NYC Court Finder</title>
-    <link rel='stylesheet' href='/public/css/main.css' />
+    <title>
+        {{#if title}}
+            {{{title}}}
+        {{else}}
+            NYC Court Finder
+        {{/if}}
+    </title>
+    <link rel='stylesheet' href='/public/css/main.css'>
 </head>
 <body>
     <nav>
@@ -28,7 +33,7 @@
     </nav>
         {{{body}}}
     <footer>
-        <a href="https://opendata.cityofnewyork.us/" alt="NYC Open Data Link">Powered by NYC Open Data</a>
+        <a href="https://opendata.cityofnewyork.us/">Powered by NYC Open Data</a>
         <p>&copy; 2023 NYC Court Finder</p>
     </footer>
 </body>
