@@ -1,5 +1,9 @@
 <!-- TODO: Get the action to be correct. -->
 <h2>Edit Profile</h2>
+<div id='route-error-wrapper'>
+	<p id="routeError">{{error}}</p>
+</div>
+<div id='error-container' hidden></div>
 <div class="full-form-wrapper">
 	<div class='form-wrapper'>
 		<form id='editProfile-form' action='/user/editProfile/:{{_id}}' method='POST'>

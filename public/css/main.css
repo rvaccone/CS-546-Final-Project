@@ -29,6 +29,7 @@ h3 {
 footer {
 	padding-top: 2%;
 	text-align: center;
+	display: block;
 }
 
 .nav-left-links {
@@ -331,4 +332,43 @@ iframe {
 	border-radius: 5px;
 	text-align: center;
 	margin: auto;
+}
+
+.full-trending-game-wrapper {
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	display: flex;
+} 
+
+.trending-game-wrapper {
+	background-color: aqua;
+	align-items: center;
+	justify-content: center;
+	width: 20%;
+	margin: 2%;
+	background-color: #E8E8E8;
+	border: 2px solid black;
+	border-radius: 5px;
+}
+
+#routeError {
+	color: red;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+}
+
+#courtReviews {
+	display: inline;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+}
+
+.spacer {
+  width: 0;
+  height: 50px; 
+  overflow: hidden;
 }

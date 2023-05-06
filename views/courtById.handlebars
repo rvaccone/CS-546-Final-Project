@@ -19,9 +19,11 @@
 <p id="disclaimer">Disclaimer: The pickup games listed on this website are organized and managed entirely by the users. The developers of this website are not responsible for any events or activities that take place as a result of the information provided on this website. We provide this information solely as a service to our users, and it is up to each individual to determine whether or not to participate in any pickup games listed on this website. Any decision to participate in such games is entirely at the individual's own risk and discretion. The developers of this website assume no responsibility for any injuries, damages, or other consequences that may arise from participation in pickup games listed on this website. By using this website, you agree to these terms and conditions.
   </p>
 <section>
+  {{#if user}}
   <button class="create-game-btn" onclick="location.href='http://localhost:3000/game/{{courtId}}'">
-  <p id="create-button-text">Create Pick-Up Game</p>
-</button>
+    <p id="create-button-text">Create Pick-Up Game</p>
+  </button>
+  {{/if}}
     <div id="pick-up-games">
         {{#each pickUpGames}}
     <div class="full-game-wrapper">
@@ -33,46 +35,50 @@
             {{!-- todo players needed  --}}
             <button class="gameButton" onclick="location.href='http://localhost:3000/game/gameDetails/{{this._id}}'">Game Details</button>
         </div>
-    </div>
+    </div> 
 {{/each}}
     </div>
 </section>
-<hr>
-<section id="courtReviews">
+<div class="spacer"></div>
+<div id="courtReviews">
 <h2>Court Reviews</h2>
-<h3>Write a review</h3>
-<div id="error-message" hidden></div>
-<form id="reviewForm">
-  <div class="input-group mb-3">
-    <label for="courtReview">Review</label>
-    <input type="text" id="courtReview" name="courtReview" placeholder="Write a review here" required maxlength="280">
-    <br>
-    <label class="input-group-text" for="inputGroupSelect01">Rating</label>
-    <select class="form-select" id="inputGroupSelect01" name="rating" required>
-      <option value="">Give a rating</option>
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-    </select>
-  </div>
-  <button type="submit" class="button">Submit review</button>
-</form>
-<hr>
-<ul id="reviews-list">
-  {{#each reviews}}
-  <li>
-    <h3><p>{{this.fullName}}<p></h1>
-    <p>Rating: {{this.rating}}/5</p>
-    <p>{{this.comment}}</p>
-    {{#if this.isOwner}}
-    <button class="delete-comment">Delete Review</button>
+  {{#if user}}
+  <div id="error-message" hidden></div>
+  <div class="game-wrapper">
+  <form id="reviewForm">
+    <div class="input-group mb-3">
+      <label for="courtReview">Review</label>
+      <input type="text" id="courtReview" name="courtReview" placeholder="Write a review here" required maxlength="280">
+      <br>
+      <label class="input-group-text" for="inputGroupSelect01">Rating</label>
+      <select class="form-select" id="inputGroupSelect01" name="rating" required>
+        <option value="">Give a rating</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </div>
+    <button type="submit" class="button">Submit review</button>
     {{/if}}
-  </li>
-  {{/each}}
-</ul>
-<hr>
+    <div/>
+  </form>
+  <hr>
+  <ul id="reviews-list">
+    {{#each reviews}}
+    <li>
+      <h3><p>{{this.fullName}}<p></h1>
+      <p>Rating: {{this.rating}}/5</p>
+      <p>{{this.comment}}</p>
+      {{#if this.isOwner}}
+      <button class="delete-comment">Delete Review</button>
+      {{/if}}
+    </li>
+    {{/each}}
+  </ul>
+  <hr>
+</div>
 <script>
 
 
