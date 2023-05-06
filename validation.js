@@ -4,38 +4,45 @@ import Moment from 'moment';
 // Validates age inputs.
 function checkAge(ageVal, varName) {
 	if (!ageVal) throw `Error: You must supply a ${varNmae}.`;
-	if (typeof ageVal !== 'number') throw `Error: ${varName} should be a number.`;
+	if (typeof ageVal !== 'number')
+		throw `Error: ${varName} should be a number.`;
 	if (ageVal === NaN) throw `Error: ${varName} age cannot be NaN.`;
-	if (ageVal < 13 || ageVal > 100) throw `Error: ${varName} is out of valid range.`;
+	if (ageVal < 13 || ageVal > 100)
+		throw `Error: ${varName} is out of valid range.`;
 	return ageVal;
 }
 
 // Validates bio inputs.
 function checkBio(bioVal, varName) {
 	if (!bioVal) throw `Error: You must supply a ${varName}.`;
-	if (typeof bioVal !== 'string') throw `Error: ${varName} should be a string.`;
+	if (typeof bioVal !== 'string')
+		throw `Error: ${varName} should be a string.`;
 	bioVal = bioVal.trim();
 	if (bioVal.length === 0)
 		throw `Error: ${varName} cannot be an empty string or string with just spaces`;
-	if (bioVal.length > 500) throw `Error: ${varName} cannot be longer than 500 characters.`;
+	if (bioVal.length > 500)
+		throw `Error: ${varName} cannot be longer than 500 characters.`;
 	return bioVal;
 }
 
 //Validates boolean inputs
 function checkBoolean(boolVal, varName) {
 	if (boolVal === 'undefined') throw `Error: You must supply a ${varName}.`;
-	if (typeof boolVal !== 'boolean') throw `Error: ${varName} should be a boolean.`;
+	if (typeof boolVal !== 'boolean')
+		throw `Error: ${varName} should be a boolean.`;
 	return boolVal;
 }
 
 // Validates comment inputs.
 function checkComment(comment, varName) {
 	if (!comment) throw `Error: You must supply a ${varName}.`;
-	if (typeof comment !== 'string') throw `Error: ${varName} should be a string.`;
+	if (typeof comment !== 'string')
+		throw `Error: ${varName} should be a string.`;
 	comment = comment.trim();
 	if (comment.length === 0)
 		throw `Error: ${varName} cannot be an empty string or string with just spaces`;
-	if (comment.length > 280) throw `Error: ${varName} cannot be longer than 280 characters.`;
+	if (comment.length > 280)
+		throw `Error: ${varName} cannot be longer than 280 characters.`;
 	return comment;
 }
 
@@ -48,7 +55,8 @@ function checkDate(date, varName) {
 		throw `Error: ${varName} cannot be an empty string or string with just spaces`;
 	if (!isNaN(date))
 		throw `Error: ${strVal} is not a valid value for ${varName} as it only contains digits`;
-	let dateRegex = /^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d$/;
+	let dateRegex =
+		/^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d$/;
 
 	if (!date.match(dateRegex)) throw 'enter a valid date format of mm/dd/yyyy';
 
@@ -59,7 +67,8 @@ function checkDate(date, varName) {
 	maxYear = maxYear.getFullYear() + 1;
 	let RD = new Date(date);
 	let RY = RD.getFullYear();
-	if (RY < minYear || RY > maxYear) throw 'releaseDate entered is not within range 1900-2024';
+	if (RY < minYear || RY > maxYear)
+		throw 'releaseDate entered is not within range 1900-2024';
 	return date;
 }
 
@@ -67,12 +76,15 @@ function checkDate(date, varName) {
 function checkEmail(emailVal, varName) {
 	let mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 	if (!emailVal) throw `Error: You must supply a ${varName}.`;
-	if (typeof emailVal !== 'string') throw `Error: ${varName} should be a string.`;
+	if (typeof emailVal !== 'string')
+		throw `Error: ${varName} should be a string.`;
 	emailVal = emailVal.trim();
 	if (emailVal.length === 0)
 		throw `Error: ${varName} cannot be an empty string or string with just spaces`;
-	if (!emailVal.includes('@')) throw `Error: ${varName} is not a valid email.`;
-	if (!emailVal.match(mailformat)) throw `Error: ${varName} is not a valid email.`;
+	if (!emailVal.includes('@'))
+		throw `Error: ${varName} is not a valid email.`;
+	if (!emailVal.match(mailformat))
+		throw `Error: ${varName} is not a valid email.`;
 	return emailVal;
 }
 
@@ -90,7 +102,8 @@ function checkID(idVal, varName) {
 // Validates image link inputs.
 function checkImgLink(imgLinkVal, varName) {
 	if (!imgLinkVal) throw `Error: You must supply a ${varName}.`;
-	if (typeof imgLinkVal !== 'string') throw `Error: ${varName} should be a string.`;
+	if (typeof imgLinkVal !== 'string')
+		throw `Error: ${varName} should be a string.`;
 	imgLinkVal = imgLinkVal.trim();
 	if (imgLinkVal.length === 0)
 		throw `Error: ${varName} cannot be an empty string or string with just spaces`;
@@ -105,31 +118,51 @@ function checkMaxPlayer(numberVal, varName) {
 	//input from form comes as a str
 	if (!numberVal) throw `Error: You must supply a ${varName}.`;
 	numberVal = parseInt(numberVal);
-	if (typeof numberVal !== 'number') throw `Error: ${varName} should be a number.`;
+	if (typeof numberVal !== 'number')
+		throw `Error: ${varName} should be a number.`;
 	if (numberVal === NaN) throw `Error: ${varName} cannot be NaN.`;
-	if (numberVal < 0 || numberVal > 10) throw `Error: invalid range provided for ${varName}.`;
+	if (numberVal < 0 || numberVal > 10)
+		throw `Error: invalid range provided for ${varName}.`;
 	return numberVal;
 }
 
 // Validates number inputs
 function checkNumber(numVal, varName) {
 	if (!numVal) throw `Error: You must supply a ${varName}.`;
-	if (typeof numVal !== 'number') throw `Error: ${varName} should be a number.`;
+	if (typeof numVal !== 'number')
+		throw `Error: ${varName} should be a number.`;
 	if (numVal === NaN) throw `Error: ${varName} age cannot be NaN.`;
+	return numVal;
+}
+
+// Validates the number of courts
+function checkNumCourts(numVal, varName) {
+	// Check that the numVal is a number
+	numVal = checkNumber(numVal, varName);
+
+	// Check that the number is between 1 and 10
+	if (numVal < 1 || numVal > 10)
+		throw `Invalid range provided for ${varName}`;
+
+	// Return the number
 	return numVal;
 }
 
 // Validates password inputs.
 function checkPassword(passwordVal, varName) {
 	// Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character.
-	let passwordFormat = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/;
+	let passwordFormat =
+		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/;
 	if (!passwordVal) throw `Error: You must supply a ${varName}.`;
-	if (typeof passwordVal !== 'string') throw `Error: ${varName} should be a string.`;
+	if (typeof passwordVal !== 'string')
+		throw `Error: ${varName} should be a string.`;
 	passwordVal = passwordVal.trim();
 	if (passwordVal.length === 0)
 		throw `Error: ${varName} cannot be an empty string or string with just spaces`;
-	if (passwordVal.length < 8) throw `Error: ${varName} must be at least 8 characters.`;
-	if (passwordVal.length > 30) throw `Error: ${varName} cannot be longer than 50 characters.`;
+	if (passwordVal.length < 8)
+		throw `Error: ${varName} must be at least 8 characters.`;
+	if (passwordVal.length > 30)
+		throw `Error: ${varName} cannot be longer than 50 characters.`;
 	if (!passwordVal.match(passwordFormat))
 		throw `Error: ${varName} must contain at least one lowercase letter, one uppercase letter, one number, and one special character.`;
 	return passwordVal;
@@ -139,7 +172,8 @@ function checkPassword(passwordVal, varName) {
 function checkRatingNumber(numVal, varName) {
 	if (!numVal) throw `Error: You must supply a ${varName}!`;
 	if (typeof numVal !== 'number') throw `Error: ${varName} must be a number!`;
-	if (numVal > 5 || numVal < 1) throw `Error: ${varName} must be a number between 1-5!`;
+	if (numVal > 5 || numVal < 1)
+		throw `Error: ${varName} must be a number between 1-5!`;
 	if (isNaN(numVal))
 		throw `Error: ${numVal} is not a valid value for ${varName} as it only contains digits`;
 	if (numVal !== numVal) throw `Error ${numVal} cannot be NaN`;
@@ -161,20 +195,22 @@ function checkString(strVal, varName) {
 // Validates name inputs
 function checkName(nameVal, varName) {
 	// Check that the name is a proper string
-    nameVal = checkString(nameVal, varName);
+	nameVal = checkString(nameVal, varName);
 
-    // Check that the name only contains letters
-    let string_format = /^[a-zA-Z]+$/;
-    if (!strVal.match(string_format)) throw `Error: ${varName} must be a valid string!`;
-    
-    // Return the name
-    return nameVal;
+	// Check that the name only contains letters
+	let string_format = /^[a-zA-Z]+$/;
+	if (!strVal.match(string_format))
+		throw `Error: ${varName} must be a valid string!`;
+
+	// Return the name
+	return nameVal;
 }
 
 //checks time
 function checkTime(timeVal, varName) {
 	if (!timeVal) throw `Error: You must supply a ${varName}!`;
-	if (typeof timeVal !== 'string') throw `Error: ${varName} must be a string!`;
+	if (typeof timeVal !== 'string')
+		throw `Error: ${varName} must be a string!`;
 	timeVal = timeVal.trim();
 	if (timeVal.length === 0)
 		throw `Error: ${varName} cannot be an empty string or string with just spaces`;
@@ -185,11 +221,13 @@ function checkTime(timeVal, varName) {
 
 function isValidNYCZipCode(zipCode, varName) {
 	if (!zipCode) throw `Error: You must supply a ${varName}!`;
-	if (typeof zipCode !== 'string') throw `Error: ${varName} must be a string!`;
+	if (typeof zipCode !== 'string')
+		throw `Error: ${varName} must be a string!`;
 	zipCode = zipCode.trim();
 	if (zipCode.length === 0)
 		throw `Error: ${varName} cannot be an empty string or string with just spaces`;
-	if (!/^\d{5}$/.test(zipCode)) throw `Error: ${varName} is not a valid zip code!`;
+	if (!/^\d{5}$/.test(zipCode))
+		throw `Error: ${varName} is not a valid zip code!`;
 	if (
 		![
 			'10001',
@@ -274,6 +312,7 @@ export {
 	checkImgLink,
 	checkMaxPlayer,
 	checkNumber,
+	checkNumCourts,
 	checkPassword,
 	checkRatingNumber,
 	checkString,

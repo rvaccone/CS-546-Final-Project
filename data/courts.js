@@ -9,7 +9,7 @@ const create = async (name, location, numCourts, accessible, lat, long) => {
   // Validate the inputs
   name = validation.checkString(name, "name");
   location = validation.checkString(location, "location");
-  numCourts = validation.checkNumber(numCourts, "numCourts");
+  numCourts = validation.checkNumCourts(numCourts, "numCourts");
   accessible = validation.checkBoolean(accessible, "accessible");
   lat = validation.checkNumber(lat, "lat");
   long = validation.checkNumber(long, "long");
@@ -84,7 +84,7 @@ const update = async (
   courtID = validation.checkID(courtID, "courtID");
   name = validation.checkString(name, "name");
   location = validation.checkString(location, "location");
-  numCourts = validation.checkNumber(numCourts, "numCourts");
+  numCourts = validation.checkNumCourts(numCourts, "numCourts");
   accessible = validation.checkBoolean(accessible, "accessible");
   lat = validation.checkNumber(lat, "lat");
   long = validation.checkNumber(long, "long");

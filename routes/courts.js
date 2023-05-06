@@ -10,6 +10,16 @@ import * as validation from '../validation.js';
 import { xssProtectObject } from '../utils/input.js';
 import { userSessionID, checkUserSession } from '../utils/session.js';
 
+router.route('/allCourts').get(async (req, res) => {
+	let courtDetails = null;
+	try {
+		courtDetails = await courtsData.getAll();
+		return res.render('allCourts', { searchResults: courtDetails });
+	} catch (e) {
+		return res.status(400).render('Error', { errorMessage: e });
+	}
+});
+
 //get courtById handlebar page
 router.route('/:id').get(async (req, res) => {
 	// Store the id from the url
