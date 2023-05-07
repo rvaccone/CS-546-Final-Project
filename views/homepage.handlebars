@@ -10,21 +10,24 @@
   </div>
 
 {{!-- Link to all the courts --}}
-<a href="http://localhost:3000/courts/allCourts">Directory of Courts</a>
-
+<div id="court-dir">
+  <a href="http://localhost:3000/courts/allCourts">Directory of Courts</a>
+</div>
 </section>
 <div class="basketball-courts">
-  <h2>Trending Pick Up Games</h2>
-  {{#each trendingGameList}}
-    <div class="trending-game">
-      <a href="game/gameDetails/{{this._id}}">
-        <h4>{{this.courtName}}</h4>
-      </a>
-      <p>{{this.location}} - {{this.date}} - {{this.time}}</p>
-    </div>
-  {{/each}}
+    <h2>Trending Pick Up Games</h2>
+      <div class="full-trending-game-wrapper">
+          {{#each trendingGameList}}
+                <div class="trending-game-wrapper">
+                <a href="game/gameDetails/{{this._id}}">
+                  <p>{{this.courtName}}</p>
+                </a>
+                <p>Date: {{this.date}}</p>
+                <p>Time: {{this.time}}</p>
+                </div>
+          {{/each}}
+      </div>
 </div>
-
 <script>
   const searchForm = document.getElementById('searchForm');
   searchForm.addEventListener('submit', (event) => {

@@ -29,13 +29,9 @@ router
 		// XSS Protection on registration form.
 		userRegistration.firstNameInput = xss(userRegistration.firstNameInput);
 		userRegistration.lastNameInput = xss(userRegistration.lastNameInput);
-		userRegistration.emailAddressInput = xss(
-			userRegistration.emailAddressInput
-		);
+		userRegistration.emailAddressInput = xss(userRegistration.emailAddressInput);
 		userRegistration.passwordInput = xss(userRegistration.passwordInput);
-		userRegistration.confirmPasswordInput = xss(
-			userRegistration.confirmPasswordInput
-		);
+		userRegistration.confirmPasswordInput = xss(userRegistration.confirmPasswordInput);
 		userRegistration.ageInput = xss(userRegistration.ageInput);
 
 		try {
@@ -75,10 +71,7 @@ router
 		}
 
 		// Checks that the passwords match.
-		if (
-			userRegistration.passwordInput !=
-			userRegistration.confirmPasswordInput
-		) {
+		if (userRegistration.passwordInput != userRegistration.confirmPasswordInput) {
 			error_array.push('Passwords do not match.');
 		}
 
@@ -138,18 +131,10 @@ router
 
 		// Preform validation on the user input.
 		try {
-			userLogin.email = validation.checkEmail(
-				userLogin.email,
-				'email address'
-			);
-			userLogin.password = validation.checkPassword(
-				userLogin.password,
-				'password'
-			);
+			userLogin.email = validation.checkEmail(userLogin.email, 'email address');
+			userLogin.password = validation.checkPassword(userLogin.password, 'password');
 		} catch (e) {
-			return res
-				.status(400)
-				.render('login', { title: 'Login', error: e });
+			return res.status(400).render('login', { title: 'Login', error: e });
 		}
 
 		// Authenticate the user.
@@ -243,9 +228,7 @@ router
 		updatedUser.lastNameInput = xss(updatedUser.lastNameInput);
 		updatedUser.emailAddressInput = xss(updatedUser.emailAddressInput);
 		updatedUser.passwordInput = xss(updatedUser.passwordInput);
-		updatedUser.confirmPasswordInput = xss(
-			updatedUser.confirmPasswordInput
-		);
+		updatedUser.confirmPasswordInput = xss(updatedUser.confirmPasswordInput);
 		updatedUser.ageInput = xss(updatedUser.ageInput);
 		updatedUser.bioInput = xss(updatedUser.bioInput);
 		updatedUser.imglinkInput = xss(updatedUser.imglinkInput);
@@ -269,19 +252,13 @@ router
 				'password'
 			);
 			updatedUser.ageInput = Number(updatedUser.ageInput);
-			updatedUser.ageInput = validation.checkAge(
-				updatedUser.ageInput,
-				'age'
-			);
+			updatedUser.ageInput = validation.checkAge(updatedUser.ageInput, 'age');
 
 			// Makes the bio input optional.
 			if (updatedUser.bioInput.trim() == '') {
 				updatedUser.bioInput = '';
 			} else {
-				updatedUser.bioInput = validation.checkBio(
-					updatedUser.bioInput,
-					'bio'
-				);
+				updatedUser.bioInput = validation.checkBio(updatedUser.bioInput, 'bio');
 			}
 
 			// Makes the imgLink input optional.

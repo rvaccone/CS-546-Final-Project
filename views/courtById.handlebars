@@ -4,21 +4,16 @@
         <p>Court: {{courtName}}&nbsp;&nbsp; | &nbsp;&nbsp;Address: {{address}} &nbsp;&nbsp;| &nbsp;&nbsp;Rating: <span id="overall-rating">{{overallRating}}</span>/5</p>
     </div>
     <div id="map">
-        <iframe
-            width="600"
-            height="450"
-            style="border:0"
-            loading="lazy"
-            allowfullscreen
-            referrerpolicy="no-referrer-when-downgrade"
-            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDFFwqO140DVnI3leB_luDuu3133GDLfaI&q={{latitude}},{{longitude}}">
-        </iframe>
+        <iframe width="600" height="450" style="border:0" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDFFwqO140DVnI3leB_luDuu3133GDLfaI&q={{latitude}},{{longitude}}"></iframe>
     </div>
 </section>
 <p id="disclaimer">Disclaimer: The pickup games listed on this website are organized and managed entirely by the users. The developers of this website are not responsible for any events or activities that take place as a result of the information provided on this website. We provide this information solely as a service to our users, and it is up to each individual to determine whether or not to participate in any pickup games listed on this website. Any decision to participate in such games is entirely at the individual's own risk and discretion. The developers of this website assume no responsibility for any injuries, damages, or other consequences that may arise from participation in pickup games listed on this website. By using this website, you agree to these terms and conditions.
   </p>
-<section>
-  <button class="create-game-btn" onclick="location.href='http://localhost:3000/game/{{courtId}}'">Create Pick-Up Game</button>
+  {{#if user}}
+  <button class="create-game-btn" onclick="location.href='http://localhost:3000/game/{{courtId}}'">
+    Create Pick-Up Game
+  </button>
+  {{/if}}
     <div id="pick-up-games">
         {{#each pickUpGames}}
     <div class="full-game-wrapper">
@@ -30,47 +25,49 @@
             {{!-- todo players needed  --}}
             <button class="gameButton" onclick="location.href='http://localhost:3000/game/gameDetails/{{this._id}}'">Game Details</button>
         </div>
-    </div>
+    </div> 
 {{/each}}
     </div>
-</section>
-<hr>
-<section id="courtReviews">
+<div class="spacer"></div>
+<div id="courtReviews">
 <h2>Court Reviews</h2>
-<h3>Write a review</h3>
-<div id="error-message" hidden></div>
-<form id="reviewForm">
-  <div class="input-group mb-3">
-    <label for="courtReview">Review</label>
-    <input type="text" id="courtReview" name="courtReview" placeholder="Write a review here" required maxlength="280">
-    <br>
-    <label class="input-group-text" for="inputGroupSelect01">Rating</label>
-    <select class="form-select" id="inputGroupSelect01" name="rating" required>
-      <option value="">Give a rating</option>
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-    </select>
+  {{#if user}}
+  <div id="error-message" hidden></div>
+  <div class="game-wrapper">
+  <form id="reviewForm">
+    <div class="input-group mb-3">
+      <label for="courtReview">Review</label>
+      <input type="text" id="courtReview" name="courtReview" placeholder="Write a review here" required maxlength="280">
+      <br>
+      <label class="input-group-text" for="inputGroupSelect01">Rating</label>
+      <select class="form-select" id="inputGroupSelect01" name="rating" required>
+        <option value="">Give a rating</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </div>
+    <button type="submit" class="button">Submit review</button>
+  </form>
   </div>
-  <button type="submit" class="button">Submit review</button>
-</form>
-<hr>
-<ul id="reviews-list">
-  {{#each reviews}}
-  <li>
-    <h3>{{this.fullName}}</h3>
-    <p>Rating: {{this.rating}}/5</p>
-    <p>{{this.comment}}</p>
-    {{#if this.isOwner}}
-    <button class="delete-comment">Delete Review</button>
-    {{/if}}
-  </li>
-  {{/each}}
-</ul>
-</section>
-<hr>
+  {{/if}}
+  <hr>
+  <ul id="reviews-list">
+    {{#each reviews}}
+    <li>
+      <h3>{{this.fullName}}</h3>
+      <p>Rating: {{this.rating}}/5</p>
+      <p>{{this.comment}}</p>
+      {{#if this.isOwner}}
+      <button class="joinButton">Delete Review</button>
+      {{/if}}
+    </li>
+    {{/each}}
+  </ul>
+  <hr>
+</div>
 <script>
 
 

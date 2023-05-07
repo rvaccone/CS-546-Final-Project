@@ -1,19 +1,20 @@
 <div class="gameInformation">
-  <h2>PickUp Game at <a href="/courts/{{gameDetails.courtID}}">{{gameDetails.courtName}}</a></h2>
+  <h1>PickUp Game at:</h1>
+  <a href="/courts/{{gameDetails.courtID}}"><h2>{{gameDetails.courtName}}</h2></a>
   <p>Host: {{Host}}</p>
   <p>Date: {{gameDetails.date}}</p>
   <p>Time: {{gameDetails.time}}</p>
   <p>Max Players: {{gameDetails.maxPlayers}}</p>
   <p>Players Joined: {{gameDetails.gameMembers.length}}</p>
+</div>
 
   {{!-- List of all of the current game members --}}
   <p>Player List:</p>
-  <ol>
+  <ul class="player-list">
     {{#each gameDetails.gameMembers}}
-      <li>{{this.fullName}}</li>
+      <li class="player">{{this.fullName}}</li>
     {{/each}}
-  </ol>
-</div>
+  </ul>
 
 {{!-- Section to display error messages --}}
 <div id='error-container' hidden></div>
@@ -24,14 +25,14 @@
   {{#if userIsGameMember}}
     {{!-- Button to unjoin the game --}}
     <div class="gameJoinForm">
-      <button id="unjoinButton" type="button">Unjoin</button>
+      <button class="joinButton" type="button">Unjoin</button>
     </div>
   {{else}}
     {{!-- Button to join the game --}}
     <div class="gameJoinForm">
       <form action="/game/addUser/{{gameDetails._id}}" method="post">
         <input type="hidden" name="gameId" value="{{gameDetails._id}}">
-        <button name="rsvpButton" type="submit">RSVP</button>
+        <button class="joinButton" name="rsvpButton" type="submit">RSVP</button>
       </form>
     </div>
   {{/if}}

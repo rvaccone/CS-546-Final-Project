@@ -1,11 +1,6 @@
 import { Router } from 'express';
 const router = Router();
-import {
-	usersData,
-	courtsData,
-	gamesData,
-	courtReviewsData,
-} from '../data/index.js';
+import { usersData, courtsData, gamesData, courtReviewsData } from '../data/index.js';
 import * as validation from '../validation.js';
 import { xssProtectObject } from '../utils/input.js';
 import { userSessionID, checkUserSession } from '../utils/session.js';
@@ -29,7 +24,7 @@ router.route('/:id').get(async (req, res) => {
 	try {
 		id = validation.checkID(id, 'id');
 	} catch (e) {
-		return res.status(400).render('Error', { errorMessage: e });
+		return res.status(400).render('Error', { title: 'Error', errorMessage: e });
 	}
 
 	// Get the court details
@@ -37,7 +32,7 @@ router.route('/:id').get(async (req, res) => {
 	try {
 		courtDetails = await courtsData.get(id);
 	} catch (e) {
-		return res.status(400).render('Error', { errorMessage: e });
+		return res.status(400).render('Error', { title: 'Error', errorMessage: e });
 	}
 
 	//get all the pickup games for the court
@@ -46,14 +41,14 @@ router.route('/:id').get(async (req, res) => {
 		pickUpGames = await gamesData.getAll(id);
 		console.log('gotem', pickUpGames);
 	} catch (e) {
-		return res.status(400).render('Error', { errorMessage: e });
+		return res.status(400).render('Error', { title: 'Error', errorMessage: e });
 	}
 
 	// Check that the court exists
 	if (!courtDetails)
 		return res
 			.status(400)
-			.render('Error', { errorMessage: 'Error: Court not found' });
+			.render('Error', { title: 'Error', errorMessage: 'Error: Court not found' });
 
 	// Adding the full name to the reviews
 	for (let review of courtDetails.reviews) {
@@ -72,9 +67,7 @@ router.route('/:id').get(async (req, res) => {
 	let fullName;
 	for (let i = 0; i < reviews.length; i++) {
 		try {
-			fullName = await usersData.getFullName(
-				reviews[i].userID.toString()
-			);
+			fullName = await usersData.getFullName(reviews[i].userID.toString());
 		} catch (e) {
 			console.log(e);
 		}
@@ -86,6 +79,7 @@ router.route('/:id').get(async (req, res) => {
 
 	// Render the courtByID page with the court details
 	res.render('courtById', {
+		title: 'Court Details',
 		courtName: courtDetails.name,
 		address: courtDetails.location,
 		overallRating: courtDetails.overallRating,
@@ -101,12 +95,11 @@ router.route('/:id').get(async (req, res) => {
 router.route('/:id/review').post(async (req, res) => {
 	// Check if the user is not signed
 	try {
-		if (!checkUserSession(req, res))
-			throw 'User should be logged in to write a review';
+		if (!checkUserSession(req, res)) throw 'User should be logged in to write a review';
 	} catch (e) {
 		return res
 			.status(400)
-			.json({ error: 'User should be logged in to write a review' });
+			.json({ title: 'Error', error: 'User should be logged in to write a review' });
 	}
 
 	// Store the id from the url
@@ -127,6 +120,7 @@ router.route('/:id/review').post(async (req, res) => {
 	if (!checkUserSession(req, res)) {
 		console.log('User must be signed in to write a review');
 		return res.status(400).render('Error', {
+			title: 'Error',
 			errorMessage: 'User must be signed in to write a review',
 		});
 	}
@@ -135,7 +129,7 @@ router.route('/:id/review').post(async (req, res) => {
 	try {
 		courtId = validation.checkID(courtId, 'courtId');
 	} catch (e) {
-		return res.status(400).render('Error', { errorMessage: e });
+		return res.status(400).render('Error', { title: 'Error', errorMessage: e });
 	}
 
 	// Get the court details
@@ -143,36 +137,25 @@ router.route('/:id/review').post(async (req, res) => {
 	try {
 		courtDetails = await courtsData.get(courtId);
 	} catch (e) {
-		return res.status(400).render('Error', { errorMessage: e });
+		return res.status(400).render('Error', { title: 'Error', errorMessage: e });
 	}
 	// before the creating a review I am checking if the user already has a review for this court
 	console.log('HERE WITH ROCCO');
 	console.log(courtDetails);
-	if (
-		courtDetails.reviews.some(
-			(review) => review.userID.toString() === userId
-		)
-	) {
+	if (courtDetails.reviews.some((review) => review.userID.toString() === userId)) {
 		return res
 			.status(400)
-			.json({ error: 'User has already posted a review for this court' });
+			.json({ title: 'Error', error: 'User has already posted a review for this court' });
 	}
 	//store the review in database
 	//const create = async (courtID, userID, rating, comment) => {
 	try {
-		courtDetails = await courtReviewsData.create(
-			courtId,
-			userId,
-			rating,
-			courtReview
-		);
+		courtDetails = await courtReviewsData.create(courtId, userId, rating, courtReview);
 		let reviews = courtDetails.reviews;
 		let fullName;
 		for (let i = 0; i < reviews.length; i++) {
 			try {
-				fullName = await usersData.getFullName(
-					reviews[i].userID.toString()
-				);
+				fullName = await usersData.getFullName(reviews[i].userID.toString());
 			} catch (e) {
 				console.log(e);
 			}
@@ -185,7 +168,7 @@ router.route('/:id/review').post(async (req, res) => {
 		console.log(courtDetails.reviews);
 		res.json(courtDetails);
 	} catch (e) {
-		return res.status(400).render('Error', { errorMessage: e });
+		return res.status(400).render('Error', { title: 'Error', errorMessage: e });
 	}
 });
 router.route('/:id/review/delete').delete(async (req, res) => {
@@ -195,6 +178,7 @@ router.route('/:id/review/delete').delete(async (req, res) => {
 	let userId = userSessionID(req, res);
 	if (!checkUserSession(req, res)) {
 		return res.status(400).render('Error', {
+			title: 'Error',
 			errorMessage: 'User must be signed in to delete a review',
 		});
 	}
@@ -203,14 +187,14 @@ router.route('/:id/review/delete').delete(async (req, res) => {
 	try {
 		courtId = validation.checkID(courtId, 'courtId');
 	} catch (e) {
-		return res.status(400).render('Error', { errorMessage: e });
+		return res.status(400).render('Error', { title: 'Error', errorMessage: e });
 	}
 	// Get the court details
 	let courtDetails = null;
 	try {
 		courtDetails = await courtsData.get(courtId);
 	} catch (e) {
-		return res.status(400).render('Error', { errorMessage: e });
+		return res.status(400).render('Error', { title: 'Error', errorMessage: e });
 	}
 	//const remove = async (courtID, userID) => {
 	//remove the review
