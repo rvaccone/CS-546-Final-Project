@@ -435,3 +435,9 @@ iframe {
 #reviews-list {
 	list-style: none;
 }
+
+#court-dir {
+	display: flex;
+	margin: auto;
+	justify-content: center;
+}
