@@ -3,8 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}}</title>
-    <link rel='stylesheet' href='/public/css/main.css' />
+    <title>
+        {{#if title}}
+            {{{title}}}
+        {{else}}
+            NYC Court Finder
+        {{/if}}
+    </title>
+    <link rel='stylesheet' href='/public/css/main.css'>
 </head>
 <body>
     <nav>

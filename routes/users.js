@@ -4,6 +4,7 @@ import { usersData } from '../data/index.js';
 import * as users_functions from '../data/users.js';
 import * as validation from '../validation.js';
 import xss from 'xss';
+import { checkUserSession, userSession } from '../utils/session.js';
 
 // Register Routes
 router
@@ -66,7 +67,7 @@ router
 				'ageInput'
 			);
 		} catch (e) {
-			return res.status(400).render('error', { error: e });
+			return res.status(400).render('Error', { errorMessage: e });
 		}
 
 		// Checks that the passwords match.
@@ -101,7 +102,7 @@ router
 			return res.status(200).redirect('/user/login');
 		} catch (e) {
 			console.log(e);
-			return res.status(400).render('register', { error: e });
+			return res.status(400).render({ title: 'Error', errorMessage: e });
 		}
 	});
 
@@ -118,9 +119,10 @@ router
 		// Get the user data from the request body.
 		const userLogin = req.body;
 		if (!userLogin || Object.keys(userLogin).length === 0) {
-			return res
-				.status(400)
-				.render('login', { title: 'Login', error: 'No user data provided.' });
+			return res.status(400).render('login', {
+				title: 'Login',
+				error: 'No user data provided.',
+			});
 		}
 
 		// XSS Protection on login form.
@@ -168,8 +170,7 @@ router
 
 	.get('/:id', async (req, res) => {
 		// Send the user's session information to the page.
-		console.log('Message ' + req.session.user);
-		if (!req.session.user) {
+		if (!checkUserSession(req, res)) {
 			return res.status(200).redirect('/');
 		} else {
 			return res.render('profile', {
@@ -186,25 +187,40 @@ router
 	})
 
 	.get('/editProfile/:id', async (req, res) => {
-		return res.status(200).render('editProfile', {
-			title: 'Edit Profile',
-			_id: req.session.user._id,
-			firstName: req.session.user.firstName,
-			lastName: req.session.user.lastName,
-			email: req.session.user.emailAddress,
-			age: req.session.user.age,
-			bio: req.session.user.bio,
-			imgLink: req.session.user.imgLink,
-		});
+		if (!checkUserSession(req, res)) {
+			return res.status(400).render('Error', {
+				errorMessage: 'You must be logged in to edit your profile.',
+			});
+		} else {
+			return res.status(200).render('editProfile', {
+				title: 'Edit Profile',
+				_id: req.session.user._id,
+				firstName: req.session.user.firstName,
+				lastName: req.session.user.lastName,
+				email: req.session.user.emailAddress,
+				age: req.session.user.age,
+				bio: req.session.user.bio,
+				imgLink: req.session.user.imgLink,
+			});
+		}
 	})
 
 	// Edit Profile Route
 	.post('/editProfile/:id', async (req, res) => {
+		// Render an error if the user is not logged in
+		if (!checkUserSession(req, res)) {
+			return res.status(400).render('Error', {
+				errorMessage: 'You must be logged in to edit your profile',
+			});
+		}
+
 		const updatedUser = req.body;
 
 		// Checks if the req.body is empty.
 		if (!updatedUser || Object.keys(updatedUser).length === 0) {
-			return res.status(400).json({ error: 'There are no fields in the request body' });
+			return res.status(400).render('Error', {
+				errorMessage: 'There are no fields in the request body',
+			});
 		}
 
 		// XSS Protection on registration form.
@@ -260,7 +276,9 @@ router
 			if (updatedUser.passwordInput != updatedUser.confirmPasswordInput)
 				throw 'Passwords do not match.';
 		} catch (e) {
-			return res.status(400).json({ error: e });
+			return res.status(400).render('Error', {
+				errorMessage: e,
+			});
 		}
 
 		// Preforms the data function.
@@ -289,7 +307,9 @@ router
 
 			res.status(200).redirect(`/user/${updatedUserData._id}`);
 		} catch (e) {
-			res.status(500).json({ error: e });
+			return res.status(500).render('Error', {
+				errorMessage: e,
+			});
 		}
 	});
 

@@ -8,6 +8,16 @@ const userSessionID = (req, res) => {
 	return userSession(req, res) ? userSession(req, res)._id : null;
 };
 
+// Function to return the user session latitude without crashing
+const userSessionLatitude = (req, res) => {
+	return userSession(req, res) ? userSession(req, res).latitude : null;
+};
+
+// Function to return the user session longitude without crashing
+const userSessionLongitude = (req, res) => {
+	return userSession(req, res) ? userSession(req, res).longitude : null;
+};
+
 // Function to check if there is a user session
 const checkUserSession = (req, res) => {
 	return userSession(req, res) != null;

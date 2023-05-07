@@ -68,7 +68,6 @@ const create = async (courtID, userID, rating, comment) => {
   //input validation
   courtID = validation.checkID(courtID, "courtID");
   userID = validation.checkID(userID, "userID");
-  console.log("YOU ARE INSIDE", rating);
   rating = validation.checkRatingNumber(rating, "rating");
   comment = validation.checkComment(comment, "comment");
 
