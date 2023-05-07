@@ -4,24 +4,14 @@
         <p>Court: {{courtName}}&nbsp;&nbsp; | &nbsp;&nbsp;Address: {{address}} &nbsp;&nbsp;| &nbsp;&nbsp;Rating: <span id="overall-rating">{{overallRating}}</span>/5</p>
     </div>
     <div id="map">
-        <iframe
-            width="600"
-            height="450"
-            style="border:0"
-            loading="lazy"
-            allowfullscreen
-            referrerpolicy="no-referrer-when-downgrade"
-            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDFFwqO140DVnI3leB_luDuu3133GDLfaI
-                &q={{latitude}},{{longitude}}">
-        </iframe>
+        <iframe width="600" height="450" style="border:0" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDFFwqO140DVnI3leB_luDuu3133GDLfaI&q={{latitude}},{{longitude}}"></iframe>
     </div>
 </section>
 <p id="disclaimer">Disclaimer: The pickup games listed on this website are organized and managed entirely by the users. The developers of this website are not responsible for any events or activities that take place as a result of the information provided on this website. We provide this information solely as a service to our users, and it is up to each individual to determine whether or not to participate in any pickup games listed on this website. Any decision to participate in such games is entirely at the individual's own risk and discretion. The developers of this website assume no responsibility for any injuries, damages, or other consequences that may arise from participation in pickup games listed on this website. By using this website, you agree to these terms and conditions.
   </p>
-<section>
   {{#if user}}
   <button class="create-game-btn" onclick="location.href='http://localhost:3000/game/{{courtId}}'">
-    <p id="create-button-text">Create Pick-Up Game</p>
+    Create Pick-Up Game
   </button>
   {{/if}}
     <div id="pick-up-games">
@@ -38,7 +28,6 @@
     </div> 
 {{/each}}
     </div>
-</section>
 <div class="spacer"></div>
 <div id="courtReviews">
 <h2>Court Reviews</h2>
@@ -61,18 +50,18 @@
       </select>
     </div>
     <button type="submit" class="button">Submit review</button>
-    {{/if}}
-    <div/>
   </form>
+  </div>
+  {{/if}}
   <hr>
   <ul id="reviews-list">
     {{#each reviews}}
     <li>
-      <h3><p>{{this.fullName}}<p></h1>
+      <h3>{{this.fullName}}</h3>
       <p>Rating: {{this.rating}}/5</p>
       <p>{{this.comment}}</p>
       {{#if this.isOwner}}
-      <button class="delete-comment">Delete Review</button>
+      <button class="joinButton">Delete Review</button>
       {{/if}}
     </li>
     {{/each}}

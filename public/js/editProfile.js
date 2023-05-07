@@ -52,11 +52,7 @@ function checkAge(ageVal, varName) {
 
 // Validates bio inputs.
 function checkBio(bioVal, varName) {
-	if (!bioVal) throw `Error: You must supply a ${varName}.`;
-	if (typeof bioVal !== 'string') throw `Error: ${varName} should be a string.`;
 	bioVal = bioVal.trim();
-	if (bioVal.length === 0)
-		throw `Error: ${varName} cannot be an empty string or string with just spaces`;
 	if (bioVal.length > 500) throw `Error: ${varName} cannot be longer than 500 characters.`;
 	return bioVal;
 }
@@ -70,22 +66,120 @@ function checkImgLink(imgLinkVal, varName) {
 		throw `Error: ${varName} cannot be an empty string or string with just spaces`;
 	if (!imgLinkVal.match(/^https?:\/\/.+\.(jpg|jpeg|png)$/))
 		throw `Error: ${varName} is not a valid link.`;
-	// TODO: Check with TA if I should try to connect to image source to see if it exists.
 	return imgLinkVal;
 }
 
-const editProfileForm = document.getElementById('editProfile-form');
+const editProfileForm = document.getElementById('edit-profile-form');
 
 if (editProfileForm) {
 	// Get the values from the form.
 	const firstName = document.getElementById('firstNameInput');
 	const lastName = document.getElementById('lastNameInput');
-	const email = document.getElementById('emailAddressInput');
-	const password = document.getElementById('passwordInput');
+	const emailAddress = document.getElementById('emailAddressInput');
+	const userPassword = document.getElementById('passwordInput');
+	const userPasswordConfirm = document.getElementById('confirmPasswordInput');
 	const age = document.getElementById('ageInput');
 	const bio = document.getElementById('bioInput');
-	const imgLink = document.getElementById('imgLinkInput');
+	const imgLink = document.getElementById('imglinkInput');
 	const errorContainer = document.getElementById('error-container');
 	const routeErrorWrapper = document.getElementById('route-error-wrapper');
 	const list = document.createElement('dl');
+	let error_array = [];
+
+	// Add event listener to the form.
+	editProfileForm.addEventListener('submit', async (event) => {
+		try {
+			// Sets error container to empty.
+			errorContainer.innerHTML = '';
+			list.innerHTML = '';
+			routeErrorWrapper.innerHTML = '';
+			error_array = [];
+
+			// Validates the first name.
+			try {
+				let first_name = checkString(firstName.value, 'firstName');
+			} catch (e) {
+				error_array.push(e);
+				firstName.style.borderColor = 'red';
+			}
+
+			// Validates the last name.
+			try {
+				let last_name = checkString(lastName.value, 'lastName');
+			} catch (e) {
+				error_array.push(e);
+				lastName.style.borderColor = 'red';
+			}
+
+			// Validates the email.
+			try {
+				let user_email = checkEmail(emailAddress.value, 'email');
+			} catch (e) {
+				error_array.push(e);
+				emailAddress.style.borderColor = 'red';
+			}
+
+			// Validates the password.
+			try {
+				let user_password = checkPassword(userPassword.value, 'password');
+			} catch (e) {
+				error_array.push(e);
+				userPassword.style.borderColor = 'red';
+				userPasswordConfirm.style.borderColor = 'red';
+			}
+
+			// Makes sure the passwords match.
+			try {
+				if (userPassword.value.trim() !== userPasswordConfirm.value.trim())
+					throw `Error: Passwords do not match.`;
+			} catch (e) {
+				error_array.push(e);
+				userPassword.style.borderColor = 'red';
+			}
+
+			// Validates the age.
+			try {
+				let user_age = checkAge(parseInt(age.value), 'age');
+			} catch (e) {
+				error_array.push(e);
+			}
+
+			// Validates the bio.
+			if (bio !== null) {
+				try {
+					let user_bio = checkBio(bio.value, 'bio');
+				} catch (e) {
+					error_array.push(e);
+					bio.style.borderColor = 'red';
+				}
+			}
+			// Validates the image link.
+			try {
+				let user_imgLink = checkImgLink(imgLink.value, 'imgLink');
+			} catch (e) {
+				error_array.push(e);
+				imgLink.style.borderColor = 'red';
+			}
+
+			// Trips the catch block if there are errors from above validation.
+			if (error_array.length > 0) {
+				throw 'There are errors.';
+			}
+		} catch (e) {
+			// Prevents the server from getting bad input.
+			event.preventDefault();
+
+			// Creates an error message and appends.
+			errorContainer.removeAttribute('hidden');
+			let errorMessage = null;
+			for (let i = 0; i < error_array.length; i++) {
+				console.log(error_array[i]);
+				errorMessage = document.createElement('dt');
+				errorMessage.innerHTML = error_array[i];
+				list.appendChild(errorMessage);
+				errorMessage.style.color = 'red';
+			}
+			errorContainer.appendChild(list);
+		}
+	});
 }

@@ -1,11 +1,6 @@
 import { Router } from 'express';
 const router = Router();
-import {
-	gamesData,
-	usersData,
-	courtsData,
-	gameMembersData,
-} from '../data/index.js';
+import { gamesData, usersData, courtsData, gameMembersData } from '../data/index.js';
 import * as validation from '../validation.js';
 import { ObjectId } from 'mongodb';
 import { xssProtectObject } from '../utils/input.js';
@@ -22,7 +17,7 @@ router
 		try {
 			id = validation.checkID(id, 'id');
 		} catch (e) {
-			return res.status(400).render('Error', { errorMessage: e });
+			return res.status(400).render('Error', { title: 'Error', errorMessage: e });
 		}
 
 		// Get the court details
@@ -30,10 +25,10 @@ router
 		try {
 			courtDetails = await courtsData.get(id);
 		} catch (e) {
-			return res.status(400).render('Error', { errorMessage: e });
+			return res.status(400).render('Error', { title: 'Error', errorMessage: e });
 		}
 		console.log('cookie details', req.session.user);
-		return res.status(200).render('createGame', { courtId: id });
+		return res.status(200).render('createGame', { title: 'Create Game', courtId: id });
 	})
 	//post to create a game
 	// Create Game by courtID
@@ -41,6 +36,7 @@ router
 		// If the user session does not exist, redirect to the error page
 		if (!checkUserSession(req, res))
 			return res.status(400).render('Error', {
+				title: 'Error',
 				errorMessage: 'User is not logged in',
 			});
 
@@ -54,6 +50,7 @@ router
 		// Checks to see if the req.body is empty.
 		if (!courtsPostData || Object.keys(courtsPostData).length === 0) {
 			return res.status(400).render('Error', {
+				title: 'Error',
 				errorMessage: 'Error: There are no fields in the request body',
 			});
 		}
@@ -62,6 +59,7 @@ router
 		// Checks to see if the correct number of fields were returned.
 		if (Object.keys(courtsPostData).length < 3) {
 			return res.status(400).render('Error', {
+				title: 'Error',
 				errorMessage: `Error: The schema does not match the database. The current body's keys are ${Object.keys(
 					courtsPostData
 				)}`,
@@ -80,17 +78,14 @@ router
 			console.log('here');
 			dateFormatted = validation.checkDate(dateFormatted, 'date');
 			console.log(dateFormatted);
-			courtsPostData.time = validation.checkTime(
-				courtsPostData.time,
-				'time'
-			);
+			courtsPostData.time = validation.checkTime(courtsPostData.time, 'time');
 			courtsPostData.maxPlayers = validation.checkMaxPlayer(
 				courtsPostData.maxPlayers,
 				'maxPlayers'
 			);
 		} catch (e) {
 			console.log(e);
-			return res.status(400).render('Error', { errorMessage: e });
+			return res.status(400).render('Error', { title: 'Error', errorMessage: e });
 		}
 
 		// Creates a new game.
@@ -107,6 +102,7 @@ router
 			);
 			// return res.status(200).json(newGame);
 			return res.render('createConfirmation', {
+				title: 'Game Joined',
 				courtName: newGame.courtName,
 				date: newGame.date,
 				time: newGame.time,
@@ -115,6 +111,7 @@ router
 			});
 		} catch (e) {
 			res.status(400).render('createConfirmation', {
+				title: 'Error',
 				errorMessage: e,
 			});
 		}
@@ -131,7 +128,7 @@ router
 		try {
 			gameID = validation.checkID(gameID, 'gameID');
 		} catch (e) {
-			return res.status(400).render('Error', { errorMessage: e });
+			return res.status(400).render('Error', { title: 'Error', errorMessage: e });
 		}
 
 		// Get the game using the gameID
@@ -139,7 +136,7 @@ router
 		try {
 			gameDetails = await gamesData.get(gameID);
 		} catch (e) {
-			return res.status(400).render('Error', { errorMessage: e });
+			return res.status(400).render('Error', { title: 'Error', errorMessage: e });
 		}
 		// checking if the user viewing this page is already a member
 
@@ -171,17 +168,19 @@ router
 		if (!gameDetails)
 			return res
 				.status(400)
-				.render('Error', { errorMessage: 'Error: Game not found' });
+				.render('Error', { title: 'Error', errorMessage: 'Error: Game not found' });
 
 		// Return the game details
 		if (userIsGameMember) {
 			return res.status(200).render('pickUpGame', {
+				title: 'Pick Up Game Details',
 				gameDetails: gameDetails,
 				Host: Host,
 				userIsGameMember,
 			});
 		} else {
 			return res.status(200).render('pickUpGame', {
+				title: 'Pick Up Game Details',
 				gameDetails: gameDetails,
 				Host: Host,
 			});
@@ -194,14 +193,14 @@ router
 		try {
 			req.params.gameID = validation.checkID(req.params.gameID, 'gameID');
 		} catch (e) {
-			return res.status(400).render('Error', { errorMessage: e });
+			return res.status(400).render('Error', { title: 'Error', errorMessage: e });
 		}
 
 		// Call the delete data function for the game
 		try {
 			let deletedGame = await gamesData.remove(req.params.gameID);
 		} catch (e) {
-			return res.status(400).render('Error', { errorMessage: e });
+			return res.status(400).render('Error', { title: 'Error', errorMessage: e });
 		}
 	})
 
@@ -214,27 +213,21 @@ router
 		if (!gameMemberPutData || Object.keys(gameMemberPutData).length === 0)
 			return res
 				.status(400)
-				.render('Error', { error: 'Error: The request was empty' });
+				.render('Error', { title: 'Error', error: 'Error: The request was empty' });
 
 		// Check to see if the correct number of fields were returned
 		if (Object.keys(gameMemberPutData).length !== 2)
 			return res.status(400).render('Error', {
-				errorMessage:
-					'The request contained the wrong number of fields',
+				title: 'Error',
+				errorMessage: 'The request contained the wrong number of fields',
 			});
 
 		// Validate the IDs
 		try {
-			gameMemberPutData.gameID = validation.checkID(
-				gameMemberPutData.gameID,
-				'gameID'
-			);
-			gameMemberPutData.userID = validation.checkID(
-				gameMemberPutData.userID,
-				'userID'
-			);
+			gameMemberPutData.gameID = validation.checkID(gameMemberPutData.gameID, 'gameID');
+			gameMemberPutData.userID = validation.checkID(gameMemberPutData.userID, 'userID');
 		} catch (e) {
-			return res.status(400).render('Error', { errorMessage: e });
+			return res.status(400).render('Error', { title: 'Error', errorMessage: e });
 		}
 
 		// Call the create gameMember create data function
@@ -249,7 +242,7 @@ router
 			if (!createGameMemberData)
 				throw `Error: Could not add user to game with ID ${gameMemberPutData.gameID}`;
 		} catch (e) {
-			return res.status(400).render('Error', { errorMessage: e });
+			return res.status(400).render('Error', { title: 'Error', errorMessage: e });
 		}
 	});
 
@@ -262,6 +255,7 @@ router
 			req.params.gameID = validation.checkID(req.params.gameID, 'gameID');
 		} catch (e) {
 			return res.status(400).render('Error', {
+				title: 'Error',
 				errorMessage: `Error: Invalid gameId with id ${gameID}`,
 			});
 		}
@@ -276,6 +270,7 @@ router
 			game = await gamesData.get(req.params.gameID);
 		} catch (e) {
 			return res.status(400).render('Error', {
+				title: 'Error',
 				errorMessage: `Error: Getting the game failed with error ${e}`,
 			});
 		}
@@ -283,6 +278,7 @@ router
 		// Check if the game exists
 		if (!game)
 			return res.status(400).render('Error', {
+				title: 'Error',
 				errorMessage: `Error: There is no game with id`,
 			});
 
@@ -292,11 +288,9 @@ router
 			// Try to call the gameMembersData create function
 			try {
 				console.log(`User id: ${req.session.user._id}`);
-				addedMember = await gameMembersData.create(
-					req.params.gameID,
-					req.session.user._id
-				);
+				addedMember = await gameMembersData.create(req.params.gameID, req.session.user._id);
 				res.render('joinConfirmation', {
+					title: 'Joined Game',
 					courtName: game.courtName,
 					courtId: game.courtID,
 				});
@@ -304,11 +298,13 @@ router
 				// res.redirect(`/games/${req.params.gameID}`);
 			} catch (e) {
 				return res.status(400).render('Error', {
+					title: 'Error',
 					errorMessage: e,
 				});
 			}
 		} else {
 			return res.status(400).render('Error', {
+				title: 'Error',
 				errorMessage: `Error: User must be signed in to join`,
 			});
 		}
@@ -320,6 +316,7 @@ router
 			req.params.gameID = validation.checkID(req.params.gameID, 'gameID');
 		} catch (e) {
 			return res.status(400).render('Error', {
+				title: 'Error',
 				errorMessage: `Error: Invalid gameId with id ${gameID}`,
 			});
 		}
@@ -330,6 +327,7 @@ router
 			game = await gamesData.get(req.params.gameID);
 		} catch (e) {
 			return res.status(400).render('Error', {
+				title: 'Error',
 				errorMessage: `Error: Getting the game failed with error ${e}`,
 			});
 		}
@@ -337,6 +335,7 @@ router
 		// Check if the game exists
 		if (!game)
 			return res.status(400).render('Error', {
+				title: 'Error',
 				errorMessage: `Error: There is no game with id`,
 			});
 
@@ -354,11 +353,13 @@ router
 				res.json(removedResult);
 			} catch (e) {
 				return res.status(400).render('Error', {
+					title: 'Error',
 					errorMessage: e,
 				});
 			}
 		} else {
 			return res.status(400).render('Error', {
+				title: 'Error',
 				errorMessage: `Error: User must be signed in to join`,
 			});
 		}
