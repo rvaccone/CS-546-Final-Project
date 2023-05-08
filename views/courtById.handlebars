@@ -65,7 +65,7 @@
       <p>Rating: {{this.rating}}/5</p>
       <p>{{this.comment}}</p>
       {{#if this.isOwner}}
-      <button class="joinButton">Delete Review</button>
+      <button id='delete-comment' class="joinButton">Delete Review</button>
       {{/if}}
     </li>
     {{/each}}
@@ -80,7 +80,7 @@ const reviewsList = document.getElementById("reviews-list");
 
 //event listener for before ajax delete button
     reviewsList.addEventListener("click", function(event) {
-  if (event.target.classList.contains("delete-comment")) {
+  if (document.getElementById("delete-comment")) {
     event.preventDefault(); 
 
     fetch("/courts/{{courtId}}/review/delete", {

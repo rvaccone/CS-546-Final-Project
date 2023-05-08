@@ -244,7 +244,7 @@ for (let courtId of courtIds) {
 // Get the current day
 let date = new Date();
 let day, month, year;
-day = date.getDay();
+day = date.getDate();
 if (day < 10) day = '0' + day.toString();
 month = date.getMonth() + 1;
 if (month < 10) month = '0' + month.toString();
