@@ -138,7 +138,7 @@ const update = async (id, firstName, lastName, email, password, age, bio, imgLin
 		const userEmails = await userCollection.find({}).project({ _id: 0, email: 1 }).toArray();
 		userEmails.forEach((user) => {
 			if (user.email.toLowerCase() === updateUser.email.toLowerCase())
-				throw 'Error: Email already registered.';
+				throw 'Email already registered.';
 		});
 	}
 

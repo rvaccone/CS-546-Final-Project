@@ -8,111 +8,103 @@ import { checkUserSession, userSession } from "../utils/session.js";
 
 // Register Routes
 router
-  // Render the registration page.
-  .get("/register", async (req, res) => {
-    return res.render("register", { title: "Register" });
-  })
+	// Render the registration page.
+	.get('/register', async (req, res) => {
+		return res.render('register', { title: 'Register' });
+	})
 
-  // Register the new user.
-  .post("/register", async (req, res) => {
-    // Get the user data from the request body.
-    let error_array = [];
-    const userRegistration = req.body;
-    console.log(userRegistration);
-    if (!userRegistration || Object.keys(userRegistration).length === 0) {
-      return res.status(400).render("register", {
-        title: "Register",
-        error: "No user data provided.",
-      });
-    }
+	// Register the new user.
+	.post('/register', async (req, res) => {
+		// Get the user data from the request body.
+		let error_array = [];
+		const userRegistration = req.body;
+		console.log(userRegistration);
+		if (!userRegistration || Object.keys(userRegistration).length === 0) {
+			return res.status(400).render('register', {
+				title: 'Register',
+				error: 'No user data provided.',
+			});
+		}
 
-    // XSS Protection on registration form.
-    userRegistration.firstNameInput = xss(userRegistration.firstNameInput);
-    userRegistration.lastNameInput = xss(userRegistration.lastNameInput);
-    userRegistration.emailAddressInput = xss(
-      userRegistration.emailAddressInput
-    );
-    userRegistration.passwordInput = xss(userRegistration.passwordInput);
-    userRegistration.confirmPasswordInput = xss(
-      userRegistration.confirmPasswordInput
-    );
-    userRegistration.ageInput = xss(userRegistration.ageInput);
+		// XSS Protection on registration form.
+		userRegistration.firstNameInput = xss(userRegistration.firstNameInput);
+		userRegistration.lastNameInput = xss(userRegistration.lastNameInput);
+		userRegistration.emailAddressInput = xss(userRegistration.emailAddressInput);
+		userRegistration.passwordInput = xss(userRegistration.passwordInput);
+		userRegistration.confirmPasswordInput = xss(userRegistration.confirmPasswordInput);
+		userRegistration.ageInput = xss(userRegistration.ageInput);
 
-    try {
-      // Validate the first name.
-      userRegistration.firstNameInput = validation.checkString(
-        userRegistration.firstNameInput,
-        "firstNameInput"
-      );
+		try {
+			// Validate the first name.
+			userRegistration.firstNameInput = validation.checkString(
+				userRegistration.firstNameInput,
+				'firstNameInput'
+			);
 
-      // Validate the last name.
-      userRegistration.lastNameInput = validation.checkString(
-        userRegistration.lastNameInput,
-        "lastNameInput"
-      );
+			// Validate the last name.
+			userRegistration.lastNameInput = validation.checkString(
+				userRegistration.lastNameInput,
+				'lastNameInput'
+			);
 
-      // Validate the email address.
-      userRegistration.emailAddressInput = validation.checkEmail(
-        userRegistration.emailAddressInput,
-        "emailAddressInput"
-      );
+			// Validate the email address.
+			userRegistration.emailAddressInput = validation.checkEmail(
+				userRegistration.emailAddressInput,
+				'emailAddressInput'
+			);
 
-      // Validate the password.
+			// Validate the password.
 
-      userRegistration.passwordInput = validation.checkPassword(
-        userRegistration.passwordInput,
-        "passwordInput"
-      );
+			userRegistration.passwordInput = validation.checkPassword(
+				userRegistration.passwordInput,
+				'passwordInput'
+			);
 
-      // Validate the age.
+			// Validate the age.
 
-      userRegistration.ageInput = validation.checkAge(
-        Number(userRegistration.ageInput),
-        "ageInput"
-      );
-    } catch (e) {
-      return res.status(400).render("Error", { errorMessage: e });
-    }
+			userRegistration.ageInput = validation.checkAge(
+				Number(userRegistration.ageInput),
+				'ageInput'
+			);
+		} catch (e) {
+			return res.status(400).render('Error', { errorMessage: e });
+		}
 
-    // Checks that the passwords match.
-    if (
-      userRegistration.passwordInput != userRegistration.confirmPasswordInput
-    ) {
-      error_array.push("Passwords do not match.");
-    }
+		// Checks that the passwords match.
+		if (userRegistration.passwordInput != userRegistration.confirmPasswordInput) {
+			error_array.push('Passwords do not match.');
+		}
 
-    // Re-renders the page with errors.
-    // if (error_array.length > 0) {
-    // 	return res.status(400).render('error', { title: 'Register', error: error_array });
-    // }
-    try {
-      const {
-        firstNameInput,
-        lastNameInput,
-        emailAddressInput,
-        passwordInput,
-        ageInput,
-        bioInput,
-        imglinkInput,
-      } = userRegistration;
-      const newUser = await users_functions.create(
-        firstNameInput,
-        lastNameInput,
-        emailAddressInput,
-        passwordInput,
-        ageInput,
-        bioInput,
-        imglinkInput
-      );
-      console.log(newUser);
-      return res.status(200).redirect("/user/login");
-    } catch (e) {
-      console.log(e);
-      return res
-        .status(400)
-        .render("Error", { title: "Error", errorMessage: e });
-    }
-  });
+		// Re-renders the page with errors.
+		// if (error_array.length > 0) {
+		// 	return res.status(400).render('error', { title: 'Register', error: error_array });
+		// }
+		try {
+			const {
+				firstNameInput,
+				lastNameInput,
+				emailAddressInput,
+				passwordInput,
+				ageInput,
+				bioInput,
+				imglinkInput,
+			} = userRegistration;
+			const newUser = await users_functions.create(
+				firstNameInput,
+				lastNameInput,
+				emailAddressInput,
+				passwordInput,
+				ageInput,
+				bioInput,
+				imglinkInput
+			);
+			console.log(newUser);
+			return res.status(200).redirect('/user/login');
+		} catch (e) {
+			console.log(e);
+			return res.status(400).render('Error', { title: 'Error', errorMessage: e });
+		}
+	});
 
 // Login Routes
 router
