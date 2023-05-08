@@ -208,14 +208,14 @@ const getCourtsByZipCode = async (zipCode) => {
       $and: [
         {
           lat: {
-            $gt: Number(latitude) - 0.1,
-            $lt: Number(latitude) + 0.1,
+            $gt: Number(latitude) - 0.05,
+            $lt: Number(latitude) + 0.05,
           },
         },
         {
           long: {
-            $gt: Number(longitude) - 0.1,
-            $lt: Number(longitude) + 0.1,
+            $gt: Number(longitude) - 0.05,
+            $lt: Number(longitude) + 0.05,
           },
         },
       ],

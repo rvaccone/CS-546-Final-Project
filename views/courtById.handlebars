@@ -1,7 +1,7 @@
 <section class="court-details">
     <h1>NYC Court Finder</h1>
     <div id="court-info">
-        <p>Court: {{courtName}}&nbsp;&nbsp; | &nbsp;&nbsp;Address: {{address}} &nbsp;&nbsp;| &nbsp;&nbsp;Rating: <span id="overall-rating">{{overallRating}}</span>/5</p>
+        <p id="court-title">Court: {{courtName}}&nbsp;&nbsp; | &nbsp;&nbsp;Address: {{address}} &nbsp;&nbsp;| &nbsp;&nbsp;Rating: <span id="overall-rating">{{overallRating}}</span>/5</p>
     </div>
     <div id="map">
         <iframe width="600" height="450" style="border:0" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDFFwqO140DVnI3leB_luDuu3133GDLfaI&q={{latitude}},{{longitude}}"></iframe>
@@ -13,6 +13,8 @@
   <button class="create-game-btn" onclick="location.href='http://localhost:3000/game/{{courtId}}'">
     Create Pick-Up Game
   </button>
+  {{else}}
+  <p>Registered users can create pick up games. Already registered? Please login</p>
   {{/if}}
     <div id="pick-up-games">
         {{#each pickUpGames}}
@@ -26,7 +28,7 @@
             <button class="gameButton" onclick="location.href='http://localhost:3000/game/gameDetails/{{this._id}}'">Game Details</button>
         </div>
     </div> 
-{{/each}}
+  {{/each}}
     </div>
 <div class="spacer"></div>
 <div id="courtReviews">
@@ -52,6 +54,8 @@
     <button type="submit" class="button">Submit review</button>
   </form>
   </div>
+  {{else}}
+  <p>Registered users can write reviews. Already registered? Please login</p>
   {{/if}}
   <hr>
   <ul id="reviews-list">

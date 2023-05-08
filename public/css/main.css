@@ -372,7 +372,7 @@ iframe {
 
 .spacer {
   width: 0;
-  height: 200px; 
+  height: 360px; 
   overflow: hidden;
 }
 
@@ -441,3 +441,42 @@ iframe {
 	margin: auto;
 	justify-content: center;
 }
+#allCourts {
+	display: inline-block;
+	padding: 10px 20px;
+	background-color: #536caa;
+	color: white;
+	text-decoration: none;
+	border-radius: 5px;
+	font-weight: bold;
+	text-align: center;
+	margin: auto;
+  }
+.allCourts {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+}
+#reviews-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	text-align: center;
+}
+.delete-review-btn{
+	display: inline-block;
+	padding: 10px 20px;
+	background-color: #536caa;
+	color: white;
+	text-decoration: none;
+	border-radius: 5px;
+	font-weight: bold;
+	text-align: center;
+	margin: auto;
+  }
+#court-title {
+font-size: large;
+}
+  
