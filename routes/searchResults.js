@@ -15,7 +15,12 @@ router.route("/*").get(async (req, res) => {
   const isZipCode = /^\d{5}(?:[-\s]\d{4})?$/.test(searchTerm);
   let courtDetails = null;
   if (isZipCode) {
-    searchTerm = validation.isValidNYCZipCode(searchTerm, "zipcode");
+    try {
+      searchTerm = validation.isValidNYCZipCode(searchTerm, "zipcode");
+    } catch (e) {
+      return res.status(400).render("Error", { errorMessage: e });
+    }
+
     try {
       courtDetails = await courtsData.getCourtsByZipCode(searchTerm);
     } catch (e) {
