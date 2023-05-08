@@ -102,7 +102,7 @@ router
 			return res.status(200).redirect('/user/login');
 		} catch (e) {
 			console.log(e);
-			return res.status(400).render({ title: 'Error', errorMessage: e });
+			return res.status(400).render('Error', { title: 'Error', errorMessage: e });
 		}
 	});
 
