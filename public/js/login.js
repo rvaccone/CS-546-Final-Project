@@ -83,7 +83,7 @@ if (loginForm) {
 				errorMessage = document.createElement('dt');
 				errorMessage.innerHTML = error_array[i];
 				list.appendChild(errorMessage);
-				errorMessage.style.color = 'red';
+				errorMessage.style.color = '#ee0000';
 			}
 			errorContainer.appendChild(list);
 		}
