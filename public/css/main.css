@@ -62,7 +62,7 @@ nav {
 }
 
 #error-container {
-	color: #9e1515;
+    color: #620b0b;
     font-family: Arial, Helvetica, sans-serif;
 	font-weight: bold;
     font-size: 14px;
@@ -71,7 +71,7 @@ nav {
 }
 
 #route-error-wrapper {
-	color: #9e1515;
+    color: #620b0b;
 	font-family: Arial, Helvetica, sans-serif;
 	font-weight: bold;
 	font-size: 14px;
@@ -356,7 +356,7 @@ iframe {
 }
 
 #routeError {
-	color: red;
+    color: #620b0b;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 14px;
 	font-weight: bold;
@@ -479,4 +479,7 @@ iframe {
 #court-title {
 font-size: large;
 }
-  
+
+#error-message {
+    color: #620b0b !important;
+}
