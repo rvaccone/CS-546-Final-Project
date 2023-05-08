@@ -1,6 +1,17 @@
 
 <h1>Basketball Court Finder</h1>
 <section id="search-bar">
+    <p>Enter a court name or New York City area zipcode in the search field to find basketball courts near you.
+      <br> Remember just a bit of the address? you can search by that too.</p>
+    <p>Zip Codes of New York City<br>
+      New York City is a very large city with many ZIP codes. ZIP codes of New York City Neighborhood are listed below:<br>
+      Manhattan:10001-10282<br>
+      Staten Island :10301-10314<br>
+      Bronx: 10451-10475<br>
+      Queens:11004-11109, 11351-11697<br>
+      Brooklyn:11201-11256
+  </p>
+  <p>Entering a zip code will show you courts within a 10 mile radius of that zipcode. </p>
   <div class="search-bar">
     <form id="searchForm">
       <label class="button_text" for="searchField">Search Courts: </label>
@@ -10,8 +21,9 @@
   </div>
 
 {{!-- Link to all the courts --}}
-<div id="court-dir">
-  <a href="http://localhost:3000/courts/allCourts">Directory of Courts</a>
+<div class="allCourts">
+<p>Having trouble searching for basketball-courts? You can look through the directory of courts to find courts</p>
+<a id="allCourts" href="http://localhost:3000/courts/allCourts">Directory of Courts</a>
 </div>
 </section>
 <div class="basketball-courts">
