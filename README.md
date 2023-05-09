@@ -30,10 +30,10 @@ To start the server:
 -   <u>Edit profile:<u/> Allows users to modify profile pictures and personal details.
 -   <u>Comments:<u/> Allow users to post comments on courts.
 -   <u>Ratings:<u/> Users can give court ratings.
+-   <u>Google Map Visual:<u/> Shows locations of games using Google Maps API.
 
 ### Additional Features
 
--   <u>Google Map Visual:<u/> Shows locations of games using Google Maps API.
 -   <u>Win/loss Statistics:<u/> Individual profiles display player win/loss statistics.
 -   <u>Request Unlisted Courts:<u/> Users can suggest the addition of an unlisted court.
 -   <u>Locational comments:<u/> Allow users to report comments on locations.
