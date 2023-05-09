@@ -30,8 +30,6 @@ function checkBoolean(boolVal, varName) {
 
 // Validates comment inputs.
 function checkComment(comment, varName) {
-	let string_format = /^[A-Za-z !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
-	if (!comment.match(string_format)) throw `Error: ${varName} must be a valid string!`;
 	if (!comment) throw `Error: You must supply a ${varName}.`;
 	if (typeof comment !== 'string') throw `Error: ${varName} should be a string.`;
 	comment = comment.trim();
