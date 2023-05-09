@@ -9,8 +9,7 @@ if (unjoinButton) {
 			const response = await fetch(`/game/addUser/${gameId}`, {
 				method: 'DELETE',
 			});
-			//   const result = await response.json();
-			console.log(response);
+
 			// Reload the page to update the button
 			window.location.reload();
 		} catch (error) {
