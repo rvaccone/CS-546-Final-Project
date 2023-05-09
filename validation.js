@@ -3,7 +3,7 @@ import Moment from 'moment';
 
 // Validates age inputs.
 function checkAge(ageVal, varName) {
-	if (!ageVal) throw `Error: You must supply a ${varNmae}.`;
+	if (!ageVal) throw `Error: You must supply a ${varName}.`;
 	if (typeof ageVal !== 'number') throw `Error: ${varName} should be a number.`;
 	if (ageVal === NaN) throw `Error: ${varName} age cannot be NaN.`;
 	if (ageVal < 13 || ageVal > 100) throw `Error: ${varName} is out of valid range.`;
