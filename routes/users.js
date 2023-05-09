@@ -1,10 +1,10 @@
-import { Router } from "express";
+import { Router } from 'express';
 const router = Router();
-import { usersData } from "../data/index.js";
-import * as users_functions from "../data/users.js";
-import * as validation from "../validation.js";
-import xss from "xss";
-import { checkUserSession, userSession } from "../utils/session.js";
+import { usersData } from '../data/index.js';
+import * as users_functions from '../data/users.js';
+import * as validation from '../validation.js';
+import xss from 'xss';
+import { checkUserSession, userSession } from '../utils/session.js';
 
 // Register Routes
 router
@@ -18,7 +18,7 @@ router
 		// Get the user data from the request body.
 		let error_array = [];
 		const userRegistration = req.body;
-		console.log(userRegistration);
+
 		if (!userRegistration || Object.keys(userRegistration).length === 0) {
 			return res.status(400).render('register', {
 				title: 'Register',
@@ -29,9 +29,13 @@ router
 		// XSS Protection on registration form.
 		userRegistration.firstNameInput = xss(userRegistration.firstNameInput);
 		userRegistration.lastNameInput = xss(userRegistration.lastNameInput);
-		userRegistration.emailAddressInput = xss(userRegistration.emailAddressInput);
+		userRegistration.emailAddressInput = xss(
+			userRegistration.emailAddressInput
+		);
 		userRegistration.passwordInput = xss(userRegistration.passwordInput);
-		userRegistration.confirmPasswordInput = xss(userRegistration.confirmPasswordInput);
+		userRegistration.confirmPasswordInput = xss(
+			userRegistration.confirmPasswordInput
+		);
 		userRegistration.ageInput = xss(userRegistration.ageInput);
 
 		try {
@@ -71,7 +75,10 @@ router
 		}
 
 		// Checks that the passwords match.
-		if (userRegistration.passwordInput != userRegistration.confirmPasswordInput) {
+		if (
+			userRegistration.passwordInput !=
+			userRegistration.confirmPasswordInput
+		) {
 			error_array.push('Passwords do not match.');
 		}
 
@@ -98,222 +105,232 @@ router
 				bioInput,
 				imglinkInput
 			);
-			console.log(newUser);
+
 			return res.status(200).redirect('/user/login');
 		} catch (e) {
-			console.log(e);
-			return res.status(400).render('Error', { title: 'Error', errorMessage: e });
+			return res
+				.status(400)
+				.render('Error', { title: 'Error', errorMessage: e });
 		}
 	});
 
 // Login Routes
 router
 
-  // Render the login page.
-  .get("/login", async (req, res) => {
-    return res.render("login", { title: "Login" });
-  })
+	// Render the login page.
+	.get('/login', async (req, res) => {
+		return res.render('login', { title: 'Login' });
+	})
 
-  // Get user data from login.
-  .post("/login", async (req, res) => {
-    // Get the user data from the request body.
-    const userLogin = req.body;
-    if (!userLogin || Object.keys(userLogin).length === 0) {
-      return res.status(400).render("login", {
-        title: "Login",
-        error: "No user data provided.",
-      });
-    }
+	// Get user data from login.
+	.post('/login', async (req, res) => {
+		// Get the user data from the request body.
+		const userLogin = req.body;
+		if (!userLogin || Object.keys(userLogin).length === 0) {
+			return res.status(400).render('login', {
+				title: 'Login',
+				error: 'No user data provided.',
+			});
+		}
 
-    // XSS Protection on login form.
-    userLogin.email = xss(userLogin.email);
-    userLogin.password = xss(userLogin.password);
+		// XSS Protection on login form.
+		userLogin.email = xss(userLogin.email);
+		userLogin.password = xss(userLogin.password);
 
-    // Preform validation on the user input.
-    try {
-      userLogin.email = validation.checkEmail(userLogin.email, "email address");
-      userLogin.password = validation.checkPassword(
-        userLogin.password,
-        "password"
-      );
-    } catch (e) {
-      return res.status(400).render("login", { title: "Login", error: e });
-    }
+		// Preform validation on the user input.
+		try {
+			userLogin.email = validation.checkEmail(
+				userLogin.email,
+				'email address'
+			);
+			userLogin.password = validation.checkPassword(
+				userLogin.password,
+				'password'
+			);
+		} catch (e) {
+			return res
+				.status(400)
+				.render('login', { title: 'Login', error: e });
+		}
 
-    // Authenticate the user.
-    try {
-      // Validates the user.
-      const validatedUser = await users_functions.checkUser(
-        userLogin.email,
-        userLogin.password
-      );
-      console.log(validatedUser);
-      if (validatedUser) {
-        // Sets the user session in the cookie.
-        req.session.user = validatedUser;
-        console.log(req.session);
-        return res.redirect(`/user/:${validatedUser._id}`);
-      }
-    } catch (e) {
-      return res.status(400).render("login", {
-        title: "Login",
-        error: e,
-      });
-    }
-  });
+		// Authenticate the user.
+		try {
+			// Validates the user.
+			const validatedUser = await users_functions.checkUser(
+				userLogin.email,
+				userLogin.password
+			);
+
+			if (validatedUser) {
+				// Sets the user session in the cookie.
+				req.session.user = validatedUser;
+				return res.redirect(`/user/:${validatedUser._id}`);
+			}
+		} catch (e) {
+			return res.status(400).render('login', {
+				title: 'Login',
+				error: e,
+			});
+		}
+	});
 
 // Edit User Routes
 router
-  .get("/logout", async (req, res) => {
-    // Destroys the session.
-    console.log("you are hitting logout route");
-    req.session.destroy();
-    return res.status(200).redirect("/");
-  })
+	.get('/logout', async (req, res) => {
+		// Destroys the session.
+		req.session.destroy();
+		return res.status(200).redirect('/');
+	})
 
-  .get("/:id", async (req, res) => {
-    // Send the user's session information to the page.
-    if (!checkUserSession(req, res)) {
-      return res.status(200).redirect("/");
-    } else {
-      return res.render("profile", {
-        title: "My Profile",
-        _id: req.session.user._id,
-        firstName: req.session.user.firstName,
-        lastName: req.session.user.lastName,
-        email: req.session.user.emailAddress,
-        age: req.session.user.age,
-        bio: req.session.user.bio,
-        imgLink: req.session.user.imgLink,
-      });
-    }
-  })
+	.get('/:id', async (req, res) => {
+		// Send the user's session information to the page.
+		if (!checkUserSession(req, res)) {
+			return res.status(200).redirect('/');
+		} else {
+			return res.render('profile', {
+				title: 'My Profile',
+				_id: req.session.user._id,
+				firstName: req.session.user.firstName,
+				lastName: req.session.user.lastName,
+				email: req.session.user.emailAddress,
+				age: req.session.user.age,
+				bio: req.session.user.bio,
+				imgLink: req.session.user.imgLink,
+			});
+		}
+	})
 
-  .get("/editProfile/:id", async (req, res) => {
-    if (!checkUserSession(req, res)) {
-      return res.status(400).render("Error", {
-        errorMessage: "You must be logged in to edit your profile.",
-      });
-    } else {
-      return res.status(200).render("editProfile", {
-        title: "Edit Profile",
-        _id: req.session.user._id,
-        firstName: req.session.user.firstName,
-        lastName: req.session.user.lastName,
-        email: req.session.user.emailAddress,
-        age: req.session.user.age,
-        bio: req.session.user.bio,
-        imgLink: req.session.user.imgLink,
-      });
-    }
-  })
+	.get('/editProfile/:id', async (req, res) => {
+		if (!checkUserSession(req, res)) {
+			return res.status(400).render('Error', {
+				errorMessage: 'You must be logged in to edit your profile.',
+			});
+		} else {
+			return res.status(200).render('editProfile', {
+				title: 'Edit Profile',
+				_id: req.session.user._id,
+				firstName: req.session.user.firstName,
+				lastName: req.session.user.lastName,
+				email: req.session.user.emailAddress,
+				age: req.session.user.age,
+				bio: req.session.user.bio,
+				imgLink: req.session.user.imgLink,
+			});
+		}
+	})
 
-  // Edit Profile Route
-  .post("/editProfile/:id", async (req, res) => {
-    // Render an error if the user is not logged in
-    if (!checkUserSession(req, res)) {
-      return res.status(400).render("Error", {
-        errorMessage: "You must be logged in to edit your profile",
-      });
-    }
+	// Edit Profile Route
+	.post('/editProfile/:id', async (req, res) => {
+		// Render an error if the user is not logged in
+		if (!checkUserSession(req, res)) {
+			return res.status(400).render('Error', {
+				errorMessage: 'You must be logged in to edit your profile',
+			});
+		}
 
-    const updatedUser = req.body;
+		const updatedUser = req.body;
 
-    // Checks if the req.body is empty.
-    if (!updatedUser || Object.keys(updatedUser).length === 0) {
-      return res.status(400).render("Error", {
-        errorMessage: "There are no fields in the request body",
-      });
-    }
+		// Checks if the req.body is empty.
+		if (!updatedUser || Object.keys(updatedUser).length === 0) {
+			return res.status(400).render('Error', {
+				errorMessage: 'There are no fields in the request body',
+			});
+		}
 
-    // XSS Protection on registration form.
-    updatedUser.firstNameInput = xss(updatedUser.firstNameInput);
-    updatedUser.lastNameInput = xss(updatedUser.lastNameInput);
-    updatedUser.emailAddressInput = xss(updatedUser.emailAddressInput);
-    updatedUser.passwordInput = xss(updatedUser.passwordInput);
-    updatedUser.confirmPasswordInput = xss(updatedUser.confirmPasswordInput);
-    updatedUser.ageInput = xss(updatedUser.ageInput);
-    updatedUser.bioInput = xss(updatedUser.bioInput);
-    updatedUser.imglinkInput = xss(updatedUser.imglinkInput);
+		// XSS Protection on registration form.
+		updatedUser.firstNameInput = xss(updatedUser.firstNameInput);
+		updatedUser.lastNameInput = xss(updatedUser.lastNameInput);
+		updatedUser.emailAddressInput = xss(updatedUser.emailAddressInput);
+		updatedUser.passwordInput = xss(updatedUser.passwordInput);
+		updatedUser.confirmPasswordInput = xss(
+			updatedUser.confirmPasswordInput
+		);
+		updatedUser.ageInput = xss(updatedUser.ageInput);
+		updatedUser.bioInput = xss(updatedUser.bioInput);
+		updatedUser.imglinkInput = xss(updatedUser.imglinkInput);
 
-    // Validates the input.
-    try {
-      updatedUser.firstNameInput = validation.checkString(
-        updatedUser.firstNameInput,
-        "firstName"
-      );
-      updatedUser.lastNameInput = validation.checkString(
-        updatedUser.lastNameInput,
-        "lastName"
-      );
-      updatedUser.emailAddressInput = validation.checkEmail(
-        updatedUser.emailAddressInput,
-        "email"
-      );
-      updatedUser.passwordInput = validation.checkPassword(
-        updatedUser.passwordInput,
-        "password"
-      );
-      updatedUser.ageInput = Number(updatedUser.ageInput);
-      updatedUser.ageInput = validation.checkAge(updatedUser.ageInput, "age");
+		// Validates the input.
+		try {
+			updatedUser.firstNameInput = validation.checkString(
+				updatedUser.firstNameInput,
+				'firstName'
+			);
+			updatedUser.lastNameInput = validation.checkString(
+				updatedUser.lastNameInput,
+				'lastName'
+			);
+			updatedUser.emailAddressInput = validation.checkEmail(
+				updatedUser.emailAddressInput,
+				'email'
+			);
+			updatedUser.passwordInput = validation.checkPassword(
+				updatedUser.passwordInput,
+				'password'
+			);
+			updatedUser.ageInput = Number(updatedUser.ageInput);
+			updatedUser.ageInput = validation.checkAge(
+				updatedUser.ageInput,
+				'age'
+			);
 
-      // Makes the bio input optional.
-      if (updatedUser.bioInput.trim() == "") {
-        updatedUser.bioInput = "";
-      } else {
-        updatedUser.bioInput = validation.checkBio(updatedUser.bioInput, "bio");
-      }
+			// Makes the bio input optional.
+			if (updatedUser.bioInput.trim() == '') {
+				updatedUser.bioInput = '';
+			} else {
+				updatedUser.bioInput = validation.checkBio(
+					updatedUser.bioInput,
+					'bio'
+				);
+			}
 
-      // Makes the imgLink input optional.
-      if (updatedUser.imglinkInput.trim() == "") {
-        updatedUser.imglinkInput =
-          "https://img.freepik.com/premium-vector/basketball_319667-191.jpg";
-      } else {
-        updatedUser.imglinkInput = validation.checkImgLink(
-          updatedUser.imglinkInput,
-          "imgLink"
-        );
-      }
+			// Makes the imgLink input optional.
+			if (updatedUser.imglinkInput.trim() == '') {
+				updatedUser.imglinkInput =
+					'https://img.freepik.com/premium-vector/basketball_319667-191.jpg';
+			} else {
+				updatedUser.imglinkInput = validation.checkImgLink(
+					updatedUser.imglinkInput,
+					'imgLink'
+				);
+			}
 
-      // Checks if the passwords match.
-      if (updatedUser.passwordInput != updatedUser.confirmPasswordInput)
-        throw "Passwords do not match.";
-    } catch (e) {
-      return res.status(400).render("Error", {
-        errorMessage: e,
-      });
-    }
+			// Checks if the passwords match.
+			if (updatedUser.passwordInput != updatedUser.confirmPasswordInput)
+				throw 'Passwords do not match.';
+		} catch (e) {
+			return res.status(400).render('Error', {
+				errorMessage: e,
+			});
+		}
 
-    // Preforms the data function.
-    try {
-      const updatedUserData = await usersData.update(
-        //req.params.id,
-        req.session.user._id,
-        updatedUser.firstNameInput,
-        updatedUser.lastNameInput,
-        updatedUser.emailAddressInput,
-        updatedUser.passwordInput,
-        updatedUser.ageInput,
-        updatedUser.bioInput,
-        updatedUser.imglinkInput
-      );
+		// Preforms the data function.
+		try {
+			const updatedUserData = await usersData.update(
+				//req.params.id,
+				req.session.user._id,
+				updatedUser.firstNameInput,
+				updatedUser.lastNameInput,
+				updatedUser.emailAddressInput,
+				updatedUser.passwordInput,
+				updatedUser.ageInput,
+				updatedUser.bioInput,
+				updatedUser.imglinkInput
+			);
 
-      console.log("This is the updated user:" + updatedUserData);
+			// Reassign the session values.
+			req.session.user.firstName = updatedUserData.firstName;
+			req.session.user.lastName = updatedUserData.lastName;
+			req.session.user.emailAddress = updatedUserData.email;
+			req.session.user.age = updatedUserData.age;
+			req.session.user.bio = updatedUserData.bio;
+			req.session.user.imgLink = updatedUserData.imgLink;
 
-      // Reassign the session values.
-      req.session.user.firstName = updatedUserData.firstName;
-      req.session.user.lastName = updatedUserData.lastName;
-      req.session.user.emailAddress = updatedUserData.email;
-      req.session.user.age = updatedUserData.age;
-      req.session.user.bio = updatedUserData.bio;
-      req.session.user.imgLink = updatedUserData.imgLink;
-
-      res.status(200).redirect(`/user/${updatedUserData._id}`);
-    } catch (e) {
-      return res.status(500).render("Error", {
-        errorMessage: e,
-      });
-    }
-  });
+			res.status(200).redirect(`/user/${updatedUserData._id}`);
+		} catch (e) {
+			return res.status(500).render('Error', {
+				errorMessage: e,
+			});
+		}
+	});
 
 export default router;
