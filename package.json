@@ -9,7 +9,7 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"seed": "node ./tasks/seed.js"
 	},
-	"author": "Jack Harrington (10463675), Sai Bandla (20011577)",
+	"author": "Jack Harrington (10463675), Sai Bandla (20011577), Rocco Vaccone (10465592)",
 	"license": "ISC",
 	"dependencies": {
 		"axios": "^1.4.0",
